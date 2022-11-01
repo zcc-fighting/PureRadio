@@ -1,0 +1,441 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AccountLoginButton.Content" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="AccountLogoutButton.Content" xml:space="preserve">
+    <value>Log out</value>
+  </data>
+  <data name="AppDisplayName" xml:space="preserve">
+    <value>Pure Radio</value>
+  </data>
+  <data name="AppTitleTextBlock.Text" xml:space="preserve">
+    <value>Pure Radio</value>
+  </data>
+  <data name="BilingualStation.Content" xml:space="preserve">
+    <value>Bilingual</value>
+  </data>
+  <data name="CantPlayTip.CloseButtonContent" xml:space="preserve">
+    <value>Got it</value>
+  </data>
+  <data name="CantPlayTip.Subtitle" xml:space="preserve">
+    <value>You cannot play future shows and live shows</value>
+  </data>
+  <data name="CantPlayTip.Title" xml:space="preserve">
+    <value>Temporarily unavailable</value>
+  </data>
+  <data name="CityStation.Content" xml:space="preserve">
+    <value>Urban</value>
+  </data>
+  <data name="ComprehensiveStation.Content" xml:space="preserve">
+    <value>Comprehensive</value>
+  </data>
+  <data name="ContentNavCategories.Content" xml:space="preserve">
+    <value>Categories</value>
+  </data>
+  <data name="ContentNavHeadlines.Content" xml:space="preserve">
+    <value>Headlines</value>
+  </data>
+  <data name="DetailPageFavButton.Text" xml:space="preserve">
+    <value>Add to Favorites</value>
+  </data>
+  <data name="DetailPageNavToday.Content" xml:space="preserve">
+    <value>Today</value>
+  </data>
+  <data name="DetailPageNavTomorrow.Content" xml:space="preserve">
+    <value>Tomorrow</value>
+  </data>
+  <data name="DetailPageNavYesterday.Content" xml:space="preserve">
+    <value>Yesterday</value>
+  </data>
+  <data name="DetailPageNowPlaying" xml:space="preserve">
+    <value>Live stream: </value>
+  </data>
+  <data name="DetailPagePlayButton.Text" xml:space="preserve">
+    <value>Play Now</value>
+  </data>
+  <data name="DialectStation.Content" xml:space="preserve">
+    <value>Dialect</value>
+  </data>
+  <data name="EconomyStation.Content" xml:space="preserve">
+    <value>Economic</value>
+  </data>
+  <data name="FavCloudEmpty.Text" xml:space="preserve">
+    <value>Nothing here</value>
+  </data>
+  <data name="FavLocalEmpty.Text" xml:space="preserve">
+    <value>Nothing here</value>
+  </data>
+  <data name="GymStation.Content" xml:space="preserve">
+    <value>Sports</value>
+  </data>
+  <data name="InformationStation.Content" xml:space="preserve">
+    <value>Information</value>
+  </data>
+  <data name="LifeStation.Content" xml:space="preserve">
+    <value>Life</value>
+  </data>
+  <data name="Literature_ArtStation.Content" xml:space="preserve">
+    <value>Literary</value>
+  </data>
+  <data name="LoginDialogContainer.CloseButtonText" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="LoginDialogContainer.PrimaryButtonText" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="LoginDialogFailureTip.CloseButtonContent" xml:space="preserve">
+    <value>Got it</value>
+  </data>
+  <data name="LoginDialogFailureTip.Subtitle" xml:space="preserve">
+    <value>The username and password you provided appear to be incorrect</value>
+  </data>
+  <data name="LoginDialogFailureTip.Title" xml:space="preserve">
+    <value>Login failed</value>
+  </data>
+  <data name="LoginDialogPassword.PlaceholderText" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="LoginDialogShowPassword.Content" xml:space="preserve">
+    <value>Show password</value>
+  </data>
+  <data name="LoginDialogSuccessTip.CloseButtonContent" xml:space="preserve">
+    <value>Got it</value>
+  </data>
+  <data name="LoginDialogSuccessTip.Subtitle" xml:space="preserve">
+    <value>Connected to your Qingting FM account</value>
+  </data>
+  <data name="LoginDialogSuccessTip.Title" xml:space="preserve">
+    <value>Login successful</value>
+  </data>
+  <data name="LoginDialogTeachingTip.CloseButtonContent" xml:space="preserve">
+    <value>Got it</value>
+  </data>
+  <data name="LoginDialogTeachingTip.Subtitle" xml:space="preserve">
+    <value>Please check that you have filled in the account number and password completely</value>
+  </data>
+  <data name="LoginDialogTeachingTip.Title" xml:space="preserve">
+    <value>Incomplete information</value>
+  </data>
+  <data name="LoginDialogTitle.Text" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="LoginDialogUsername.PlaceholderText" xml:space="preserve">
+    <value>Phone Number</value>
+  </data>
+  <data name="LogoutDialogSuccessTip.CloseButtonContent" xml:space="preserve">
+    <value>Got it</value>
+  </data>
+  <data name="LogoutDialogSuccessTip.Subtitle" xml:space="preserve">
+    <value>Disconnected from your Qingting FM account</value>
+  </data>
+  <data name="LogoutDialogSuccessTip.Title" xml:space="preserve">
+    <value>Logout succeeded</value>
+  </data>
+  <data name="MusicStation.Content" xml:space="preserve">
+    <value>Music</value>
+  </data>
+  <data name="navContent.Content" xml:space="preserve">
+    <value>Library</value>
+  </data>
+  <data name="navDetailProgram" xml:space="preserve">
+    <value>Program</value>
+  </data>
+  <data name="navDetailRadio" xml:space="preserve">
+    <value>Radio Station</value>
+  </data>
+  <data name="navLibrary.Content" xml:space="preserve">
+    <value>Library</value>
+  </data>
+  <data name="navRadio.Content" xml:space="preserve">
+    <value>Radio Station</value>
+  </data>
+  <data name="navRecommend.Content" xml:space="preserve">
+    <value>Picked For You</value>
+  </data>
+  <data name="navSearch" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="navSearchBox.PlaceholderText" xml:space="preserve">
+    <value>Search for a radio station or program</value>
+  </data>
+  <data name="navSettings.Content" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="navUser.Content" xml:space="preserve">
+    <value>Account</value>
+  </data>
+  <data name="PlayCountDisplayProgram" xml:space="preserve">
+    <value>Playcount: </value>
+  </data>
+  <data name="PlayCountDisplayRadio" xml:space="preserve">
+    <value>Listeners: </value>
+  </data>
+  <data name="ProgramCountDisplay" xml:space="preserve">
+    <value>Episodes</value>
+  </data>
+  <data name="QuyiStation.Content" xml:space="preserve">
+    <value>Opera</value>
+  </data>
+  <data name="RankNavInternet.Content" xml:space="preserve">
+    <value>Internet</value>
+  </data>
+  <data name="RankNavNational.Content" xml:space="preserve">
+    <value>National</value>
+  </data>
+  <data name="RankNavRational.Content" xml:space="preserve">
+    <value>Regional</value>
+  </data>
+  <data name="RecentlyListenEmpty.Text" xml:space="preserve">
+    <value>Nothing here</value>
+  </data>
+  <data name="RecommendEmpty.Text" xml:space="preserve">
+    <value>Nothing here</value>
+  </data>
+  <data name="RecommendFavLocalTitle.Text" xml:space="preserve">
+    <value>Your Favorites</value>
+  </data>
+  <data name="RecommendGreetingAfternoon" xml:space="preserve">
+    <value>Good afternoon</value>
+  </data>
+  <data name="RecommendGreetingEvening" xml:space="preserve">
+    <value>Good evening</value>
+  </data>
+  <data name="RecommendGreetingLateNight" xml:space="preserve">
+    <value>How is it going</value>
+  </data>
+  <data name="RecommendGreetingMorning" xml:space="preserve">
+    <value>Good morning</value>
+  </data>
+  <data name="RecommendGreetingNight" xml:space="preserve">
+    <value>Sweet dreams</value>
+  </data>
+  <data name="RecommendProgramTitle.Text" xml:space="preserve">
+    <value>Selected Programs</value>
+  </data>
+  <data name="RecommendRadioTitle.Text" xml:space="preserve">
+    <value>Trending Stations</value>
+  </data>
+  <data name="SearchEmpty.Text" xml:space="preserve">
+    <value>Uncharted territory</value>
+  </data>
+  <data name="SearchResultProgram.Content" xml:space="preserve">
+    <value>Program</value>
+  </data>
+  <data name="SearchResultRadio.Content" xml:space="preserve">
+    <value>Radio</value>
+  </data>
+  <data name="SettingsAboutTitle.Text" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="SettingsAppearanceTitle.Text" xml:space="preserve">
+    <value>Appearance</value>
+  </data>
+  <data name="SettingsClearCache.Text" xml:space="preserve">
+    <value>Clear Cache</value>
+  </data>
+  <data name="SettingsClearCacheButton.Content" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="SettingsGeneralTitle.Text" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="SettingsLanguageEnUS.Content" xml:space="preserve">
+    <value>English (United States)</value>
+  </data>
+  <data name="SettingsLanguageRestartCancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="SettingsLanguageRestartOK" xml:space="preserve">
+    <value>Restart</value>
+  </data>
+  <data name="SettingsLanguageRestartSecondary" xml:space="preserve">
+    <value>Switching the language requires restarting the application.</value>
+  </data>
+  <data name="SettingsLanguageRestartTitle" xml:space="preserve">
+    <value>Restart the application</value>
+  </data>
+  <data name="SettingsLanguageSystem.Content" xml:space="preserve">
+    <value>Use system setting</value>
+  </data>
+  <data name="SettingsLanguageTitle.Text" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="SettingsLanguageZhCN.Content" xml:space="preserve">
+    <value>中文 (简体)</value>
+  </data>
+  <data name="SettingsReferencesTitle.Text" xml:space="preserve">
+    <value>References</value>
+  </data>
+  <data name="SettingsSwitchOff" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="SettingsSwitchOn" xml:space="preserve">
+    <value>On</value>
+  </data>
+  <data name="SettingsThemeModeDark.Content" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="SettingsThemeModeLight.Content" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="SettingsThemeModeSystem.Content" xml:space="preserve">
+    <value>Use system setting</value>
+  </data>
+  <data name="SettingsThemeModeTitle.Text" xml:space="preserve">
+    <value>Theme</value>
+  </data>
+  <data name="SettingsTimerDelay" xml:space="preserve">
+    <value>Scheduled closing time: </value>
+  </data>
+  <data name="SettingsTimerPickerTitle.Text" xml:space="preserve">
+    <value>Countdown</value>
+  </data>
+  <data name="SettingsTimerTitle.Text" xml:space="preserve">
+    <value>Timer</value>
+  </data>
+  <data name="SMTCLive" xml:space="preserve">
+    <value>Live</value>
+  </data>
+  <data name="Transportation.Content" xml:space="preserve">
+    <value>Traffic</value>
+  </data>
+  <data name="TravelStation.Content" xml:space="preserve">
+    <value>Travel</value>
+  </data>
+  <data name="UpdateTimeBlock.Text" xml:space="preserve">
+    <value>Update Time: </value>
+  </data>
+  <data name="UserDefaultName" xml:space="preserve">
+    <value>Hi There!</value>
+  </data>
+  <data name="UserDefaultSignature" xml:space="preserve">
+    <value>You are currently logged in as a local account.</value>
+  </data>
+  <data name="UserFavCloudTitle.Text" xml:space="preserve">
+    <value>Cloud Favorites</value>
+  </data>
+  <data name="UserFavLocalTitle.Text" xml:space="preserve">
+    <value>Local Favorites</value>
+  </data>
+  <data name="UserRecentlyTitle.Text" xml:space="preserve">
+    <value>Recently Played</value>
+  </data>
+</root>

@@ -1,0 +1,159 @@
+﻿<Page
+    x:Class="PureRadio.Views.RootPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:PureRadio"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:common="using:PureRadio.Common"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <!--This top margin is the height of the custom TitleBar-->
+        <Thickness x:Key="NavigationViewContentMargin">0,48,0,0</Thickness>
+        <!--<common:MediaPlaybackStateToButtonIconConverter x:Key="MediaPlaybackStateToButtonIconConverter"/>
+        <common:MediaMuteStateToButtonIconConverter x:Key="MediaMuteStateToButtonIconConverter"/>
+        <common:MediaPositionToTimeConverter x:Key="MediaPositionToTimeConverter"/>
+        <common:FavStateToButtonIconConverter x:Key="FavStateToButtonIconConverter"/>-->
+    </Page.Resources>
+
+    <Grid>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="WideLayout">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="760" />
+                    </VisualState.StateTriggers>
+                </VisualState>
+                <VisualState x:Name="MiddleLayout">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="640" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="Duration.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="NarrowLayout">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="Duration.Visibility" Value="Collapsed" />
+                        <Setter Target="FavButton.Visibility" Value="Collapsed" />
+                        <Setter Target="RefreshButton.Visibility" Value="Collapsed" />
+                        <Setter Target="VolumeButton.Margin" Value="8,0,16,0"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <Border 
+            IsHitTestVisible="True"
+            VerticalAlignment="Top"                
+            Height="48"
+            Canvas.ZIndex="1">
+            <Grid>
+                <StackPanel 
+                    x:Name="AppTitleBar" 
+                    Orientation="Horizontal"                     
+                    Margin="48,0,0,0"
+                    Background="Transparent">
+                    <Image x:Name="AppFontIcon"
+                        HorizontalAlignment="Left" 
+                        VerticalAlignment="Center"
+                        Source="/Assets/Square44x44Logo.png" 
+                        Width="16" 
+                        Height="16"/>
+                    <TextBlock x:Name="AppTitleTextBlock"
+                        x:Uid="AppTitleTextBlock"
+                        VerticalAlignment="Center"
+                        Margin="12, 0, 0, 0"
+                        Style="{StaticResource CaptionTextBlockStyle}" />
+                </StackPanel>
+                <AutoSuggestBox x:Name="AppTitleSearch"
+                    x:Uid="navSearchBox"
+                    QueryIcon="Find"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Width="300"
+                    TextChanged="AutoSuggestBox_TextChanged"
+                    QuerySubmitted="AutoSuggestBox_QuerySubmitted"
+                    Height="32"/>
+                
+            </Grid>
+        </Border>
+        <muxc:NavigationView 
+             x:Name="NavView"
+            OpenPaneLength="240"
+            Canvas.ZIndex="0"
+            IsBackButtonVisible="Visible"
+            IsTitleBarAutoPaddingEnabled="False"
+            Loaded="NavView_Loaded"
+            ItemInvoked="NavView_ItemInvoked"
+            BackRequested="NavView_BackRequested"
+            PaneOpening="NavigationViewControl_PaneOpening"
+            PaneClosing="NavigationViewControl_PaneClosing"
+            DisplayModeChanged="NavigationViewControl_DisplayModeChanged">
+            <muxc:NavigationView.MenuItems>
+                <muxc:NavigationViewItem Tag="recommend" x:Uid="navRecommend">
+                    <muxc:NavigationViewItem.Icon>
+                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE80F;"/>
+                    </muxc:NavigationViewItem.Icon>
+                </muxc:NavigationViewItem>
+                <muxc:NavigationViewItem Tag="radio" x:Uid="navRadio">
+                    <muxc:NavigationViewItem.Icon>
+                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE74C;"/>
+                    </muxc:NavigationViewItem.Icon>
+                </muxc:NavigationViewItem>
+                <muxc:NavigationViewItem Tag="content" x:Uid="navContent">
+                    <muxc:NavigationViewItem.Icon>
+                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE8D6;"/>
+                    </muxc:NavigationViewItem.Icon>
+                </muxc:NavigationViewItem>
+            </muxc:NavigationView.MenuItems>
+
+            <muxc:NavigationView.Content>
+                <Grid>
+                    <Frame
+                        x:Name="ContentFrame"
+                        IsTabStop="False"/>
+                    <Grid
+                        x:Name="NowPlayFrame"
+                        VerticalAlignment="Bottom"
+                        Height="100"
+                        Background="Transparent">
+                        <Grid.Resources>
+                            <Storyboard x:Name="EnterStoryboard">
+                                <DoubleAnimation 
+                                    From="0" To="1" Duration="00:00:0.1" 
+                                    Storyboard.TargetName="DynamicBackground" 
+                                    Storyboard.TargetProperty="Opacity">
+                                </DoubleAnimation>
+                            </Storyboard>
+                            <Storyboard x:Name="ExitStoryboard">
+                                <DoubleAnimation 
+                                    From="1" To="0" Duration="00:00:0.1" 
+                                    Storyboard.TargetName="DynamicBackground" 
+                                    Storyboard.TargetProperty="Opacity">
+                                </DoubleAnimation>
+                            </Storyboard>
+                        </Grid.Resources>
+                    </Grid>
+                </Grid>
+            </muxc:NavigationView.Content>
+            <muxc:NavigationView.FooterMenuItems>
+                <muxc:NavigationViewItem Tag="user" x:Uid="navUser">
+                    <muxc:NavigationViewItem.Icon>
+                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE77B;"/>
+                    </muxc:NavigationViewItem.Icon>
+                </muxc:NavigationViewItem>
+                <muxc:NavigationViewItem Tag="library" x:Uid="navLibrary">
+                    <muxc:NavigationViewItem.Icon>
+                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE8F1;"/>
+                    </muxc:NavigationViewItem.Icon>
+                </muxc:NavigationViewItem>
+            </muxc:NavigationView.FooterMenuItems>
+        </muxc:NavigationView>
+    </Grid>
+</Page>
