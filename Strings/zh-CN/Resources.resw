@@ -381,6 +381,9 @@
   <data name="SettingsLanguageZhCN.Content" xml:space="preserve">
     <value>中文 (简体)</value>
   </data>
+  <data name="SettingsNetworkStatus" xml:space="preserve">
+    <value>连接网络</value>
+  </data>
   <data name="SettingsReferencesTitle.Text" xml:space="preserve">
     <value>开源项目引用</value>
   </data>
