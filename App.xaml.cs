@@ -27,7 +27,7 @@ namespace PureRadio
         /// 已执行，逻辑上等同于 main() 或 WinMain()。
         /// </summary>
         public App()
-        {
+        {    
             this.InitializeComponent();
             this.Suspending += OnSuspending;
         }

@@ -9,7 +9,7 @@ namespace LocalRadioManage.DataModelTransform
     class DateTransform
     {
         //为方便索引，将日期存储为int形式
-        //8 6 6
+        //8(7) 6 6
         public static ulong DateToInt(DateTime date,string start_time,string end_time)
         {
             ulong store_date = 0;

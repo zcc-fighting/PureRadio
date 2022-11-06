@@ -10,7 +10,7 @@ using Windows.Storage;
 
 
 
-namespace LocalRadioManage.Service
+namespace LocalRadioManage.LocalService
 {
     /// <summary>
     /// 对于在用户未登录情况下的数据操作

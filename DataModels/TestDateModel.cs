@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataModel
+namespace DataModels
 {
 
-   //用于音频索引存储
+    //用于音频索引存储
     public class RadioFullContent
     {
         /// <summary>
@@ -42,6 +42,9 @@ namespace DataModel
         /// 标题
         /// </summary>
         public string title { get; set; }
+
+        public string user { get; set; }
+        public Uri radio_uri { get; set; }
     }
     //用于电台索引存储
     public class RadioFullAlbum
@@ -57,7 +60,7 @@ namespace DataModel
         /// <summary>
         /// 封面
         /// </summary>
-        public string cover { get; set; }
+        public Uri cover { get; set; }
         /// <summary>
         /// 介绍
         /// </summary>
@@ -82,5 +85,22 @@ namespace DataModel
         /// 更新时间
         /// </summary>
         public string update_time { get; set; }
+
+        public string user
+        {
+            get
+            {
+                if (user == null||user=="")
+                {
+                    user = "0";
+                }
+                return user;
+            }
+            set
+            {
+                user = value;
+            }
+
+        }
     }
 }

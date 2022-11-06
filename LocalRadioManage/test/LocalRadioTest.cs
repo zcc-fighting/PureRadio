@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using LocalRadioManage;
 using LocalRadioManage.DBBuilder;
 using LocalRadioManage.DataModelTransform;
-using LocalRadioManage.Service;
-using DataModel;
+using LocalRadioManage.LocalService;
+using DataModels;
 
 namespace LocalRadioManage.test
 {
@@ -15,8 +15,7 @@ namespace LocalRadioManage.test
     {
         public static void TestServiceStart()
         {
-            myService service = new myService();
-            service.Start();
+            LocalService.LocalService service = new LocalService.LocalService();
         }
 
         public static void TestDataModelTrans()
@@ -37,13 +36,13 @@ namespace LocalRadioManage.test
             album.id = 15926;
             album.title = "谢谢你";
             album.description = "因为有你";
-            album.cover = "温暖四季.jpg";
+            album.cover =new Uri(Default.DefalutStorage.image_folder.Path+"\\温暖四季.jpg");
 
-          radio_store=  RadioTransform.ToLocalRadioStorage(radio);
-          album_store=  ChannalAlbumTransform.ToLocalChannalAlbumStorage(album);
+          radio_store=  RadioTransform.Local.ToLocalRadioStorage(radio);
+          album_store=  ChannalAlbumTransform.Local.ToLocalChannalAlbumStorage(album);
 
-          radio = RadioTransform.ToRadioFullContent(radio_store);
-          album = ChannalAlbumTransform.ToRadioFullAlbum(album_store);
+          radio = RadioTransform.Local.ToRadioFullContent(radio_store);
+          album = ChannalAlbumTransform.Local.ToRadioFullAlbum(album_store);
 
         }
 

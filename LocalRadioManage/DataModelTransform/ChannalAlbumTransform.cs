@@ -3,88 +3,173 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DataModel;
+using DataModels;
+using LocalRadioManage.DBBuilder.TableObj;
+using System.Net;
+using System.Web;
+
 
 namespace LocalRadioManage.DataModelTransform
 {
-    class ChannalAlbumTransform
+   public partial class ChannalAlbumTransform
     {
-        /// <summary>
-        /// 对应表LocalChannalAlbum
-        /// 加入顺序
-        /// "ChannalAlbumId", "ChannalAlbumType", "ChannalAlbumName","ChannalAlbumDesc", "ChannalAlbumCover"
-        /// </summary>
-        public static List<object> ToLocalChannalAlbumStorage(RadioFullAlbum radio_album)
+        public static class Local
         {
-            List<object> local_store=new List<object>();
-            try
+            /// <summary>
+            /// 对应表LocalChannalAlbum
+            /// </summary>
+            public static List<object> ToLocalChannalAlbumStorage(RadioFullAlbum radio_album)
             {
-                local_store.Add(radio_album.id);
-                local_store.Add(0);
-                local_store.Add(radio_album.title);
-                local_store.Add(radio_album.description);
-                local_store.Add(radio_album.cover);
-                return local_store;
-            }
-            catch
-            {
-                return null;
-            }
-        }
 
-        public static List<List<object>> ToLocalChannalAlbumStorage(List<RadioFullAlbum> radio_album)
-        {
-            List<List<object>> local_stores = new List<List<object>>();
-            try
-            {
-                foreach (RadioFullAlbum album in radio_album)
+                object[] local_store = new object[LocalChannalAlbum.ColLocation.Count];
+                try
                 {
-                    local_stores.Add(ToLocalChannalAlbumStorage(album));
+                    local_store[LocalChannalAlbum.ColLocation[LocalChannalAlbum.ChannalAlbumId]] = radio_album.id;
+                    local_store[LocalChannalAlbum.ColLocation[LocalChannalAlbum.ChannalAlbumType]] = 0;
+                    local_store[LocalChannalAlbum.ColLocation[LocalChannalAlbum.ChannalAlbumName]] = radio_album.title;
+                    local_store[LocalChannalAlbum.ColLocation[LocalChannalAlbum.ChannalAlbumDesc]] = radio_album.description;
+                    local_store[LocalChannalAlbum.ColLocation[LocalChannalAlbum.ChannalAlbumCover]] = radio_album.cover.ToString();
+
+                    return local_store.ToList();
                 }
-                return local_stores;
-            }
-            catch 
-            {
-                return null;
-            }
-           
-        }
-
-        public static RadioFullAlbum ToRadioFullAlbum(List<object> local_store)
-        {
-            RadioFullAlbum album = new RadioFullAlbum();
-            try 
-            { 
-                album.id = (int)local_store[0];
-                album.title = (string)local_store[2];
-                album.description = (string)local_store[3];
-                album.cover = (string)local_store[4];
-                return album;
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        public static List<RadioFullAlbum> ToRadioFullAlbum(List<List<object>> local_store)
-        {
-            List<RadioFullAlbum> albums = new List<RadioFullAlbum>();
-            try
-            {
-                foreach (List<object> store in local_store)
+                catch
                 {
-                    albums.Add(ToRadioFullAlbum(store));
+                    return null;
                 }
-                return albums;
             }
-            catch
+            public static List<List<object>> ToLocalChannalAlbumStorage(List<RadioFullAlbum> radio_albums)
             {
-                return null;
-            }
-           
-        }
+                List<List<object>> local_stores = new List<List<object>>();
+                try
+                {
+                    foreach (RadioFullAlbum album in radio_albums)
+                    {
+                        local_stores.Add(ToLocalChannalAlbumStorage(album));
+                    }
+                    return local_stores;
+                }
+                catch
+                {
+                    return null;
+                }
 
+            }
+            public static RadioFullAlbum ToRadioFullAlbum(List<object> store)
+            {
+                RadioFullAlbum album = new RadioFullAlbum();
+                try
+                {
+                    album.id = (int)store[LocalChannalAlbum.ColLocation[LocalChannalAlbum.ChannalAlbumId]];
+                    album.title = (string)store[LocalChannalAlbum.ColLocation[LocalChannalAlbum.ChannalAlbumName]];
+                    album.description = (string)store[LocalChannalAlbum.ColLocation[LocalChannalAlbum.ChannalAlbumDesc]];
+                    album.cover =new Uri((string)store[LocalChannalAlbum.ColLocation[LocalChannalAlbum.ChannalAlbumCover]]);
+                    return album;
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+            public static List<RadioFullAlbum> ToRadioFullAlbum(List<List<object>> stores)
+            {
+                List<RadioFullAlbum> albums = new List<RadioFullAlbum>();
+                try
+                {
+                    foreach (List<object> store in stores)
+                    {
+                        albums.Add(ToRadioFullAlbum(store));
+                    }
+                    return albums;
+                }
+                catch
+                {
+                    return null;
+                }
+
+            }
+        }
 
     }
-}
+
+    public partial class ChannalAlbumTransform
+    {
+        public static class Remote
+        {
+            /// <summary>
+            /// 对应表UserFavChannalAlbum
+            /// </summary>
+            public static List<object> ToUserFavChannalAlbumStorage(RadioFullAlbum radio_album)
+            {
+
+                object[] local_store = new object[UserFavChannalAlbum.ColLocation.Count];
+                try
+                {
+                    local_store[UserFavChannalAlbum.ColLocation[UserFavChannalAlbum.ChannalAlbumId]] = radio_album.id;
+                    local_store[UserFavChannalAlbum.ColLocation[UserFavChannalAlbum.ChannalAlbumType]] = 0;
+                    local_store[UserFavChannalAlbum.ColLocation[UserFavChannalAlbum.ChannalAlbumName]] = radio_album.title;
+                    local_store[UserFavChannalAlbum.ColLocation[UserFavChannalAlbum.ChannalAlbumDesc]] = radio_album.description;
+                    local_store[UserFavChannalAlbum.ColLocation[UserFavChannalAlbum.ChannalAlbumCover]] = radio_album.cover;
+
+                    return local_store.ToList();
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+            public static List<List<object>> ToUserFavChannalAlbumStorage(List<RadioFullAlbum> radio_albums)
+            {
+                List<List<object>> local_stores = new List<List<object>>();
+                try
+                {
+                    foreach (RadioFullAlbum album in radio_albums)
+                    {
+                        local_stores.Add(ToUserFavChannalAlbumStorage(album));
+                    }
+                    return local_stores;
+                }
+                catch
+                {
+                    return null;
+                }
+
+            }
+            public static RadioFullAlbum ToRadioFullAlbum(List<object> store)
+            {
+                RadioFullAlbum album = new RadioFullAlbum();
+                try
+                {
+                    album.user = (string)store[UserFavChannalAlbum.ColLocation[UserFavChannalAlbum.UserName]];
+                    album.id = (int)store[UserFavChannalAlbum.ColLocation[UserFavChannalAlbum.ChannalAlbumId]];
+                    album.title = (string)store[UserFavChannalAlbum.ColLocation[UserFavChannalAlbum.ChannalAlbumName]];
+                    album.description = (string)store[UserFavChannalAlbum.ColLocation[UserFavChannalAlbum.ChannalAlbumDesc]];
+                    album.cover =new Uri((string)store[UserFavChannalAlbum.ColLocation[UserFavChannalAlbum.ChannalAlbumCover]]);
+                
+                    return album;
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+            public static List<RadioFullAlbum> ToRadioFullAlbum(List<List<object>> stores)
+            {
+                List<RadioFullAlbum> albums = new List<RadioFullAlbum>();
+                try
+                {
+                    foreach (List<object> store in stores)
+                    {
+                        albums.Add(ToRadioFullAlbum(store));
+                    }
+                    return albums;
+                }
+                catch
+                {
+                    return null;
+                }
+
+            }
+        }
+
+    }
+    }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using LocalRadioManage.Service;
+using LocalRadioManage.LocalService;
 using System.IO;
 using System.Net;
 using System.Web;
@@ -13,7 +13,7 @@ using LocalRadioManage.DBBuilder;
 using LocalRadioManage.DBBuilder.TableObj;
 
 
-namespace LocalRadioManage.Service.UserInform
+namespace LocalRadioManage.LocalService.UserInforms
 {
     public partial class UserDown
     {
@@ -42,27 +42,87 @@ namespace LocalRadioManage.Service.UserInform
         private List<List<object>> user_down_radios_inform = new List<List<object>>();
     }
 
-   public partial class UserDown
+    public partial class UserDown
     {
+       ///初始化
      public UserDown()
         {
-            table_name_program = UserDownChannalAlbum.TableName;
+          SetUserDown();
+
+        }
+     public UserDown(string user_name)
+        {
+            SetUserDown(user_name);
+        }
+     public UserDown(List<object> user_down_program)
+        {
+            SetUserDown(user_down_program);
+        }
+    
+
+
+     private void SetUserDown()
+        {
+             table_name_program = UserDownChannalAlbum.TableName;
             selected_col_program = SQLiteConnect.TableHandle.GetColNames(table_name_program).ToList();
             table_name_radio = UserDownRadio.TableName;
             selected_col_radio= SQLiteConnect.TableHandle.GetColNames(table_name_radio).ToList();
         }
-     public UserDown(List<object> user_down_program)
+        //用户->所有program
+     public void SetUserDown(string user_name)
         {
-            table_name_program = UserDownChannalAlbum.TableName;
-            selected_col_program = SQLiteConnect.TableHandle.GetColNames(table_name_program).ToList();
-            table_name_radio = UserDownRadio.TableName;
-            selected_col_radio = SQLiteConnect.TableHandle.GetColNames(table_name_radio).ToList();
-
-            int location = UserDownChannalAlbum.ColLocation[UserDownChannalAlbum.ChannalAlbumId];
-            condition_express_program = UserDownChannalAlbum.UserName[0] + "=" + UserDownChannalAlbum.ColLocation[UserDownChannalAlbum.UserName];
-            condition_express_radio = UserDownChannalAlbum.ChannalAlbumId[0] + "=" + user_down_program[location];//获取某一节目表下所有音频的表达式
+            SetUserDown();
+            condition_express_program = UserDownChannalAlbum.UserName[0] + "=" + user_name;
         }
+        //program->所有radio
+     public bool SetUserDown(List<object> user_down_program)
+        {
+            int location=UserDownChannalAlbum.ColLocation[UserDownChannalAlbum.UserName];
+            string user_name=(string)user_down_program[location];
+            SetUserDown(user_name);
+            location=UserDownChannalAlbum.ColLocation[UserDownChannalAlbum.ChannalAlbumId];
+            try
+            {
+                condition_express_radio = UserDownChannalAlbum.ChannalAlbumId[0] + "=" + user_down_program[location];
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+      //radio->单个radio
+     public bool SetUserDown(List<object> user_down_radio,bool is_radio)
+        {
+            if (is_radio)
+            {
+                int location = UserDownRadio.ColLocation[UserDownRadio.UserName];
+                string user_name = (string)user_down_radio[location];
+                SetUserDown(user_name);
 
+                try
+                {
+                    location = UserDownRadio.ColLocation[UserDownRadio.RadioId];
+                    condition_express_radio = UserDownRadio.RadioId[0] + "=" + (int)user_down_radio[location];
+                    location = UserDownRadio.ColLocation[UserDownRadio.RadioDate];
+                    condition_express_radio = " and " + UserDownRadio.RadioDate[0] + "=" + (ulong)user_down_radio[location];
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+
+            return SetUserDown(user_down_radio);
+
+        }
+      
+    }
+
+   public partial class UserDown
+    {
+    
         public bool SaveUserDownProgram(List<object> user_down_program)
         {
             try
@@ -113,7 +173,6 @@ namespace LocalRadioManage.Service.UserInform
                 return null;
             }
         }
-
         public List<List<object>> LoadUserDownRadio()
         {
             try
@@ -163,12 +222,25 @@ namespace LocalRadioManage.Service.UserInform
 
         private List<List<object>> GetProgramInforms()
         {
-            return user_down_programs_inform;
+            if (user_down_programs_inform.Count > 0)
+            {
+                return user_down_programs_inform;
+            }
+            else
+            {
+                return null;
+            }
         }
-
         private List<List<object>> GetRadioInforms()
         {
-            return user_down_radios_inform;
+            if (user_down_radios_inform.Count > 0)
+            {
+                return user_down_radios_inform;
+            }
+            else
+            {
+                return null;
+            }
         }
 
     }

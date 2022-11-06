@@ -6,16 +6,30 @@ using System.Threading.Tasks;
 using LocalRadioManage.DBBuilder;
 using LocalRadioManage.DBBuilder.TableObj;
 
-namespace LocalRadioManage.Service
+namespace LocalRadioManage.LocalService
 {
-   public partial class myService
+   public partial class LocalService
     {
         /// <summary>
         /// 访问此变量需加锁，用于异步结果读取
         /// </summary>
-        public MissionComplete complete = new MissionComplete();
+        public MissionComplete complete = null;
+        ServiceUserDown UserDownService = null;
+        ServiceUserFav UserFavService = null;
+        public class MissionComplete
+        {
+            public bool is_complete = false;
+            public bool is_success = false;
+        }
 
-        public  bool Start()
+        public LocalService()
+        {
+            Start();
+            complete = new MissionComplete();
+            UserDownService = new ServiceUserDown();
+            UserFavService = new ServiceUserFav();
+        }
+        private bool Start()
         {
             //暂有数据库的创建/获取->默认用户设置->默认存放文件夹
             if (SQLiteConnect.CreateLocalRadioManage())
@@ -52,12 +66,36 @@ namespace LocalRadioManage.Service
                 }
             }
         }
-
     }
 
-    public class MissionComplete
+    /// <summary>
+    /// 本地下载服务
+    /// </summary>
+    public partial class LocalService
     {
-       public bool is_complete = false;
-       public bool is_success = false;
+       
+
+        public void test()
+        {
+
+        }
+        
     }
+
+    /// <summary>
+    ///远端收藏服务
+    /// </summary>
+    public partial class LocalService
+    {
+       
+    }
+
 }
+
+
+
+
+
+
+
+
