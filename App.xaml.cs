@@ -14,6 +14,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using LocalRadioManage.test;
 
 namespace PureRadio
 {
@@ -27,7 +28,9 @@ namespace PureRadio
         /// 已执行，逻辑上等同于 main() 或 WinMain()。
         /// </summary>
         public App()
-        {    
+        {
+            
+            LocalRadioTest.TestServiceStart();
             this.InitializeComponent();
             this.Suspending += OnSuspending;
         }

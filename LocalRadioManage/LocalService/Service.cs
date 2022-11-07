@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using LocalRadioManage.DBBuilder;
 using LocalRadioManage.DBBuilder.TableObj;
+using DataModels;
+using Windows.Storage;
+using LocalRadioManage.StorageOperate;
 
 namespace LocalRadioManage.LocalService
 {
@@ -74,10 +77,48 @@ namespace LocalRadioManage.LocalService
     public partial class LocalService
     {
        
-
-        public void test()
+     public async Task<bool> Download(RadioFullAlbum album,List<RadioFullContent> radio)
         {
+         bool flag = false;
+         flag &= await  UserDownService.SaveDownProgram(album);
+         flag &= await UserDownService.DownRadio(radio);
+         return flag;
+        }
+     public async Task<bool> Download(RadioFullAlbum album, RadioFullContent radio)
+        {
+            bool flag = true;
+            flag &= await UserDownService.SaveDownProgram(album);
+            flag &= await UserDownService.DownRadio(radio);
+            return flag;
+        }
 
+     public List<RadioFullAlbum> Load(string user_name)
+        {
+          return  UserDownService.LoadProgram(user_name);
+        }
+     public List<RadioFullContent> Load(RadioFullAlbum album)
+        {
+            return UserDownService.LoadRadio(album);
+        }
+     public StorageFile Load(RadioFullContent radio)
+        {
+            Task<Task<StorageFile>> task = new Task<Task<StorageFile>>(()=> Load(radio,false));
+            task.Start();
+            task.Result.Wait();
+            StorageFile file =task.Result.Result;
+            return file;
+        }
+     private async Task<StorageFile> Load(RadioFullContent radio,bool is_null)
+        {
+          return await MyFile.GetFile(Default.DefalutStorage.radio_folder, radio.radio_uri.ToString());
+        }
+
+     public ServiceUserDown.DownProgress GetDownProgress()
+        {
+            lock (UserDownService.Progress)
+            {
+                return UserDownService.Progress;
+            }
         }
         
     }
@@ -89,7 +130,6 @@ namespace LocalRadioManage.LocalService
     {
        
     }
-
 }
 
 

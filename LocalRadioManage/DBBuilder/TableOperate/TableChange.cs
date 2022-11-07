@@ -50,7 +50,7 @@ namespace LocalRadioManage.DBBuilder.TableOperate
             }
         }
         
-        public static TableInform getTableInform(string table_name, string[] col_names, string[] col_types, string[] tab_constrain)
+        public static TableInform GetTableInform(string table_name, string[] col_names, string[] col_types, string[] tab_constrain)
         {
             TableInform data = new TableInform();
             data.table_name = table_name;

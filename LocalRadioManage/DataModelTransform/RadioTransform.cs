@@ -60,6 +60,44 @@ namespace LocalRadioManage.DataModelTransform
                 }
             }
 
+            public static List<object> ToUserDownRadio(RadioFullContent radio)
+            {
+                  object[] local_store = new object[UserDownRadio.ColLocation.Count];
+
+                try
+                {
+                    ulong radio_date = DateTransform.DateToInt(DateTransform.GetDateTime(radio.day), radio.start_time, radio.end_time);
+
+                    local_store[UserDownRadio.ColLocation[UserDownRadio.UserName]] = radio.user;
+                    local_store[UserDownRadio.ColLocation[UserDownRadio.RadioId]] = radio.id;
+                    local_store[UserDownRadio.ColLocation[UserDownRadio.RadioDate]] = radio_date;
+                    local_store[UserDownRadio.ColLocation[UserDownRadio.ChannalAlbumId]] = radio.channel_id;
+
+                    return local_store.ToList();
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+            public static List<List<object>> ToUserDownRadio(List<RadioFullContent> radios)
+            {
+                List<List<object>> local_stores = new List<List<object>>();
+                try
+                {
+                    foreach (RadioFullContent radio in radios)
+                    {
+                        local_stores.Add(ToUserDownRadio(radio));
+                    }
+                    return local_stores;
+                }
+                catch
+                {
+                    local_stores.Clear();
+                    return null;
+                }
+            }
+
             public static RadioFullContent ToRadioFullContent(List<object> store)
             {
 

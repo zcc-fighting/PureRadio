@@ -17,11 +17,13 @@ namespace LocalRadioManage.DBBuilder.TableObj
         public readonly static string[] UserName = { "UserName", "TEXT NOT NULL" };
         public readonly static string[] RadioId = { "RadioId", "INTEGER" };
         public readonly static string[] RadioDate = { "RadioDate", "INTEGER" };
+        public readonly static string[] ChannalAlbumId = { "ChannalAlbumId", "INTEGER" };
 
         public readonly static string[] PrimaryKey = { UserName[0], RadioId[0],RadioDate[0] };
         public readonly static string[] ForeignKey_0 = { UserName[0], Users.TableName, Users.UserName[0] };
         public readonly static string[] ForeignKey_1 = { RadioId[0],RadioDate[0], LocalRadio.TableName, LocalRadio.RadioId[0],LocalRadio.RadioDate[0]};
-        public readonly static List<string[]> ForeignKey_List = new List<string[]> { ForeignKey_0, ForeignKey_1 };
+        public readonly static string[] ForeignKey_2 = {UserName[0],ChannalAlbumId[0],UserDownChannalAlbum.TableName, UserDownChannalAlbum.UserName[0],UserDownChannalAlbum.ChannalAlbumId[0]};
+        public readonly static List<string[]> ForeignKey_List = new List<string[]> { ForeignKey_0, ForeignKey_1,ForeignKey_2 };
         
 
         public readonly static Dictionary<string[], int> ColLocation = new Dictionary<string[], int>
@@ -29,6 +31,7 @@ namespace LocalRadioManage.DBBuilder.TableObj
             {UserName,0 },
             {RadioId,1},
             {RadioDate,2 },
+            {ChannalAlbumId,3}
         };
 
         public TableInform GetTableInform()
@@ -42,7 +45,7 @@ namespace LocalRadioManage.DBBuilder.TableObj
                 col_types.Add(pair.Key[1]);
             }
             tab_constrain = TableInform.CreateConstraint(PrimaryKey, ForeignKey_List);
-            TableInform data = TableChange.getTableInform(TableName, col_names.ToArray(), col_types.ToArray(), tab_constrain.ToArray());
+            TableInform data = TableChange.GetTableInform(TableName, col_names.ToArray(), col_types.ToArray(), tab_constrain.ToArray());
             return data;
         }
     }

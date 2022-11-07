@@ -140,7 +140,7 @@ namespace LocalRadioManage.DBBuilder.TableObj
 
             return Update.UpdateData(sql, parameters);
         }
-        public bool DeleteRecords(string table_name, string condition_express)
+        public bool DeleteRecords(string table_name, string condition_express,bool is_constrant)
         {
             string sql;
             TableInform data;
@@ -151,8 +151,24 @@ namespace LocalRadioManage.DBBuilder.TableObj
             {
                 return false;
             }
+           
+            
+                sql = Delete.GetDeleteQuery(data.table_name, condition_express, is_constrant);
+           
 
-            sql = Delete.GetDeleteQuery(data.table_name, condition_express);
+            return Delete.DeleteDatas(sql);
+        }
+
+        public bool DeleteRecords(List<string> need_delete,List<string> table_name, string condition_express, bool is_constrant)
+        {
+            string sql="";
+        
+            if (table_name == null ||table_name.Count==0||condition_express == "")
+            {
+                return false;
+            }
+
+            sql = Delete.GetDeleteQuery(need_delete,table_name, condition_express,is_constrant);
 
             return Delete.DeleteDatas(sql);
         }
@@ -178,6 +194,22 @@ namespace LocalRadioManage.DBBuilder.TableObj
             }
             sql = Select.GetSelectQuery(data.table_name, selected_col, condition_express);
             return Select.SelectData(sql, selected_col, ref data_list_out);
+        }
+
+        public bool SelectRecords(Dictionary<string,List<string>> table_cols,string condition_express,ref List<List<object>> data_list_out)
+        {
+          
+            string sql = Select.GetSelectQuery(table_cols, condition_express);
+            List<string> selected_cols= new List<string>(); 
+            foreach(KeyValuePair<string,List<string>> table_col in table_cols)
+            {
+                if (table_col.Value != null)
+                {
+                    selected_cols.AddRange(table_col.Value);
+                }
+            }
+
+            return Select.SelectData(sql, selected_cols, ref data_list_out);
         }
     }
 

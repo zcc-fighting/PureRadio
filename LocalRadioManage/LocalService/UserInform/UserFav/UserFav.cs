@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using LocalRadioManage.LocalService;
 using LocalRadioManage.DBBuilder;
 using LocalRadioManage.DBBuilder.TableObj;
+using LocalRadioManage.DataModelTransform;
+using DataModels;
 
 namespace LocalRadioManage.LocalService.UserInforms
 {
@@ -14,14 +16,14 @@ namespace LocalRadioManage.LocalService.UserInforms
         /// <summary>
         /// 收藏节目表参数
         /// </summary>
-        private string table_name_program = "";
+        private string user_program_name = "";
         private List<string> selected_col_program = null;
         private string condition_express_program = "";
 
         /// <summary>
         /// 收藏音频表参数
         /// </summary>
-        private string table_name_radio = "";
+        private string user_radio_name = "";
         private List<string> selected_col_radio = null;
         private string condition_express_radio = "";
 
@@ -48,62 +50,60 @@ namespace LocalRadioManage.LocalService.UserInforms
         {
             SetUserFav(user_name);
         }
-     public UserFav(List<object> user_down_program)
+     public UserFav(RadioFullAlbum album)
         {
-            SetUserFav(user_down_program);
+            SetUserFav( album);
+        }
+        public UserFav(RadioFullContent radio)
+        {
+            SetUserFav(radio);
         }
 
 
-     private void SetUserFav()
+        private void SetUserFav()
         {
-            table_name_program = UserFavChannalAlbum.TableName;
-            selected_col_program = SQLiteConnect.TableHandle.GetColNames(table_name_program).ToList();
-            table_name_radio = UserFavRadio.TableName;
-            selected_col_radio= SQLiteConnect.TableHandle.GetColNames(table_name_radio).ToList();
+            user_program_name = UserFavChannalAlbum.TableName;
+            selected_col_program = SQLiteConnect.TableHandle.GetColNames(user_program_name).ToList();
+            user_radio_name = UserFavRadio.TableName;
+            selected_col_radio= SQLiteConnect.TableHandle.GetColNames(user_radio_name).ToList();
         }
-        //用户->所有program
+        //某一用户->所有program
      public void SetUserFav(string user_name)
         {
             SetUserFav();
             condition_express_program = UserFavChannalAlbum.UserName[0] + "=" + user_name;
         }
-        //program->所有radio
-     public bool SetUserFav(List<object> user_fav_program)
+        
+        //某一program->所有radio
+     public bool SetUserFav(RadioFullAlbum album)
         {
-            int location= UserFavChannalAlbum.ColLocation[UserFavChannalAlbum.UserName];
-            string user_name=(string)user_fav_program[location];
-            SetUserFav(user_name);
-            location= UserFavChannalAlbum.ColLocation[UserFavChannalAlbum.ChannalAlbumId];
             try
             {
-                condition_express_radio = UserFavChannalAlbum.ChannalAlbumId[0] + "=" + user_fav_program.ElementAt(location);
+                SetUserFav(album.user);
+                condition_express_program += UserFavChannalAlbum.ChannalAlbumId[0] + "=" + album.id;
+                return true;
             }
             catch
             {
                 return false;
             }
-            return true;
         }
         //radio->单个radio
-        public bool SetUserFav(List<object> user_fav_radio, bool is_radio)
+     public bool SetUserFav(RadioFullContent radio)
         {
-            int location = UserFavRadio.ColLocation[UserFavRadio.UserName];
-            string user_name = (string)user_fav_radio[location];
-            SetUserFav(user_name);
-
+            SetUserFav(radio.user);
             try
             {
-                location = UserFavRadio.ColLocation[UserFavRadio.RadioId];
-                condition_express_radio = UserFavRadio.RadioId[0] + "=" + (int)user_fav_radio[location];
-                location = UserFavRadio.ColLocation[UserFavRadio.RadioDate];
-                condition_express_radio = " and " + UserFavRadio.RadioDate[0] + "=" + (ulong)user_fav_radio[location];
+                condition_express_radio = UserFavRadio.RadioId[0] + "=" + radio.id;
+                ulong date = DateTransform.DateToInt(DateTransform.GetDateTime(radio.day), radio.start_time, radio.end_time);
+                condition_express_radio = " and " + UserFavRadio.RadioDate[0] + "=" + date;
+                return true;
             }
             catch
             {
                 return false;
             }
-            return true;
-
+           
         }
 
     }
@@ -115,35 +115,37 @@ namespace LocalRadioManage.LocalService.UserInforms
         /// 对用户收藏节目表/音频表的访问控制
         /// </summary>
         /// <param name="user_fav"></param>
-        public bool SaveUserFavProgram(List<object> user_fav_program)
+        public bool SaveUserFavProgram(RadioFullAlbum album)
         {
             try
             {
-                return SQLiteConnect.TableHandle.AddRecord(table_name_program, user_fav_program);
+                List<object> user_fav_program= ChannalAlbumTransform.Remote.ToUserFavChannalAlbumStorage(album);
+                return SQLiteConnect.TableHandle.AddRecord(user_program_name, user_fav_program);
             }
             catch
             {
                 return false;
             }
         }
-        public bool SaveUserFavRadio(List<object> user_fav_radio)
+        public bool SaveUserFavRadio(RadioFullContent radio)
         {
             try
             {
-                return SQLiteConnect.TableHandle.AddRecord(table_name_radio, user_fav_radio);
+                List<object> user_fav_radio = RadioTransform.Remote.ToRemoteRadioFav(radio);
+                return SQLiteConnect.TableHandle.AddRecord(user_radio_name, user_fav_radio);
             }
             catch
             {
                 return false;
             }
         }
-        public bool SaveUserFavRadio(List<List<object>> user_fav_radios)
+        public bool SaveUserFavRadio(List<RadioFullContent> radios)
         {
             try
             {
-                foreach (List<object> user_down in user_fav_radios)
+                foreach (RadioFullContent radio in radios)
                 {
-                    SaveUserFavRadio(user_down);
+                    SaveUserFavRadio(radio);
                 }
                 return true;
             }
@@ -153,11 +155,11 @@ namespace LocalRadioManage.LocalService.UserInforms
             }
         }
 
-        public List<List<object>> LoadUserFavProgram()
+        public List<RadioFullAlbum> LoadUserFavProgram()
         {
             try
             {
-                 SQLiteConnect.TableHandle.SelectRecords(table_name_program, selected_col_program, condition_express_program, ref user_fav_programs_inform);
+                 SQLiteConnect.TableHandle.SelectRecords(user_program_name, selected_col_program, condition_express_program, ref user_fav_programs_inform);
                 return GetProgramInforms();
 
             }
@@ -167,11 +169,11 @@ namespace LocalRadioManage.LocalService.UserInforms
             }
         }
 
-        public List<List<object>> LoadUserFavRadio()
+        public List<RadioFullContent> LoadUserFavRadio()
         {
             try
             {
-                SQLiteConnect.TableHandle.SelectRecords(table_name_radio, selected_col_radio, condition_express_radio, ref user_fav_radios_inform);
+                SQLiteConnect.TableHandle.SelectRecords(user_radio_name, selected_col_radio, condition_express_radio, ref user_fav_radios_inform);
                 return GetRadioInforms();
             }
             catch
@@ -180,11 +182,11 @@ namespace LocalRadioManage.LocalService.UserInforms
             }
         }
 
-        public bool DeleteUserFavProgram()
+        public bool DeleteUserFavProgram(bool is_constraint)
         {
             try
             {
-                return SQLiteConnect.TableHandle.DeleteRecords(table_name_program, condition_express_program);
+                return SQLiteConnect.TableHandle.DeleteRecords(user_program_name, condition_express_program,is_constraint);
             }
             catch
             {
@@ -192,11 +194,11 @@ namespace LocalRadioManage.LocalService.UserInforms
             }
         }
 
-        public bool DeleteUserFavRadios()
+        public bool DeleteUserFavRadios(bool is_constraint)
         {
             try
             {
-                return SQLiteConnect.TableHandle.DeleteRecords(table_name_radio, condition_express_radio);
+                return SQLiteConnect.TableHandle.DeleteRecords(user_radio_name, condition_express_radio,is_constraint);
             }
             catch
             {
@@ -214,11 +216,11 @@ namespace LocalRadioManage.LocalService.UserInforms
             condition_express_radio = express;
         }
 
-        private List<List<object>> GetProgramInforms()
+        private List<RadioFullAlbum> GetProgramInforms()
         {
             if (user_fav_programs_inform.Count > 0)
             {
-                return user_fav_programs_inform;
+               return ChannalAlbumTransform.Remote.ToRadioFullAlbum(user_fav_programs_inform);
             }
             else
             {
@@ -227,11 +229,11 @@ namespace LocalRadioManage.LocalService.UserInforms
            
         }
 
-        private List<List<object>> GetRadioInforms()
+        private List<RadioFullContent> GetRadioInforms()
         {
             if (user_fav_radios_inform.Count > 0)
             {
-                return user_fav_radios_inform;
+               return RadioTransform.Remote.ToRadioFullContent(user_fav_radios_inform);
             }
             else
             {

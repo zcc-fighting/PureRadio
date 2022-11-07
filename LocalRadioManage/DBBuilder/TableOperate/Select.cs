@@ -33,9 +33,65 @@ namespace LocalRadioManage.DBBuilder.TableOperate
             return sql_str;
         }
 
+        //构建多表查询
+        public static string GetSelectQuery(Dictionary<string,List<string>> table_cols, string expression)
+        {
+            if (table_cols == null || table_cols.Count == 0)
+            {
+                return "";
+            }
+            string sql_str = "select ";
+            int first = 0;
+          
+            foreach(KeyValuePair<string,List<string>> table_col in table_cols)
+            {
+
+                if (table_col.Value != null && table_col.Value.Count != 0)
+                {
+                    if (first == 0)
+                    {
+                        sql_str += table_col.Key + "." + table_col.Value[0];
+                        first++;
+                        for (int i = 1; i < table_col.Value.Count; i++)
+                        {
+                            sql_str += "," + table_col.Key + "." + table_col.Value[i];
+                        }
+                    }
+                    else
+                    {
+                        for (int i = 0; i < table_col.Value.Count; i++)
+                        {
+                            sql_str += "," + table_col.Key + "." + table_col.Value[i];
+                        }
+                    }
+                }
+            }
+            sql_str += " from ";
+            first = 0;
+            foreach (KeyValuePair<string, List<string>> table_col in table_cols)
+            {
+                if (first == 0)
+                {
+                    first++;
+                    sql_str += table_col.Key;
+                }
+                else
+                {
+                    sql_str += " inner join " + table_col.Key;
+                }
+            }
+            
+            if (expression != "")
+            {
+                sql_str += " where " + expression;
+            }
+            return sql_str;
+        }
+
+
         public static bool SelectData(string sql,List<string> selected_col,ref List<List<object>> data)
         {
-            if (sql == null)
+            if (sql == null||sql=="")
             {
                 return false;
             }

@@ -52,7 +52,7 @@ namespace LocalRadioManage.DBBuilder.TableObj
                 col_types.Add(pair.Key[1]);
             }
             tab_constrain = TableInform.CreateConstraint(PrimaryKey, ForeignKey_List);
-            TableInform data = TableChange.getTableInform(TableName, col_names.ToArray(), col_types.ToArray(), tab_constrain.ToArray());
+            TableInform data = TableChange.GetTableInform(TableName, col_names.ToArray(), col_types.ToArray(), tab_constrain.ToArray());
             return data;
         }
     }

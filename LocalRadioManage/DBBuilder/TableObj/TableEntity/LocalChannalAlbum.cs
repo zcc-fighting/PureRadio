@@ -23,7 +23,7 @@ namespace LocalRadioManage.DBBuilder.TableObj
         public readonly static string[] ChannalAlbumName = { "ChannalAlbumName", "TEXT NOT NULL" };
         public readonly static string[] ChannalAlbumDesc = { "ChannalAlbumDesc", "TEXT NOT NULL" };
         public readonly static string[] ChannalAlbumCover = { "ChannalAlbumCover", "TEXT NOT NULL" };
-        public readonly static string[] ChannalAlbunLocalPath = { "ChannalAlbunLocalPath", "TEXT NOT NULL"};
+        //public readonly static string[] ChannalAlbunLocalPath = { "ChannalAlbunLocalPath", "TEXT NOT NULL"};
         public readonly static string[] PrimaryKey = {ChannalAlbumId[0]};
         public readonly static List<string[]> ForeignKey_List = new List<string[]>();
 
@@ -34,7 +34,7 @@ namespace LocalRadioManage.DBBuilder.TableObj
             { ChannalAlbumName,2},
             { ChannalAlbumDesc,3 },
             { ChannalAlbumCover,4},
-            { ChannalAlbunLocalPath,5 }
+            //{ ChannalAlbunLocalPath,5 }
         };
      
       
@@ -49,7 +49,7 @@ namespace LocalRadioManage.DBBuilder.TableObj
                 col_types.Add(pair.Key[1]);
             }
            tab_constrain = TableInform.CreateConstraint(PrimaryKey, ForeignKey_List);
-           TableInform data = TableChange.getTableInform(TableName, col_names.ToArray(), col_types.ToArray(), tab_constrain.ToArray());
+           TableInform data = TableChange.GetTableInform(TableName, col_names.ToArray(), col_types.ToArray(), tab_constrain.ToArray());
            return data;
         }
 

@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using DataModels;
 using LocalRadioManage.DBBuilder.TableObj;
 using LocalRadioManage.LocalService.UserInforms;
-using LocalRadioManage.DataModelTransform;
 using LocalRadioManage.StorageOperate;
 using Windows.Storage;
 
@@ -18,10 +17,9 @@ namespace LocalRadioManage.LocalService
         public bool SaveFavProgram(RadioFullAlbum album)
         {
             user_inform.SetUserInform(album.user);
-            List<object> fav_program = ChannalAlbumTransform.Local.ToLocalChannalAlbumStorage(album);
             try
             {
-                return user_inform.UserFav.SaveUserFavProgram(fav_program);
+                return user_inform.UserFav.SaveUserFavProgram(album);
             }
             catch
             {
@@ -50,10 +48,9 @@ namespace LocalRadioManage.LocalService
         public bool FavRadio(RadioFullContent radio)
         {
             user_inform.SetUserInform(radio.user);
-            List<object> down_radio = RadioTransform.Local.ToLocalRadioStorage(radio);
             try
             {
-                return user_inform.UserFav.SaveUserFavRadio(down_radio);
+                return user_inform.UserFav.SaveUserFavRadio(radio);
             }
             catch
             {
@@ -71,14 +68,54 @@ namespace LocalRadioManage.LocalService
 
         public List<RadioFullAlbum> LoadProgram(string user_name)
         {
-
-            return null;
+            try
+            {
+                user_inform.UserFav.SetUserFav(user_name);
+                return user_inform.UserFav.LoadUserFavProgram();
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public List<RadioFullContent> LoadRadio(RadioFullAlbum album)
         {
+            try
+            {
+                user_inform.UserFav.SetUserFav(album);
+                return user_inform.UserFav.LoadUserFavRadio();
+            }
+            catch
+            {
+                return null;
+            }
+        }
 
-            return null;
+        public bool DeleteProgram(string user_name,bool is_constrant)
+        {
+            try
+            {
+                user_inform.UserFav.SetUserFav(user_name);
+                return user_inform.UserFav.DeleteUserFavProgram(is_constrant);
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public bool DeleteProgram(RadioFullAlbum album,bool is_constrant)
+        {
+            try
+            {
+                user_inform.UserFav.SetUserFav(album);
+                return user_inform.UserFav.DeleteUserFavProgram(is_constrant);
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

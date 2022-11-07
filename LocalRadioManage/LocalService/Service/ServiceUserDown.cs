@@ -6,14 +6,13 @@ using System.Threading.Tasks;
 using DataModels;
 using LocalRadioManage.DBBuilder.TableObj;
 using LocalRadioManage.LocalService.UserInforms;
-using LocalRadioManage.DataModelTransform;
 using LocalRadioManage.StorageOperate;
 using Windows.Storage;
 
 
 namespace LocalRadioManage.LocalService
 {
-    class ServiceUserDown
+  public  class ServiceUserDown
     {
         UserInform user_inform = new UserInform();
         public  DownProgress Progress = new DownProgress();
@@ -21,20 +20,19 @@ namespace LocalRadioManage.LocalService
         public async Task<bool> SaveDownProgram(RadioFullAlbum album)
         {
             user_inform.SetUserInform(album.user);
-            List<object> down_program= ChannalAlbumTransform.Local.ToLocalChannalAlbumStorage(album);
             try
             {
-               user_inform.UserDown.SetUserDown(down_program);
+               user_inform.UserDown.SetUserDown(album);
                 //已存在则返回
-                if (user_inform.UserDown.LoadUserDownProgram() != null)
+                if (user_inform.UserDown.LoadUserDownProgram()!= null)
                 {
                     return true;
                 }
-               user_inform.UserDown.SetUserDown(album.user);
+              user_inform.UserDown.SetUserDown(album.user);
                 //修改图片本地名称
               StorageFile img_flie=await MyFile.CreateFile(Default.DefalutStorage.image_folder, album.cover);
-              down_program[LocalChannalAlbum.ColLocation[LocalChannalAlbum.ChannalAlbunLocalPath]] = img_flie.Path;
-              return  user_inform.UserDown.SaveUserDownProgram(down_program);
+              album.cover =new Uri(img_flie.Path);
+              return  user_inform.UserDown.SaveUserDownProgram(album);
             }
             catch
             {
@@ -63,20 +61,20 @@ namespace LocalRadioManage.LocalService
         public async Task<bool> DownRadio(RadioFullContent radio)
         {
             user_inform.SetUserInform(radio.user);
-            List<object> down_radio = RadioTransform.Local.ToLocalRadioStorage(radio);
+          
             try
             {
-                user_inform.UserDown.SetUserDown(down_radio,true);
+                user_inform.UserDown.SetUserDown(radio);
                 //已存在则返回
-                if (user_inform.UserDown.LoadUserDownRadio() != null)
+                if (user_inform.UserDown.LoadUserDownRadio() !=null)
                 {
                     return true;
                 }
                 user_inform.UserDown.SetUserDown(radio.user);
                 //修改音频本地名称
-                StorageFile radio_file = await MyFile.CreateFile(Default.DefalutStorage.image_folder, radio.radio_uri);
-                down_radio[LocalRadio.ColLocation[LocalRadio.RadioLocalPath]] = radio_file.Path;
-                return user_inform.UserDown.SaveUserDownRadio(down_radio);
+                StorageFile radio_file = await MyFile.CreateFile(Default.DefalutStorage.radio_folder, radio.radio_uri);
+                radio.radio_uri =new Uri(radio_file.Path);
+                return user_inform.UserDown.SaveUserDownRadio(radio);
             }
             catch
             {
@@ -115,17 +113,57 @@ namespace LocalRadioManage.LocalService
 
         public List<RadioFullAlbum> LoadProgram(string user_name)
         {
-
-            return null;
+            try
+            {
+                user_inform.UserDown.SetUserDown(user_name);
+                return user_inform.UserDown.LoadUserDownProgram();
+            }
+            catch
+            {
+                return null;
+            }
+           
         }
 
         public List<RadioFullContent> LoadRadio(RadioFullAlbum album)
         {
-
-            return null;
+            try
+            {
+                user_inform.UserDown.SetUserDown(album);
+                return user_inform.UserDown.LoadUserDownRadio();
+            }
+            catch
+            {
+                return null;
+            }
+           
         }
 
+        public bool DeleteProgram(string user_name,bool is_constrant)
+        {
+            try
+            {
+                user_inform.UserDown.SetUserDown(user_name);
+                return user_inform.UserDown.DeleteUsrDownProgram(is_constrant);
+            }
+            catch
+            {
+                return false;
+            }
+        }
 
+        public bool DeleteRadio(RadioFullAlbum album,bool is_constrant)
+        {
+            try
+            {
+                user_inform.UserDown.SetUserDown(album);
+                return user_inform.UserDown.DeleteUsrDownProgram(is_constrant);
+            }
+            catch
+            {
+                return false;
+            }
+        }
 
         public class DownProgress
         {

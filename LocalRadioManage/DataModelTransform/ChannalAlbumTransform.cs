@@ -54,6 +54,42 @@ namespace LocalRadioManage.DataModelTransform
                 }
 
             }
+            /// <summary>
+            /// 对应表UserDownChannalAlbum
+            /// </summary>
+            public static List<object> ToUserDownChannalAlubum(RadioFullAlbum radio_album)
+            {
+                object[] local_store = new object[UserDownChannalAlbum.ColLocation.Count];
+                try
+                {
+                    local_store[UserDownChannalAlbum.ColLocation[UserDownChannalAlbum.UserName]] = radio_album.user;
+                    local_store[UserDownChannalAlbum.ColLocation[UserDownChannalAlbum.ChannalAlbumId]] = radio_album.id;
+                    return local_store.ToList();
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+            public static List<List<object>> ToUserDownChannalAlubum(List<RadioFullAlbum> radio_albums)
+            {
+                List<List<object>> local_stores = new List<List<object>>();
+                try
+                {
+                    foreach (RadioFullAlbum album in radio_albums)
+                    {
+                        local_stores.Add(ToUserDownChannalAlubum(album));
+                    }
+                    return local_stores;
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+            /// <summary>
+            /// 对应RadioFullAlbum
+            /// </summary>
             public static RadioFullAlbum ToRadioFullAlbum(List<object> store)
             {
                 RadioFullAlbum album = new RadioFullAlbum();

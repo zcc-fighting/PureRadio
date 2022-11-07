@@ -96,12 +96,8 @@ namespace LocalRadioManage.LocalService.UserInforms
         {
             SetUserInform();
             condition_express = Users.UserName[0] + "=" + album.user;
-            List<object> user_down_program= ChannalAlbumTransform.Local.ToLocalChannalAlbumStorage(album);
-            UserDown.SetUserDown(user_down_program);
-            List<object> user_fav_proram = ChannalAlbumTransform.Remote.ToUserFavChannalAlbumStorage(album);
-            UserFav.SetUserFav(user_fav_proram);
-
-           
+            UserDown.SetUserDown(album);
+            UserFav.SetUserFav(album);
         }
 
     }
@@ -149,11 +145,11 @@ namespace LocalRadioManage.LocalService.UserInforms
             }
 
         }
-        public bool DeleteUsr()
+        public bool DeleteUsr(bool is_constraint)
         {
             try
             {
-                return SQLiteConnect.TableHandle.DeleteRecords(table_name, condition_express);
+                return SQLiteConnect.TableHandle.DeleteRecords(table_name, condition_express,is_constraint);
             }
             catch
             {

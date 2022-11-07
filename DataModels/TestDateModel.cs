@@ -43,7 +43,7 @@ namespace DataModels
         /// </summary>
         public string title { get; set; }
 
-        public string user { get; set; }
+        public string user = "0";
         public Uri radio_uri { get; set; }
     }
     //用于电台索引存储
@@ -86,21 +86,7 @@ namespace DataModels
         /// </summary>
         public string update_time { get; set; }
 
-        public string user
-        {
-            get
-            {
-                if (user == null||user=="")
-                {
-                    user = "0";
-                }
-                return user;
-            }
-            set
-            {
-                user = value;
-            }
-
-        }
+        public string user = "0";
+        
     }
 }
