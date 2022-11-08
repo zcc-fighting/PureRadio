@@ -209,33 +209,36 @@ namespace PureRadio.Views
         private void On_Navigated(object sender, NavigationEventArgs e)
         {
             NavView.IsBackEnabled = ContentFrame.CanGoBack;
-            if (ContentFrame.SourcePageType==typeof(SettingsPage))
+            if (ContentFrame.SourcePageType == typeof(SettingsPage))
             {
                 //NavView.AlwaysShowHeader = true;
                 // SettingsItem is not part of NavView.MenuItems, and doesn't have a Tag.
                 NavView.SelectedItem = (muxc.NavigationViewItem)NavView.SettingsItem;
                 NavView.Header = ((muxc.NavigationViewItem)NavView.SelectedItem)?.Content?.ToString();
             }
-            else if(ContentFrame.SourcePageType==typeof(UserPage))
+            else if (ContentFrame.SourcePageType == typeof(UserPage))
             {
-                
+
                 NavView.Header = ((muxc.NavigationViewItem)NavView.SelectedItem)?.Content?.ToString();
 
             }
-            else if(ContentFrame.SourcePageType==typeof(LibraryPage))
-            {
-                NavView.Header = ((muxc.NavigationViewItem)NavView.SelectedItem)?.Content?.ToString();
-
-            }
-            else if(ContentFrame.SourcePageType==typeof(RecommendPage))
+            else if (ContentFrame.SourcePageType == typeof(LibraryPage))
             {
                 NavView.Header = ((muxc.NavigationViewItem)NavView.SelectedItem)?.Content?.ToString();
 
             }
-            else if(ContentFrame.SourcePageType!=null)
+            else if (ContentFrame.SourcePageType == typeof(RecommendPage))
+            {
+                NavView.Header = ((muxc.NavigationViewItem)NavView.SelectedItem)?.Content?.ToString();
+
+            }
+            else if (ContentFrame.SourcePageType != null)
             {
                 NavView.Header = ((muxc.NavigationViewItem)NavView.SelectedItem)?.Content?.ToString();
             }
+            
+            
+            
         }
 
 

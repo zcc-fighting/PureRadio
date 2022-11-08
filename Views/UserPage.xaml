@@ -5,10 +5,302 @@
     xmlns:local="using:PureRadio"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:datamodel="using:PureRadio.DataModel"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:common="using:PureRadio.Common"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
+    
+    <Page.Resources>
+        <ResourceDictionary>
+            <common:BooleanToDisplayConverter x:Key="BooleanToDisplayConverter"/>
+            <common:ThemeDisplayConverter x:Key="ThemeDisplayConverter"/>
+            <common:LanguageDisplayConverter x:Key="LanguageDisplayConverter"/>
+            <common:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        </ResourceDictionary>
+    </Page.Resources>
+    
     <Grid>
-        
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="WideLayout">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="640" />
+                    </VisualState.StateTriggers>
+                </VisualState>
+                <VisualState x:Name="NarrowLayout">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="contentSV.Padding" Value="12,0,12,0" />
+                        <Setter Target="contentSV.Margin" Value="0,20,0,0"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <ContentDialog
+            x:Name="LoginDialog"
+            x:Uid="LoginDialogContainer"
+            IsPrimaryButtonEnabled="True"
+            PrimaryButtonText="Login"             
+            CloseButtonText="Cancel"
+            DefaultButton="Primary"
+            Opened="LoginDialog_Opened"
+            Canvas.ZIndex="128">
+            <StackPanel                 
+                Orientation="Vertical" HorizontalAlignment="Stretch" MinWidth="300">
+                <TextBlock 
+                    x:Uid="LoginDialogTitle"
+                    Text="Login" Style="{StaticResource TitleTextBlockStyle}"/>
+                <TextBox 
+                    x:Uid="LoginDialogUsername"
+                    x:Name="usernameBox"
+                    Margin="0,16,0,0"
+                    PlaceholderText="Phone Number" />
+                <PasswordBox 
+                    x:Uid="LoginDialogPassword"
+                    x:Name="passworBox" Margin="0,8,0,0"
+                    PlaceholderText="Password"
+                    PasswordRevealMode="Hidden"/>
+                <CheckBox 
+                    x:Uid="LoginDialogShowPassword"
+                    x:Name="revealModeCheckBox" 
+                    Margin="0,4,0,0"
+                    Content="Show password" IsChecked="False"
+                    Checked="revealModeCheckBox_Checked"
+                    Unchecked="revealModeCheckBox_Unchecked"/>
+            </StackPanel>
+        </ContentDialog>
+
+        <muxc:TeachingTip 
+            x:Name="LoginDialogTeachingTip"
+            x:Uid="LoginDialogTeachingTip"
+	        PreferredPlacement="Auto"
+	        PlacementMargin="20">
+        </muxc:TeachingTip>
+        <muxc:TeachingTip 
+            x:Name="LoginDialogFailureTip"
+            x:Uid="LoginDialogFailureTip"	      
+	        PreferredPlacement="Auto"
+	        PlacementMargin="20">
+        </muxc:TeachingTip>
+        <muxc:TeachingTip 
+            x:Name="LoginDialogSuccessTip"
+            x:Uid="LoginDialogSuccessTip"	      
+	        PreferredPlacement="Auto"
+	        PlacementMargin="20">
+        </muxc:TeachingTip>
+        <muxc:TeachingTip 
+            x:Name="LogoutDialogSuccessTip"
+            x:Uid="LogoutDialogSuccessTip"	      
+	        PreferredPlacement="Auto"
+	        PlacementMargin="20">
+        </muxc:TeachingTip>
+
+        <ScrollViewer
+            x:Name="contentSV"
+            Padding="56,0,56,0"
+            Margin="0,36,0,0"
+            IsTabStop="False"
+            VerticalScrollBarVisibility="Auto"
+            VerticalScrollMode="Auto">
+            <StackPanel HorizontalAlignment="Stretch" Margin="0,0,0,100">
+                <!-- User Info -->
+                <Grid
+                    Margin="0,8,0,0"
+                    Background="Transparent">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <muxc:PersonPicture  
+                        Grid.Column="0"
+                        ProfilePicture="{x:Bind ViewModel.Avatar, Mode=OneWay}" />
+                    <StackPanel 
+                        Grid.Column="1"
+                        Margin="24,0,0,0"
+                        Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Left">
+                        <TextBlock Text="{x:Bind ViewModel.NickName, Mode=OneWay}" FontWeight="Bold" Style="{StaticResource HeaderTextBlockStyle}"/>
+                        <TextBlock Text="{x:Bind ViewModel.Signature, Mode=OneWay}" FontWeight="Normal" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                    </StackPanel>
+                    <Button 
+                        Grid.Column="2"
+                        x:Uid="AccountLoginButton" 
+                        x:Name="AccountLoginButton" 
+                        Visibility="{x:Bind ViewModel.AccountLoginButtonState, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}" 
+                        Content="Login" Width="100" Click="AccountLoginButton_Click"/>
+                    <Button 
+                        Grid.Column="3"
+                        x:Uid="AccountLogoutButton" 
+                        x:Name="AccountLogoutButton" 
+                        Visibility="{x:Bind ViewModel.AccountLogoutButtonState, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
+                        Content="Log out" Width="100" Click="AccountLogoutButton_Click"/>
+                </Grid>
+                <!-- Favorite -->
+                <TextBlock 
+                    Margin="0,16,0,0"
+                    x:Uid="UserFavCloudTitle"
+                    Text="Favorite (Cloud)" 
+                    Style="{StaticResource SubtitleTextBlockStyle}"/>
+                <GridView 
+                    x:Name="FavCloud"
+                    ItemsSource="{x:Bind ViewModel.FavCloud, Mode=TwoWay}"
+                    ItemClick="FavCloud_ItemClick"
+                    IsItemClickEnabled="True"
+                    Margin="0,8,0,0">
+                    <GridView.ItemTemplate>
+                        <DataTemplate x:DataType="datamodel:FavItem">
+                            <Grid
+                                CornerRadius="4"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1"
+                                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                Height="210"
+                                Width="152"
+                                Canvas.ZIndex="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="152"/>
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Border 
+                                    Grid.Row="0" Height="120" Width="120"
+                                    CornerRadius="4">
+                                    <Image                                                                        
+                                    Height="120" Width="120"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    Source="{x:Bind album_cover}"
+                                    x:Phase="1"/>
+                                </Border>
+                                <TextBlock 
+                                    Grid.Row="1"
+                                    Margin="16,0,16,0"
+                                    Text="{x:Bind name}" 
+                                    Style="{StaticResource BaseTextBlockStyle}"
+                                    x:Phase="0"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Top"/>
+                            </Grid>
+                        </DataTemplate>
+                    </GridView.ItemTemplate>
+                </GridView>
+                <TextBlock 
+                    x:Uid="FavCloudEmpty" 
+                    Visibility="{x:Bind ViewModel.FavCloudEmptyReplace, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}" 
+                    Margin="0,8" 
+                    Text="Nothing here" 
+                    Style="{StaticResource BodyTextBlockStyle}"/>
+                <TextBlock 
+                    Margin="0,12,0,0"
+                    x:Uid="UserFavLocalTitle"
+                    Text="Favorite (Local)" 
+                    Style="{StaticResource SubtitleTextBlockStyle}"/>
+                <GridView 
+                    x:Name="FavLocal"
+                    ItemsSource="{x:Bind ViewModel.FavLocal, Mode=TwoWay}"
+                    IsItemClickEnabled="True"
+                    ItemClick="FavLocal_ItemClick"
+                    Margin="0,8,0,0">
+                    <GridView.ItemTemplate>
+                        <DataTemplate x:DataType="datamodel:FavItem">
+                            <Grid
+                                CornerRadius="4"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1"
+                                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                Height="210"
+                                Width="152"
+                                Canvas.ZIndex="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="152"/>
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Border 
+                                    Grid.Row="0" Height="120" Width="120"
+                                    CornerRadius="4">
+                                    <Image                                                                        
+                                    Height="120" Width="120"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    Source="{x:Bind album_cover}"
+                                    x:Phase="1"/>
+                                </Border>
+                                <TextBlock 
+                                    Grid.Row="1"
+                                    Margin="16,0,16,0"
+                                    Text="{x:Bind name}" 
+                                    Style="{StaticResource BaseTextBlockStyle}"
+                                    x:Phase="0"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Top"/>
+                            </Grid>
+                        </DataTemplate>
+                    </GridView.ItemTemplate>
+                </GridView>
+                <TextBlock 
+                    x:Uid="FavLocalEmpty" 
+                    Visibility="{x:Bind ViewModel.FavLocalEmptyReplace, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}" 
+                    Margin="0,8" 
+                    Text="Nothing here" 
+                    Style="{StaticResource BodyTextBlockStyle}"/>
+                <!-- Recently -->
+                <!--
+                <TextBlock 
+                    Margin="0,12,0,0"
+                    x:Uid="UserRecentlyTitle"
+                    Text="Recently" 
+                    Style="{StaticResource SubtitleTextBlockStyle}"/>
+                <GridView 
+                    x:Name="RecentListen"
+                    ItemsSource="{x:Bind ViewModel.RecentlyListen, Mode=TwoWay}">
+                    <GridView.ItemTemplate>
+                        <DataTemplate x:DataType="datamodel:FavItem">
+                            <Grid
+                                CornerRadius="4"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1"
+                                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                Height="210"
+                                Width="152"
+                                Canvas.ZIndex="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="152"/>
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Border 
+                                    Grid.Row="0" Height="120" Width="120"
+                                    CornerRadius="4">
+                                    <Image                                                                        
+                                    Height="120" Width="120"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    Source="{x:Bind album_cover}"
+                                    x:Phase="1"/>
+                                </Border>
+                                <TextBlock 
+                                    Grid.Row="1"
+                                    Margin="16,0,16,0"
+                                    Text="{x:Bind name}" 
+                                    Style="{StaticResource BaseTextBlockStyle}"
+                                    x:Phase="0"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Top"/>
+                            </Grid>
+                        </DataTemplate>
+                    </GridView.ItemTemplate>
+                </GridView>
+                <TextBlock 
+                    x:Uid="RecentlyListenEmpty" 
+                    Visibility="{x:Bind ViewModel.RecentlyListenEmptyReplace, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}" 
+                    Margin="0,8" 
+                    Text="Nothing here" 
+                    Style="{StaticResource BodyTextBlockStyle}"/>
+                -->
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </Page>

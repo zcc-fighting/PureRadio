@@ -4,7 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:datamodel="using:PureRadio.DataModel"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:datamodelresult="using:PureRadio.DataModel.Results"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:datamodelresult="using:PureRadio.DataModel.Results"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -49,17 +50,34 @@
             VerticalScrollMode="Auto">
             <StackPanel HorizontalAlignment="Stretch" Margin="0,0,0,100">
                 <!-- Rank Radio -->
-                <TextBlock
-                Margin="0,8,0,0"
-                x:Uid="RankRadioTitle"
-                Text="Rank Stations" 
-                Style="{StaticResource SubtitleTextBlockStyle}"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock
+                        Grid.Column="0"
+                        Margin="0,8,0,0"
+                        x:Uid="RankRadioTitle"
+                        Text="Rank Stations" 
+                        Style="{StaticResource SubtitleTextBlockStyle}"/>
+                    <HyperlinkButton
+                        Grid.Column="2"
+                        Margin="{Binding ElementName=DynamicBridgeCard, Path=Margin}"
+                        x:Uid="RadioMoreItemsButton"
+                        x:Name="MoreItemsButton"
+                        Content="More Items"
+                        Click="RadioMoreItemsButton_Click">
+                        
+                    </HyperlinkButton>
+                </Grid>
                 <GridView
                     Name="RankRadioView"
                     ItemsSource="{x:Bind ViewModel.RankRadio, Mode=TwoWay}"
                     IsItemClickEnabled="True"
-                    ItemClick="RecoRadio_ItemClick"
-                    SizeChanged="RecoRadio_SizeChanged"
+                    ItemClick="RankRadio_ItemClick"
+                    SizeChanged="RankRadio_SizeChanged"
                     Margin="-6,2,-6,-6">
                     <GridView.ItemContainerStyle>
                         <Style TargetType="GridViewItem">
@@ -69,72 +87,176 @@
                     <GridView.ItemTemplate>
                         <DataTemplate x:DataType="datamodel:LeaderboardItem">
                             <Grid
-                        x:Name="CardCantainer"
-                        CornerRadius="8"
-                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                        BorderThickness="1"
-                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                        Height="132"
-                        Width="{Binding ElementName=DynamicBridge, Path=Width}"
-                        Canvas.ZIndex="1">
+                                x:Name="CardCantainer"
+                                CornerRadius="8"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1"
+                                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                Height="132"
+                                Width="{Binding ElementName=DynamicBridgeCard, Path=Width}"
+                                Canvas.ZIndex="1">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="auto"/>
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
                                 <Border 
-                            Grid.Column="0"                                    
-                            Height="100" Width="100"
-                            BorderThickness="0"
-                            Margin="{Binding ElementName=DynamicBridge, Path=Margin}"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            CornerRadius="4">
+                                    Grid.Column="0"                                    
+                                    Height="100" Width="100"
+                                    BorderThickness="0"
+                                    Margin="{Binding ElementName=DynamicBridgeCard, Path=Margin}"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    CornerRadius="4">
                                     <Image                                   
-                                Height="100" Width="100"                            
-                                Source="{x:Bind cover}"
-                                x:Phase="1"/>
+                                        Height="100" Width="100"                            
+                                        Source="{x:Bind cover}"
+                                        x:Phase="1"/>
                                 </Border>
-                                <Grid 
-                            Grid.Column="1"
-                            Margin="0,16,16,16"
-                            Height="100">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="auto"/>
-                                        <RowDefinition />
-                                        <RowDefinition />
-                                    </Grid.RowDefinitions>
+                                <StackPanel 
+                                    Grid.Column="1"
+                                    Margin="0,16,16,16"
+                                    Height="100">
                                     <TextBlock 
-                                Grid.Row="0"
-                                Text="{x:Bind title}" 
-                                Style="{StaticResource BaseTextBlockStyle}"
-                                x:Phase="0"
-                                MaxLines="2"
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Top"/>
+                                        Grid.Row="0"
+                                        Text="{x:Bind title}" 
+                                        Style="{StaticResource BaseTextBlockStyle}"
+                                        x:Phase="0"
+                                        MaxLines="2"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Top"/>
                                     <TextBlock     
-                                Grid.Row="1"
-                                Text="{x:Bind nowplaying.title}" 
-                                Style="{StaticResource BodyTextBlockStyle}"
-                                x:Phase="0"
-                                MaxLines="1"
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Top"/>
+                                        Grid.Row="1"
+                                        Text="{x:Bind nowplaying.title}" 
+                                        Style="{StaticResource BodyTextBlockStyle}"
+                                        x:Phase="0"
+                                        MaxLines="1"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Top"/>
                                     <TextBlock
-                                Grid.Row="2"
-                                Text="{x:Bind audience_count}"
-                                Style="{StaticResource BodyTextBlockStyle}"
-                                x:Phase="0"
-                                MaxLines="1"
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Bottom"/>
-                                </Grid>
+                                        Grid.Row="2"
+                                        Text="{x:Bind audience_count}"
+                                        Style="{StaticResource BodyTextBlockStyle}"
+                                        x:Phase="0"
+                                        MaxLines="1"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Bottom"/>
+                                </StackPanel>
                             </Grid>
                         </DataTemplate>
                     </GridView.ItemTemplate>
                 </GridView>
-                    
-            </StackPanel>
+                <!--<TextBlock 
+                    x:Uid="RadioEmpty" 
+                    Visibility="{x:Bind ViewModel.RankRadioEmptyReplace, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}" 
+                    Margin="0,8" 
+                    Text="Nothing here" 
+                    Style="{StaticResource BodyTextBlockStyle}"/>-->
                 
+                <!-- Categories Radio List -->
+                <!--
+                <GridView
+                    Name="CategoriesRadioListView"
+                    ItemsSource="{x:Bind ViewModel.CategoriesRadioList, Mode=TwoWay}">
+                    <GridView.ItemContainerStyle>
+                        <Style TargetType="GridViewItem">
+                            <Setter Property="Margin" Value="2"/>
+                        </Style>
+                    </GridView.ItemContainerStyle>
+                    <GridView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <ItemsWrapGrid x:Name="MaxItemsWrapGrid"
+                           MaximumRowsOrColumns="2"
+                           Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </GridView.ItemsPanel>
+                    <GridView.ItemTemplate>
+                        <DataTemplate x:DataType="datamodelresult:RadioCategoriesRoot">
+                            <StackPanel>
+                                <TextBlock
+                                Margin="0,8,0,0"
+                                Text="{x:Bind CategoryName}" 
+                                Style="{StaticResource SubtitleTextBlockStyle}"/>
+                                <GridView
+                                    Name="CategoriesRadioView"
+                                    ItemsSource="{x:Bind Data, Mode=TwoWay}"
+                                    IsItemClickEnabled="True"
+                                    ItemClick="CategoriesRadio_ItemClick"
+                                    SizeChanged="CategoriesRadio_SizeChanged"
+                                    Margin="-6,2,-6,-6">
+                                    <GridView.ItemContainerStyle>
+                                        <Style TargetType="GridViewItem">
+                                            <Setter Property="Margin" Value="6"/>
+                                        </Style>
+                                    </GridView.ItemContainerStyle>
+                                    <GridView.ItemTemplate>
+                                        <DataTemplate x:DataType="datamodel:RadioCategoriesItem">
+                                            <Grid
+                                                x:Name="CardCantainer"
+                                                CornerRadius="8"
+                                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                                BorderThickness="1"
+                                                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                                Height="132"
+                                                Width="{Binding ElementName=DynamicBridgeCard, Path=Width}"
+                                                Canvas.ZIndex="1">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="auto"/>
+                                                    <ColumnDefinition />
+                                                </Grid.ColumnDefinitions>
+                                                <Border 
+                                                    Grid.Column="0"                                    
+                                                    Height="100" Width="100"
+                                                    BorderThickness="0"
+                                                    Margin="{Binding ElementName=DynamicBridgeCard, Path=Margin}"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalAlignment="Center"
+                                                    CornerRadius="4">
+                                                    <Image                                   
+                                                        Height="100" Width="100"                            
+                                                        Source="{x:Bind cover}"
+                                                        x:Phase="1"/>
+                                                </Border>
+                                                <StackPanel 
+                                                    Grid.Column="1"
+                                                    Margin="0,16,16,16"
+                                                    Height="100">
+                                                    <TextBlock 
+                                                        Grid.Row="0"
+                                                        Text="{x:Bind title}" 
+                                                        Style="{StaticResource BaseTextBlockStyle}"
+                                                        x:Phase="0"
+                                                        MaxLines="2"
+                                                        HorizontalAlignment="Left"
+                                                        VerticalAlignment="Top"/>
+                                                    <TextBlock     
+                                                        Grid.Row="1"
+                                                        Text="{x:Bind nowplaying.title}" 
+                                                        Style="{StaticResource BodyTextBlockStyle}"
+                                                        x:Phase="0"
+                                                        MaxLines="1"
+                                                        HorizontalAlignment="Left"
+                                                        VerticalAlignment="Top"/>
+                                                    <TextBlock
+                                                        Grid.Row="2"
+                                                        Text="{x:Bind audience_count}"
+                                                        Style="{StaticResource BodyTextBlockStyle}"
+                                                        x:Phase="0"
+                                                        MaxLines="1"
+                                                        HorizontalAlignment="Left"
+                                                        VerticalAlignment="Bottom"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </GridView.ItemTemplate>
+                                </GridView>
+                            </StackPanel>
+                           
+                            
+                        </DataTemplate>
+                    </GridView.ItemTemplate>
+                </GridView>
+                -->
+            </StackPanel>    
         </ScrollViewer>
     </Grid>
 </Page>

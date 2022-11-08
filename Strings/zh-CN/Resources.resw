@@ -141,6 +141,9 @@
   <data name="CantPlayTip.Title" xml:space="preserve">
     <value>暂时无法播放</value>
   </data>
+  <data name="CategoriesRadioTitle.Text" xml:space="preserve">
+    <value>分类电台</value>
+  </data>
   <data name="CityStation.Content" xml:space="preserve">
     <value>都市台</value>
   </data>
@@ -294,6 +297,12 @@
   <data name="QuyiStation.Content" xml:space="preserve">
     <value>曲艺台</value>
   </data>
+  <data name="RadioEmpty.Text" xml:space="preserve">
+    <value>这里什么都没有</value>
+  </data>
+  <data name="RadioMoreItemsButton.Content" xml:space="preserve">
+    <value>查看更多</value>
+  </data>
   <data name="RankNavInternet.Content" xml:space="preserve">
     <value>网络台</value>
   </data>
@@ -302,6 +311,9 @@
   </data>
   <data name="RankNavRational.Content" xml:space="preserve">
     <value>地方台</value>
+  </data>
+  <data name="RankRadioTitle.Text" xml:space="preserve">
+    <value>热门电台</value>
   </data>
   <data name="RecentlyListenEmpty.Text" xml:space="preserve">
     <value>这里什么都没有</value>
@@ -382,7 +394,7 @@
     <value>中文 (简体)</value>
   </data>
   <data name="SettingsNetworkStatus" xml:space="preserve">
-    <value>连接网络</value>
+    <value>网络</value>
   </data>
   <data name="SettingsReferencesTitle.Text" xml:space="preserve">
     <value>开源项目引用</value>

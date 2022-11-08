@@ -225,7 +225,7 @@
                     <ToggleSwitch 
                         x:Name="ConnectNetworkToggleSwitch" 
                         Grid.Column="3" 
-                        IsOn="True"
+                        IsOn="{x:Bind ViewModel.NetworkStatus,Mode=TwoWay}"
                         Toggled="ConnectNetworkToggleSwitch_Toggled" Margin="16,0,16,0" HorizontalAlignment="Right" VerticalAlignment="Center" MinWidth="100"/>
                 </Grid>
                 <!-- Cache -->

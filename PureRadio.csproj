@@ -166,11 +166,15 @@
     <Compile Include="ViewModels\AppViewModel.cs" />
     <Compile Include="ViewModels\RadioViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
+    <Compile Include="ViewModels\UserViewModel.cs" />
     <Compile Include="Views\ContentPage.xaml.cs">
       <DependentUpon>ContentPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\LibraryPage.xaml.cs">
       <DependentUpon>LibraryPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MoreRadioPage.xaml.cs">
+      <DependentUpon>MoreRadioPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\RadioPage.xaml.cs">
       <DependentUpon>RadioPage.xaml</DependentUpon>
@@ -318,6 +322,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\LibraryPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MoreRadioPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -110,7 +110,7 @@ namespace PureRadio.ViewModels
 
         public void SaveNetwork()
         {
-            Windows.Storage.ApplicationData.Current.LocalSettings.Values["CurrentNetworkMode"] = !NetworkStatus;
+            Windows.Storage.ApplicationData.Current.LocalSettings.Values["CurrentNetworkMode"] = NetworkStatus;
         }
 
 
