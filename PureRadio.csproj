@@ -310,6 +310,11 @@
     <Content Include="Assets\Wide310x150Logo.scale-150.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
+    <Content Include="LocalRadioManage\DBBuilder\sqlite\sqldiff.exe" />
+    <Content Include="LocalRadioManage\DBBuilder\sqlite\sqlite3.def" />
+    <Content Include="LocalRadioManage\DBBuilder\sqlite\sqlite3.dll" />
+    <Content Include="LocalRadioManage\DBBuilder\sqlite\sqlite3.exe" />
+    <Content Include="LocalRadioManage\DBBuilder\sqlite\sqlite3_analyzer.exe" />
     <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>
   <ItemGroup>
