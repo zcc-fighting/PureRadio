@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,17 +58,17 @@ namespace PureRadio.Uwp.Models.QingTing.Radio
     }
 
 
-    //public class BroadcastersItem
-    //{
-    //    /// <summary>
-    //    /// 
-    //    /// </summary>
-    //    public int id { get; set; }
-    //    /// <summary>
-    //    /// 怀集音乐之声（肇庆站）
-    //    /// </summary>
-    //    public string username { get; set; }
-    //}
+    public class BroadcastersItem
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        public int id { get; set; }
+        /// <summary>
+        /// 怀集音乐之声（肇庆站）
+        /// </summary>
+        public string username { get; set; }
+    }
 
     public class Nowplaying
     {

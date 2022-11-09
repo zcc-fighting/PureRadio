@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +20,7 @@ namespace PureRadio.Uwp.Models.QingTing.Radio
         /// <summary>
         /// 电台分类请求响应数据
         /// </summary>
-       // [JsonProperty(NullValueHandling = NullValueHandling.Ignore, PropertyName = "Data", Required = Required.Default)]
-        //public List<DataItem> Data { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore, PropertyName = "Data", Required = Required.Default)]
+        public List<DataItem> Data { get; set; }
     }
 }
