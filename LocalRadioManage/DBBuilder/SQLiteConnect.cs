@@ -51,6 +51,8 @@ namespace LocalRadioManage.DBBuilder
             db_connect.Open();
             cmd = new SQLiteCommand("PRAGMA foreign_keys = ON",db_connect);
             cmd.ExecuteNonQuery();
+            cmd = new SQLiteCommand("PRAGMA recursive_triggers = true;", db_connect);
+            cmd.ExecuteNonQuery();
             return true;
         }
 

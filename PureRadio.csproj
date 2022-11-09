@@ -147,6 +147,8 @@
     <Compile Include="LocalRadioManage\DBBuilder\TableOperate\Update.cs" />
     <Compile Include="LocalRadioManage\LocalService\Service\Default.cs" />
     <Compile Include="LocalRadioManage\LocalService\Service.cs" />
+    <Compile Include="LocalRadioManage\LocalService\Service\ServiceUser.cs" />
+    <Compile Include="LocalRadioManage\LocalService\UserInform\UserDown\LocalDown.cs" />
     <Compile Include="LocalRadioManage\LocalService\Service\ServiceUserDown.cs" />
     <Compile Include="LocalRadioManage\LocalService\Service\ServiceUserFav.cs" />
     <Compile Include="LocalRadioManage\LocalService\UserInform\UserDown\UserDown.cs" />

@@ -159,7 +159,7 @@ namespace LocalRadioManage.DBBuilder.TableObj
             return Delete.DeleteDatas(sql);
         }
 
-        public bool DeleteRecords(List<string> need_delete,List<string> table_name, string condition_express, bool is_constrant)
+        public bool DeleteRecords(string need_delete,List<string> table_name, string condition_express, bool is_constrant)
         {
             string sql="";
         

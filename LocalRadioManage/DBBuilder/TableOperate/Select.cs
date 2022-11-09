@@ -50,6 +50,11 @@ namespace LocalRadioManage.DBBuilder.TableOperate
                 {
                     if (first == 0)
                     {
+                        if (table_col.Value[0] == "*")
+                        {
+                            sql_str += table_col.Value[0];
+                            break;
+                        }
                         sql_str += table_col.Key + "." + table_col.Value[0];
                         first++;
                         for (int i = 1; i < table_col.Value.Count; i++)
@@ -91,6 +96,7 @@ namespace LocalRadioManage.DBBuilder.TableOperate
 
         public static bool SelectData(string sql,List<string> selected_col,ref List<List<object>> data)
         {
+            data = new List<List<object>>();
             if (sql == null||sql=="")
             {
                 return false;

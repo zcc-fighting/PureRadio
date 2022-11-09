@@ -11,27 +11,45 @@ using LocalRadioManage.StorageOperate;
 
 namespace LocalRadioManage.LocalService
 {
+    //启动项
    public partial class LocalService
     {
         /// <summary>
         /// 访问此变量需加锁，用于异步结果读取
         /// </summary>
-        public MissionComplete complete = null;
+        private MissionComplete complete = null;
         ServiceUserDown UserDownService = null;
         ServiceUserFav UserFavService = null;
-        public class MissionComplete
-        {
-            public bool is_complete = false;
-            public bool is_success = false;
-        }
+        ServiceUser UserService = null;
 
-        public LocalService()
+        /// <summary>
+        /// 启动项设为单例
+        /// </summary>
+        private static readonly Lazy<LocalService> lazy = new Lazy<LocalService>(() => new LocalService());
+        public static LocalService Instance
+        {
+            get
+            {
+                return lazy.Value;
+            }
+        }
+        private LocalService()
         {
             Start();
             complete = new MissionComplete();
             UserDownService = new ServiceUserDown();
             UserFavService = new ServiceUserFav();
+            UserService = new ServiceUser();
         }
+
+
+        public class MissionComplete
+        {
+            public bool is_complete = false;
+            public bool is_success = false;
+        }
+        
+       
         private bool Start()
         {
             //暂有数据库的创建/获取->默认用户设置->默认存放文件夹
@@ -69,66 +87,225 @@ namespace LocalRadioManage.LocalService
                 }
             }
         }
+
+        public MissionComplete GetMissionComplete()
+        {
+            lock (complete)
+            {
+                return complete;
+            }
+        }
     }
 
-    /// <summary>
-    /// 本地下载服务
-    /// </summary>
+    public partial class LocalService
+    { 
+      /// <summary>
+      /// 本地用户管理
+      /// </summary>
+        public class LocalUser : LocalService
+        {
+            public bool SaveUser(string user_name)
+            {
+              return  UserService.SaveUser(user_name);
+            }
+
+            public bool SaveUser(string user_name,string user_pass)
+            {
+              return UserService.SaveUser(user_name, user_pass);
+            }
+
+            public async Task<bool> RemoveUser_Asyc(string user_name)
+            {
+                return await UserService.DeleteUser(user_name);
+            }
+
+            public bool DeleteUsr(string user_name)
+            {
+                Task<Task<bool>> task = new Task<Task<bool>>(() => RemoveUser_Asyc(user_name));
+                task.Start();
+                task.Result.Wait();
+                return task.Result.Result;
+            }
+
+        }
+    }
+  
     public partial class LocalService
     {
-       
-     public async Task<bool> Download(RadioFullAlbum album,List<RadioFullContent> radio)
+        /// <summary>
+        /// 本地下载服务
+        /// </summary>
+        public class LocalDown:LocalService
         {
-         bool flag = false;
-         flag &= await  UserDownService.SaveDownProgram(album);
-         flag &= await UserDownService.DownRadio(radio);
-         return flag;
-        }
-     public async Task<bool> Download(RadioFullAlbum album, RadioFullContent radio)
-        {
-            bool flag = true;
-            flag &= await UserDownService.SaveDownProgram(album);
-            flag &= await UserDownService.DownRadio(radio);
-            return flag;
-        }
-
-     public List<RadioFullAlbum> Load(string user_name)
-        {
-          return  UserDownService.LoadProgram(user_name);
-        }
-     public List<RadioFullContent> Load(RadioFullAlbum album)
-        {
-            return UserDownService.LoadRadio(album);
-        }
-     public StorageFile Load(RadioFullContent radio)
-        {
-            Task<Task<StorageFile>> task = new Task<Task<StorageFile>>(()=> Load(radio,false));
-            task.Start();
-            task.Result.Wait();
-            StorageFile file =task.Result.Result;
-            return file;
-        }
-     private async Task<StorageFile> Load(RadioFullContent radio,bool is_null)
-        {
-          return await MyFile.GetFile(Default.DefalutStorage.radio_folder, radio.radio_uri.ToString());
-        }
-
-     public ServiceUserDown.DownProgress GetDownProgress()
-        {
-            lock (UserDownService.Progress)
+            //异步下载
+            public async Task<bool> Download_Asyc(RadioFullAlbum album, List<RadioFullContent> radio)
             {
-                return UserDownService.Progress;
+                bool flag = false;
+                flag &= await UserDownService.SaveDownProgram(album);
+                flag &= await UserDownService.DownRadio(radio);
+                return flag;
             }
+            public async Task<bool> Download_Asyc(RadioFullAlbum album, RadioFullContent radio)
+            {
+                bool flag = true;
+                flag &= await UserDownService.SaveDownProgram(album);
+                flag &= await UserDownService.DownRadio(radio);
+                return flag;
+            }
+            //同步下载
+            public bool Download(RadioFullAlbum album, List<RadioFullContent> radio)
+            {
+                Task<Task<bool>> task= new Task<Task<bool>>(() => Download_Asyc(album,radio));
+                task.Start();
+                task.Result.Wait();
+                return task.Result.Result;
+            }
+            public bool Download(RadioFullAlbum album, RadioFullContent radio)
+            {
+                Task<Task<bool>> task = new Task<Task<bool>>(() => Download_Asyc(album, radio));
+                task.Start();
+                task.Result.Wait();
+                return task.Result.Result;
+            }
+
+            public List<RadioFullAlbum> Load(string user_name)
+            {
+                return UserDownService.LoadProgram(user_name);
+            }
+            public List<RadioFullContent> Load(RadioFullAlbum album)
+            {
+                return UserDownService.LoadRadio(album);
+            }
+            public StorageFile Load(RadioFullContent radio)
+            {
+                Task<Task<StorageFile>> task = new Task<Task<StorageFile>>(() => Load_Asyc(radio));
+                task.Start();
+                task.Result.Wait();
+                StorageFile file = task.Result.Result;
+                return file;
+            }
+            //异步加载
+            public async Task<StorageFile> Load_Asyc(RadioFullContent radio)
+            {
+                return await MyFile.GetFile(Default.DefalutStorage.radio_folder, radio.radio_uri);
+            }
+
+            //异步删除
+            public async Task<bool> RemoveProgram_Asyc(string user_name, bool is_constrant)
+            {
+                return await UserDownService.DeleteProgram(user_name, is_constrant);
+            }
+            public async Task<bool> RemoveProgram_Asyc(RadioFullAlbum album, bool is_constrant)
+            {
+                return await UserDownService.DeleteProgram(album, is_constrant);
+            }
+
+            //同步删除
+            public bool RemoveProgram(string user_name, bool is_constrant)
+            {
+                Task<Task<bool>> task = new Task<Task<bool>>(() => RemoveProgram_Asyc(user_name, is_constrant));
+                task.Start();
+                task.Result.Wait();
+                return task.Result.Result;
+            }
+            public bool RemoveProgram(RadioFullAlbum album, bool is_constrant)
+            {
+                Task<Task<bool>> task = new Task<Task<bool>>(() => RemoveProgram_Asyc(album, is_constrant));
+                task.Start();
+                task.Result.Wait();
+                return task.Result.Result;
+            }
+
+            //异步删除
+            public async Task<bool> RemoveRadio_Asyc(RadioFullAlbum album, bool is_constrant)
+            {
+                return await UserDownService.DeleteRadio(album, is_constrant);
+
+            }
+            public async Task<bool> RemoveRadio_Asyc(RadioFullContent radio, bool is_constrant)
+            {
+                return await UserDownService.DeleteRadio(radio, is_constrant);
+
+            }
+
+            //同步删除
+            public bool RemoveRadio(RadioFullAlbum album, bool is_constrant)
+            {
+                Task<Task<bool>> task = new Task<Task<bool>>(() => RemoveRadio_Asyc(album, is_constrant));
+                task.Start();
+                task.Result.Wait();
+                return task.Result.Result;
+            }
+            public bool RemoveRadio(RadioFullContent radio, bool is_constrant)
+            {
+                Task<Task<bool>> task = new Task<Task<bool>>(() => RemoveRadio_Asyc(radio, is_constrant));
+                task.Start();
+                task.Result.Wait();
+                return task.Result.Result;
+            }
+
+            //获取多音频下载进度
+            public ServiceUserDown.DownProgress GetDownProgress()
+            {
+                lock (UserDownService.Progress)
+                {
+                    return UserDownService.Progress;
+                }
+            }
+
         }
         
     }
-
-    /// <summary>
-    ///远端收藏服务
-    /// </summary>
+   
     public partial class LocalService
     {
-       
+        /// <summary>
+        ///本地收藏服务
+        /// </summary>
+        public class LocalFav: LocalService
+        {
+            public bool Favor(RadioFullAlbum album, List<RadioFullContent> radio)
+            {
+                bool flag = false;
+                flag &= UserFavService.SaveFavProgram(album);
+                UserFavService.FavRadio(radio);
+                return flag;
+            }
+            public bool Favor(RadioFullAlbum album, RadioFullContent radio)
+            {
+                bool flag = true;
+                flag &= UserFavService.SaveFavProgram(album);
+                flag &= UserFavService.FavRadio(radio);
+                return flag;
+            }
+
+            public List<RadioFullAlbum> Load(string user_name)
+            {
+                return UserFavService.LoadProgram(user_name);
+            }
+            public List<RadioFullContent> Load(RadioFullAlbum album)
+            {
+                return UserFavService.LoadRadio(album);
+            }
+
+            public bool RemoveProgram(string user_name,bool is_constrant)
+            {
+                return UserFavService.DeleteProgram(user_name, is_constrant);
+            }
+            public bool RemoveProgram(RadioFullAlbum album, bool is_constrant)
+            {
+                return UserFavService.DeleteProgram(album, is_constrant);
+            }
+            public bool RemoveRadio(RadioFullAlbum album, bool is_constrant)
+            {
+                return UserFavService.DeleteRadio(album, is_constrant);
+            }
+
+            public bool RemoveRadio(RadioFullContent radio, bool is_constrant)
+            {
+                return UserFavService.DeleteRadio(radio, is_constrant);
+            }
+        }
     }
 }
 

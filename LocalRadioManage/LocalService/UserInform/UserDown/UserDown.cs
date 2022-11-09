@@ -20,8 +20,10 @@ namespace LocalRadioManage.LocalService.UserInforms
 {
     public partial class UserDown
     {
+
+       public LocalDown LocalDown = new LocalDown();
         /// <summary>
-        /// 下载节目表参数
+        /// 用户下载节目表参数
         /// </summary>
         private string user_program_name = "";
         private string local_program_name = "";
@@ -29,7 +31,7 @@ namespace LocalRadioManage.LocalService.UserInforms
         private Dictionary<string, List<string>> table_cols_program = null;
 
         /// <summary>
-        /// 下载音频表参数
+        /// 用户下载音频表参数
         /// </summary>
         private string user_radio_name = "";
         private string local_radio_name = "";
@@ -61,10 +63,12 @@ namespace LocalRadioManage.LocalService.UserInforms
         }
      public UserDown(RadioFullAlbum album)
         {
+          
             SetUserDown(album);
         }
      public UserDown(RadioFullContent radio)
         {
+           
             SetUserDown(radio);
         }
     
@@ -74,15 +78,16 @@ namespace LocalRadioManage.LocalService.UserInforms
             local_program_name = LocalChannalAlbum.TableName;
             user_radio_name = UserDownRadio.TableName;
             local_radio_name = LocalRadio.TableName;
-        
-
+ 
             List<string> selected_col_program = SQLiteConnect.TableHandle.GetColNames(local_program_name).ToList();
+            List<string> selected_col_radio = SQLiteConnect.TableHandle.GetColNames(local_radio_name).ToList();
+
             table_cols_program = new Dictionary<string, List<string>>() {
                     { local_program_name,selected_col_program },
                     { user_program_name,null}
                 };
 
-            List<string> selected_col_radio = SQLiteConnect.TableHandle.GetColNames(local_radio_name).ToList();
+          
             table_cols_radio = new Dictionary<string, List<string>>() {
                     { local_radio_name,selected_col_radio },
                     { user_radio_name,null}
@@ -102,6 +107,7 @@ namespace LocalRadioManage.LocalService.UserInforms
         {
             try
             {
+                LocalDown.SetLocalDown(album);
                 SetUserDown(album.user);
                 condition_express_radio = user_radio_name + "." + UserDownRadio.UserName[0] + "=" + album.user;//找到用户
                 condition_express_radio += " and " + user_radio_name + "." + UserDownRadio.ChannalAlbumId[0] + "=" + album.id;//匹配某一专辑
@@ -122,6 +128,7 @@ namespace LocalRadioManage.LocalService.UserInforms
         {
             try
             {
+                LocalDown.SetLocalDown(radio);
                 SetUserDown(radio.user);
                 condition_express_radio = user_radio_name + "." + UserDownRadio.UserName[0] + "=" + radio.user;//找到用户
                 condition_express_radio += " and " + user_radio_name + "." + UserDownRadio.RadioId[0] + "=" + radio.id;
@@ -145,8 +152,7 @@ namespace LocalRadioManage.LocalService.UserInforms
             try
             {
                 List<object> user_program = ChannalAlbumTransform.Local.ToUserDownChannalAlubum(album);
-                List<object> local_program = ChannalAlbumTransform.Local.ToLocalChannalAlbumStorage(album);
-                SQLiteConnect.TableHandle.AddRecord(this.local_program_name, local_program);
+                LocalDown.SaveLocalDownProgram(album);
                 return SQLiteConnect.TableHandle.AddRecord(this.user_program_name, user_program);
             }
             catch
@@ -159,8 +165,7 @@ namespace LocalRadioManage.LocalService.UserInforms
             try
             {
                 List<object> user_radio= RadioTransform.Local.ToUserDownRadio(radio);
-                List<object> local_radio = RadioTransform.Local.ToLocalRadioStorage(radio);
-                SQLiteConnect.TableHandle.AddRecord(local_radio_name, local_radio);
+                LocalDown.SaveLocalDownRadio(radio);
                 return SQLiteConnect.TableHandle.AddRecord(user_radio_name, user_radio);
             }
             catch
@@ -209,22 +214,15 @@ namespace LocalRadioManage.LocalService.UserInforms
             }
         }
 
-        //删除user_program,因为设置了外键local_program是否能删除取决于是否被引用
+        //删除user_program
         public bool DeleteUsrDownProgram(bool is_constrant)
         {
             try
             {
             
               List<string> table_name =new List<string>(){user_program_name,local_program_name };
-             return  SQLiteConnect.TableHandle.DeleteRecords(table_name,table_name, condition_express_program, is_constrant);
-
-              //逆天
-              //string check_express = local_program_name + "." + LocalChannalAlbum.ChannalAlbumId[0] + " not in (";
-              //List<string> temp = new List<string>() { UserDownChannalAlbum.ChannalAlbumId[0] };
-              //check_express += Select.GetSelectQuery(user_program_name, temp, "");
-              //check_express += ")";
-              //SQLiteConnect.TableHandle.SelectRecords(local_program_name, table_cols_program[local_program_name], check_express, ref user_down_programs_inform);
-            
+             return  SQLiteConnect.TableHandle.DeleteRecords(user_program_name,table_name, condition_express_program, is_constrant);
+      
             }
             catch
             {
@@ -237,7 +235,7 @@ namespace LocalRadioManage.LocalService.UserInforms
             try
             {
                 List<string> table_name = new List<string>() { user_radio_name, local_radio_name };
-                return SQLiteConnect.TableHandle.DeleteRecords(table_name,table_name,condition_express_radio, is_constrant);
+                return SQLiteConnect.TableHandle.DeleteRecords(user_radio_name,table_name,condition_express_radio, is_constrant);
             }
             catch
             {

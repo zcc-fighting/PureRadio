@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using System.IO;
+using System.Net;
+using System.Web;
 
 namespace LocalRadioManage.StorageOperate
 {
@@ -90,6 +92,38 @@ namespace LocalRadioManage.StorageOperate
 
             }
             return false;
+        }
+
+        public static async Task<bool> DeleteFile(StorageFolder root_folder, Uri uri)
+        {
+            string file_name = HttpUtility.UrlDecode(uri.Segments.Last());
+            return await DeleteFile(root_folder,file_name);
+        }
+        public static async Task<List<bool>> DeleteFile(StorageFolder root_folder, List<Uri> uris)
+        {
+            List<bool> is_files = new List<bool>();
+            try
+            {
+                foreach (Uri uri in uris)
+                {
+                    try
+                    {
+                       bool get_file = await DeleteFile(root_folder, uri);
+                        is_files.Add(get_file);
+                    }
+                    catch
+                    {
+                       is_files.Add(false);
+                    }
+                }
+                return is_files;
+
+            }
+            catch
+            {
+
+            }
+            return null;
         }
     }
 }

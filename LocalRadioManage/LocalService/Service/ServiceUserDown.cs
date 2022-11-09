@@ -17,22 +17,28 @@ namespace LocalRadioManage.LocalService
         UserInform user_inform = new UserInform();
         public  DownProgress Progress = new DownProgress();
        
+        //保存节目->节目表+文件(图片)
         public async Task<bool> SaveDownProgram(RadioFullAlbum album)
         {
+            user_inform.SaveUser(album.user);
             user_inform.SetUserInform(album.user);
             try
             {
                user_inform.UserDown.SetUserDown(album);
-                //已存在则返回
+                //用户已存在该节目则返回
                 if (user_inform.UserDown.LoadUserDownProgram()!= null)
                 {
                     return true;
                 }
-              user_inform.UserDown.SetUserDown(album.user);
-                //修改图片本地名称
-              StorageFile img_flie=await MyFile.CreateFile(Default.DefalutStorage.image_folder, album.cover);
-              album.cover =new Uri(img_flie.Path);
-              return  user_inform.UserDown.SaveUserDownProgram(album);
+                //本地已存在该节目则不下载
+                if (user_inform.UserDown.LocalDown.LoadLocalDownProgram() == null)
+                {
+                    user_inform.UserDown.SetUserDown(album.user);
+                    //修改图片本地名称
+                    StorageFile img_flie = await MyFile.CreateFile(Default.DefalutStorage.image_folder, album.cover);
+                    album.cover = new Uri(img_flie.Path);
+                }
+               return  user_inform.UserDown.SaveUserDownProgram(album);
             }
             catch
             {
@@ -57,23 +63,28 @@ namespace LocalRadioManage.LocalService
 
             return true;
         }
-
+        //保存音频->音频表+文件(音频)
         public async Task<bool> DownRadio(RadioFullContent radio)
         {
+            user_inform.SaveUser(radio.user);
             user_inform.SetUserInform(radio.user);
           
             try
             {
                 user_inform.UserDown.SetUserDown(radio);
-                //已存在则返回
+                //用户已存在该音频则返回
                 if (user_inform.UserDown.LoadUserDownRadio() !=null)
                 {
                     return true;
                 }
-                user_inform.UserDown.SetUserDown(radio.user);
-                //修改音频本地名称
-                StorageFile radio_file = await MyFile.CreateFile(Default.DefalutStorage.radio_folder, radio.radio_uri);
-                radio.radio_uri =new Uri(radio_file.Path);
+                //本地已存在该音频则不下载
+                if (user_inform.UserDown.LocalDown.LoadLocalDownRadio() == null)
+                {
+                    user_inform.UserDown.SetUserDown(radio.user);
+                    //修改音频本地名称
+                    StorageFile radio_file = await MyFile.CreateFile(Default.DefalutStorage.radio_folder, radio.radio_uri);
+                    radio.radio_uri = new Uri(radio_file.Path);
+                }
                 return user_inform.UserDown.SaveUserDownRadio(radio);
             }
             catch
@@ -111,6 +122,7 @@ namespace LocalRadioManage.LocalService
             }
         }
 
+        //根据用户/专辑->载入节目/音频
         public List<RadioFullAlbum> LoadProgram(string user_name)
         {
             try
@@ -124,7 +136,6 @@ namespace LocalRadioManage.LocalService
             }
            
         }
-
         public List<RadioFullContent> LoadRadio(RadioFullAlbum album)
         {
             try
@@ -139,27 +150,141 @@ namespace LocalRadioManage.LocalService
            
         }
 
-        public bool DeleteProgram(string user_name,bool is_constrant)
+        //删除节目->节目表+文件(图片)
+        public async Task<bool> DeleteProgram(string user_name,bool is_constrant)
         {
             try
             {
-                user_inform.UserDown.SetUserDown(user_name);
-                return user_inform.UserDown.DeleteUsrDownProgram(is_constrant);
+               user_inform.UserDown.SetUserDown(user_name);
+               return await DeleteProgram(is_constrant);
+                
+            }
+            catch
+            {
+                return false;
+            }
+           
+        }
+        public async Task<bool> DeleteProgram(RadioFullAlbum album, bool is_constrant)
+        {
+            try
+            {
+                user_inform.UserDown.SetUserDown(album);
+                return await DeleteProgram(is_constrant);
             }
             catch
             {
                 return false;
             }
         }
+        private async Task<bool> DeleteProgram(bool is_constrant)
+        {
+            if (user_inform.UserDown.DeleteUsrDownProgram(is_constrant))
+            {
+                //获取已无用户依赖的本地节目/音频
+                List<RadioFullAlbum> lonely_albums = user_inform.UserDown.LocalDown.LoadLocalDownProgram_Check();
+                List<RadioFullContent> lonely_radios = user_inform.UserDown.LocalDown.LoadLocalDownRaio_Check();
+                
+                List<Uri> img_uris = new List<Uri>();
+                List<Uri> radio_uris = new List<Uri>();
 
-        public bool DeleteRadio(RadioFullAlbum album,bool is_constrant)
+                //删除对应专辑
+                if (lonely_albums!= null)
+                {
+                    user_inform.UserDown.LocalDown.DeleteLocalDownProgram_Check(true);
+                    foreach (RadioFullAlbum album in lonely_albums)
+                    {
+                        img_uris.Add(album.cover);
+                    }
+                }
+
+                //删除对应音频
+                if (lonely_radios != null)
+                {
+                    user_inform.UserDown.LocalDown.DeleteLocalDownRadios_Check(true);
+                    foreach (RadioFullContent radio in lonely_radios)
+                    {
+                        radio_uris.Add(radio.radio_uri);
+                    }
+                }
+                 
+
+                try
+                {
+                    await MyFile.DeleteFile(Default.DefalutStorage.image_folder, img_uris);
+                    await MyFile.DeleteFile(Default.DefalutStorage.radio_folder, radio_uris);
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+        //删除音频->音频表+文件(音频)
+        public async Task<bool> DeleteRadio(RadioFullAlbum album,bool is_constrant)
         {
             try
             {
                 user_inform.UserDown.SetUserDown(album);
-                return user_inform.UserDown.DeleteUsrDownProgram(is_constrant);
+                return await DeleteRadio(is_constrant);
             }
             catch
+            {
+                return false;
+            }
+        }
+        public async  Task<bool> DeleteRadio(RadioFullContent radio,bool is_constrant)
+        {
+
+            try
+            {
+                user_inform.UserDown.SetUserDown(radio);
+                return await DeleteRadio(is_constrant);
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        private async Task<bool> DeleteRadio(bool is_constrant)
+        {
+            if (user_inform.UserDown.DeleteUsrDownRadios(is_constrant))
+            {
+
+                //获取已无用户依赖的音频
+                List<RadioFullContent> lonely_radios = user_inform.UserDown.LocalDown.LoadLocalDownRaio_Check();
+
+                //删除本地对应音频
+                List<Uri> radio_uris = new List<Uri>();
+
+                if (lonely_radios != null)
+                {
+                    //删除表中数据
+                    user_inform.UserDown.LocalDown.DeleteLocalDownRadios_Check(true);
+
+                    foreach (RadioFullContent radio in lonely_radios)
+                    {
+                        radio_uris.Add(radio.radio_uri);
+                    }
+                }
+                
+
+                try
+                {
+                    await MyFile.DeleteFile(Default.DefalutStorage.radio_folder, radio_uris);
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+            else
             {
                 return false;
             }

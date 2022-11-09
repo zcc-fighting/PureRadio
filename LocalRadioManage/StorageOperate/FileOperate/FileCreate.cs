@@ -83,6 +83,7 @@ namespace LocalRadioManage.StorageOperate
            
         }
 
+        //文件创建uri
         public static async Task<StorageFile> CreateFile(StorageFolder root_folder,Uri uri)
         {
             StorageFile temp_file=null;
@@ -92,6 +93,11 @@ namespace LocalRadioManage.StorageOperate
             try
             {
                 file_name = HttpUtility.UrlDecode(uri.Segments.Last());
+                store_file = await MyFile.GetFile(root_folder, file_name);
+                if (store_file != null)
+                {
+                    return store_file;
+                }
                 temp_file =await StorageFile.CreateStreamedFileFromUriAsync(file_name,uri,null);
                 store_file = await CreateFile(root_folder, file_name);
                 await temp_file.CopyAndReplaceAsync(store_file);

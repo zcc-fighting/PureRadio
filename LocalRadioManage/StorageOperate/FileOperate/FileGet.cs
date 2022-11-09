@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using System.IO;
+using System.Net;
+using System.Web;
 
 namespace LocalRadioManage.StorageOperate
 {
@@ -90,5 +92,40 @@ namespace LocalRadioManage.StorageOperate
             return null;
 
         }
+
+
+        public static async Task<StorageFile> GetFile(StorageFolder root_folder, Uri uri)
+        {
+           string file_name = HttpUtility.UrlDecode(uri.Segments.Last());
+           return await GetFile(root_folder,file_name);
+        }
+        public static async Task<List<StorageFile>> GetFile(StorageFolder root_folder, List<Uri> uris)
+        {
+            List<StorageFile> files = new List<StorageFile>();
+            try
+            {
+                foreach (Uri uri in uris)
+                {
+                    try
+                    {
+                        StorageFile get_file = await GetFile(root_folder, uri);
+                        files.Add(get_file);
+                    }
+                    catch
+                    {
+                        files.Add(null);
+                    }
+                }
+                return files;
+
+            }
+            catch
+            {
+
+            }
+            return null;
+        }
+
+
     }
 }

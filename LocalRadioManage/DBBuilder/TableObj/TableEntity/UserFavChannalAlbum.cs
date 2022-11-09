@@ -24,7 +24,7 @@ namespace LocalRadioManage.DBBuilder.TableObj
 
       
         public readonly static string[] PrimaryKey = { UserName[0], ChannalAlbumId[0] };
-        public readonly static string[] ForeignKey = { UserName[0], Users.TableName,Users.UserName[0] };
+        public readonly static string[] ForeignKey = { UserName[0], Users.TableName,Users.UserName[0], TableInform.FOREIGN_CASCADE };
         public readonly static List<string[]> ForeignKey_List = new List<string[]> { ForeignKey };
       
 

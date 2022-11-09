@@ -95,7 +95,7 @@ namespace LocalRadioManage.DataModelTransform
                 RadioFullAlbum album = new RadioFullAlbum();
                 try
                 {
-                    album.id = (int)store[LocalChannalAlbum.ColLocation[LocalChannalAlbum.ChannalAlbumId]];
+                    album.id = (int)(long)store[LocalChannalAlbum.ColLocation[LocalChannalAlbum.ChannalAlbumId]];
                     album.title = (string)store[LocalChannalAlbum.ColLocation[LocalChannalAlbum.ChannalAlbumName]];
                     album.description = (string)store[LocalChannalAlbum.ColLocation[LocalChannalAlbum.ChannalAlbumDesc]];
                     album.cover =new Uri((string)store[LocalChannalAlbum.ColLocation[LocalChannalAlbum.ChannalAlbumCover]]);
@@ -176,7 +176,7 @@ namespace LocalRadioManage.DataModelTransform
                 try
                 {
                     album.user = (string)store[UserFavChannalAlbum.ColLocation[UserFavChannalAlbum.UserName]];
-                    album.id = (int)store[UserFavChannalAlbum.ColLocation[UserFavChannalAlbum.ChannalAlbumId]];
+                    album.id = (int)(long)store[UserFavChannalAlbum.ColLocation[UserFavChannalAlbum.ChannalAlbumId]];
                     album.title = (string)store[UserFavChannalAlbum.ColLocation[UserFavChannalAlbum.ChannalAlbumName]];
                     album.description = (string)store[UserFavChannalAlbum.ColLocation[UserFavChannalAlbum.ChannalAlbumDesc]];
                     album.cover =new Uri((string)store[UserFavChannalAlbum.ColLocation[UserFavChannalAlbum.ChannalAlbumCover]]);
