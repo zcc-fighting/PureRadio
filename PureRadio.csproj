@@ -160,6 +160,7 @@
     <Compile Include="DataModels\Results\SearchSuggestResult.cs" />
     <Compile Include="DataModels\SearchProgramResultItem.cs" />
     <Compile Include="DataModels\SearchRadioResultItem.cs" />
+    <Compile Include="DataModels\TestDateModel.cs" />
     <Compile Include="DataModels\TimerStatus.cs" />
     <Compile Include="DataModels\UserProfile.cs" />
     <Compile Include="LocalRadioManage\DataModelTransform\ChannalAlbumTransform.cs" />
@@ -194,32 +195,6 @@
     <Compile Include="LocalRadioManage\StorageOperate\FolderOperate\FolderDelere.cs" />
     <Compile Include="LocalRadioManage\StorageOperate\FolderOperate\FolderGet.cs" />
     <Compile Include="LocalRadioManage\test\LocalRadioTest.cs" />
-    <Compile Include="obj\x64\Debug\.NETCore,Version=v5.0.AssemblyAttributes.cs" />
-    <Compile Include="obj\x64\Debug\App.g.cs" />
-    <Compile Include="obj\x64\Debug\App.g.i.cs" />
-    <Compile Include="obj\x64\Debug\Views\ContentPage.g.cs" />
-    <Compile Include="obj\x64\Debug\Views\ContentPage.g.i.cs" />
-    <Compile Include="obj\x64\Debug\Views\LibraryPage.g.cs" />
-    <Compile Include="obj\x64\Debug\Views\LibraryPage.g.i.cs" />
-    <Compile Include="obj\x64\Debug\Views\MoreRadioPage.g.cs" />
-    <Compile Include="obj\x64\Debug\Views\MoreRadioPage.g.i.cs" />
-    <Compile Include="obj\x64\Debug\Views\RadioPage.g.cs" />
-    <Compile Include="obj\x64\Debug\Views\RadioPage.g.i.cs" />
-    <Compile Include="obj\x64\Debug\Views\RecommendPage.g.cs" />
-    <Compile Include="obj\x64\Debug\Views\RecommendPage.g.i.cs" />
-    <Compile Include="obj\x64\Debug\Views\RootPage.g.cs" />
-    <Compile Include="obj\x64\Debug\Views\RootPage.g.i.cs" />
-    <Compile Include="obj\x64\Debug\Views\SettingsPage.g.cs" />
-    <Compile Include="obj\x64\Debug\Views\SettingsPage.g.i.cs" />
-    <Compile Include="obj\x64\Debug\Views\UserPage.g.cs" />
-    <Compile Include="obj\x64\Debug\Views\UserPage.g.i.cs" />
-    <Compile Include="obj\x64\Debug\XamlTypeInfo.g.cs" />
-    <Compile Include="obj\x86\Debug\.NETCore,Version=v5.0.AssemblyAttributes.cs" />
-    <Compile Include="obj\x86\Debug\App.g.cs" />
-    <Compile Include="obj\x86\Debug\App.g.i.cs" />
-    <Compile Include="obj\x86\Debug\MainPage.g.cs" />
-    <Compile Include="obj\x86\Debug\MainPage.g.i.cs" />
-    <Compile Include="obj\x86\Debug\XamlTypeInfo.g.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\AppViewModel.cs" />
     <Compile Include="ViewModels\RadioViewModel.cs" />
@@ -373,23 +348,6 @@
     <Content Include="LocalRadioManage\DBBuilder\sqlite\sqlite3.dll" />
     <Content Include="LocalRadioManage\DBBuilder\sqlite\sqlite3.exe" />
     <Content Include="LocalRadioManage\DBBuilder\sqlite\sqlite3_analyzer.exe" />
-    <Content Include="obj\x64\Debug\intermediatexaml\PureRadio.exe" />
-    <Content Include="obj\x64\Debug\intermediatexaml\PureRadio.pdb" />
-    <Content Include="obj\x64\Debug\Microsoft.Toolkit.Uwp.pri.xml" />
-    <Content Include="obj\x64\Debug\Microsoft.Toolkit.Uwp.UI.Animations.pri.xml" />
-    <Content Include="obj\x64\Debug\Microsoft.Toolkit.Uwp.UI.Controls.Media.pri.xml" />
-    <Content Include="obj\x64\Debug\Microsoft.Toolkit.Uwp.UI.pri.xml" />
-    <Content Include="obj\x64\Debug\Microsoft.UI.Xaml.pri.xml" />
-    <Content Include="obj\x64\Debug\MultipleQualifiersPerDimensionFound.txt" />
-    <Content Include="obj\x64\Debug\priconfig.xml" />
-    <Content Include="obj\x64\Debug\ProjectArchitectures.txt" />
-    <Content Include="obj\x64\Debug\PureRadio.csproj.FileListAbsolute.txt" />
-    <Content Include="obj\x64\Debug\PureRadio.exe" />
-    <Content Include="obj\x64\Debug\PureRadio.pdb" />
-    <Content Include="obj\x64\Debug\PureRadio.xr.xml" />
-    <Content Include="obj\x64\Debug\qualifiers.txt" />
-    <Content Include="obj\x64\Debug\XamlSaveStateFile.xml" />
-    <Content Include="obj\x86\Debug\XamlSaveStateFile.xml" />
     <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -397,42 +355,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="obj\x64\Debug\App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="obj\x64\Debug\Views\ContentPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="obj\x64\Debug\Views\LibraryPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="obj\x64\Debug\Views\MoreRadioPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="obj\x64\Debug\Views\RadioPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="obj\x64\Debug\Views\RecommendPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="obj\x64\Debug\Views\RootPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="obj\x64\Debug\Views\SettingsPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="obj\x64\Debug\Views\UserPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Views\ContentPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -488,6 +410,9 @@
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.1</Version>
     </PackageReference>
+    <PackageReference Include="System.Data.SQLite.Core">
+      <Version>1.0.116</Version>
+    </PackageReference>
     <PackageReference Include="System.Runtime.WindowsRuntime.UI.Xaml">
       <Version>4.7.0</Version>
     </PackageReference>
@@ -499,54 +424,7 @@
     <PRIResource Include="Strings\en-US\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="obj\x64\Debug\TempPE\" />
-    <Folder Include="obj\x86\Debug\intermediatexaml\" />
-    <Folder Include="obj\x86\Debug\TempPE\" />
     <Folder Include="Services\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="obj\project.assets.json" />
-    <None Include="obj\project.nuget.cache" />
-    <None Include="obj\PureRadio.csproj.nuget.dgspec.json" />
-    <None Include="obj\PureRadio.csproj.nuget.g.props" />
-    <None Include="obj\PureRadio.csproj.nuget.g.targets" />
-    <None Include="obj\x64\Debug\.winmd_cache\%24Microsoft.Graphics.Canvas.winmd_637214534760000000.json" />
-    <None Include="obj\x64\Debug\.winmd_cache\%24Microsoft.UI.Xaml.Markup.winmd_637424527200000000.json" />
-    <None Include="obj\x64\Debug\.winmd_cache\%24Microsoft.Web.WebView2.Core.winmd_637920505780000000.json" />
-    <None Include="obj\x64\Debug\App.xbf" />
-    <None Include="obj\x64\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
-    <None Include="obj\x64\Debug\embed\embed.resfiles" />
-    <None Include="obj\x64\Debug\embed\embed.resfiles.intermediate" />
-    <None Include="obj\x64\Debug\excluded.layout.resfiles" />
-    <None Include="obj\x64\Debug\excluded.layout.resfiles.intermediate" />
-    <None Include="obj\x64\Debug\filtered.layout.resfiles" />
-    <None Include="obj\x64\Debug\filtered.layout.resfiles.intermediate" />
-    <None Include="obj\x64\Debug\pri.resfiles" />
-    <None Include="obj\x64\Debug\pri.resfiles.intermediate" />
-    <None Include="obj\x64\Debug\priconfig.xml.intermediate" />
-    <None Include="obj\x64\Debug\PureRadio.csproj.AssemblyReference.cache" />
-    <None Include="obj\x64\Debug\PureRadio.csproj.CopyComplete" />
-    <None Include="obj\x64\Debug\PureRadio.csproj.CoreCompileInputs.cache" />
-    <None Include="obj\x64\Debug\qualifiers.txt.intermediate" />
-    <None Include="obj\x64\Debug\ResourceHandlingTask.state" />
-    <None Include="obj\x64\Debug\resources.en-us.resfiles" />
-    <None Include="obj\x64\Debug\resources.en-us.resfiles.intermediate" />
-    <None Include="obj\x64\Debug\resources.resfiles" />
-    <None Include="obj\x64\Debug\resources.resfiles.intermediate" />
-    <None Include="obj\x64\Debug\unfiltered.layout.resfiles" />
-    <None Include="obj\x64\Debug\unfiltered.layout.resfiles.intermediate" />
-    <None Include="obj\x64\Debug\Views\ContentPage.xbf" />
-    <None Include="obj\x64\Debug\Views\LibraryPage.xbf" />
-    <None Include="obj\x64\Debug\Views\MoreRadioPage.xbf" />
-    <None Include="obj\x64\Debug\Views\RadioPage.xbf" />
-    <None Include="obj\x64\Debug\Views\RecommendPage.xbf" />
-    <None Include="obj\x64\Debug\Views\RootPage.xbf" />
-    <None Include="obj\x64\Debug\Views\SettingsPage.xbf" />
-    <None Include="obj\x64\Debug\Views\UserPage.xbf" />
-    <None Include="obj\x86\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
-    <None Include="obj\x86\Debug\PureRadio.csproj.AssemblyReference.cache" />
-    <PRIResource Include="obj\x64\Debug\FxResources.System.Text.Json.SR.resw" />
-    <PRIResource Include="obj\x64\Debug\FxResources.System.Text.Encodings.Web.SR.resw" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
