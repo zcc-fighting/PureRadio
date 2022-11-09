@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -119,14 +119,70 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Common\BooleanToDisplayConverter.cs" />
+    <Compile Include="Common\BooleanToVisibilityConverter.cs" />
     <Compile Include="Common\FavStateToButtonIconConverter.cs" />
+    <Compile Include="Common\HttpHelper.cs" />
     <Compile Include="Common\LanguageDisplayConverter.cs" />
     <Compile Include="Common\MediaMuteStateToButtonIconConverter.cs" />
     <Compile Include="Common\MediaPlaybackStateToButtonIconConverter.cs" />
     <Compile Include="Common\MediaPositionToDoubleConverter.cs" />
     <Compile Include="Common\MediaPositionToTimeConverter.cs" />
+    <Compile Include="Common\QTDecoder.cs" />
     <Compile Include="Common\ThemeDisplayConverter.cs" />
+    <Compile Include="DataModels\ContentIncrementalLoading.cs" />
+    <Compile Include="DataModels\ContentItem.cs" />
+    <Compile Include="DataModels\FavItem.cs" />
+    <Compile Include="DataModels\FullDetailRadio.cs" />
+    <Compile Include="DataModels\LeaderboardItem.cs" />
+    <Compile Include="DataModels\Message\ProgramDemanMessage.cs" />
+    <Compile Include="DataModels\Message\RadioDemandMessage.cs" />
+    <Compile Include="DataModels\MyIncrementalLoading.cs" />
+    <Compile Include="DataModels\MyIncrementalLoading30.cs" />
+    <Compile Include="DataModels\NowPlayingDetail.cs" />
+    <Compile Include="DataModels\Parameter\ProgramShot.cs" />
+    <Compile Include="DataModels\Parameter\RadioShot.cs" />
+    <Compile Include="DataModels\ProgramJumpItem.cs" />
+    <Compile Include="DataModels\ProvinceItem.cs" />
+    <Compile Include="DataModels\QingTing\Content\ContentDetailItem.cs" />
+    <Compile Include="DataModels\QingTing\Content\ContentDetailResponse.cs" />
+    <Compile Include="DataModels\QingTing\Content\ContentProgramListItem.cs" />
+    <Compile Include="DataModels\QingTing\Content\ContentProgramListResponse.cs" />
+    <Compile Include="DataModels\QingTing\Radio\RadioCategoryItem.cs" />
+    <Compile Include="DataModels\QingTing\Radio\RadioCategoryResponse.cs" />
+    <Compile Include="DataModels\QingTing\Radio\RadioDetailItem.cs" />
+    <Compile Include="DataModels\QingTing\Radio\RadioDetailResponse.cs" />
+    <Compile Include="DataModels\QingTing\Radio\RadioPlaylistItem.cs" />
+    <Compile Include="DataModels\QingTing\Radio\RadioPlaylistResponse.cs" />
+    <Compile Include="DataModels\QingTing\Search\SearchContentItem.cs" />
+    <Compile Include="DataModels\QingTing\Search\SearchContentResponse.cs" />
+    <Compile Include="DataModels\QingTing\Search\SearchRadioItem.cs" />
+    <Compile Include="DataModels\QingTing\Search\SearchRadioResponse.cs" />
+    <Compile Include="DataModels\QingTing\Search\SearchSuggestItem.cs" />
+    <Compile Include="DataModels\QingTing\Search\SearchSuggestResponse.cs" />
+    <Compile Include="DataModels\QingTing\User\SignInResponse.cs" />
+    <Compile Include="DataModels\QingTing\User\SignInUserItem.cs" />
+    <Compile Include="DataModels\QingTing\User\TokenInfo.cs" />
+    <Compile Include="DataModels\QingTing\User\TokenInfoResponse.cs" />
+    <Compile Include="DataModels\RadioCategoriesItem.cs" />
+    <Compile Include="DataModels\Results\ContentResult.cs" />
+    <Compile Include="DataModels\Results\FavResult.cs" />
+    <Compile Include="DataModels\Results\LoginResult.cs" />
+    <Compile Include="DataModels\Results\ProgramDetailFull.cs" />
+    <Compile Include="DataModels\Results\RadioCategories.cs" />
+    <Compile Include="DataModels\Results\RadioDetailFull.cs" />
+    <Compile Include="DataModels\Results\RadioDetailSmallResult.cs" />
+    <Compile Include="DataModels\Results\RadioRankResult.cs" />
+    <Compile Include="DataModels\Results\RecommendProgramResult.cs" />
+    <Compile Include="DataModels\Results\RecommendRadioResult.cs" />
+    <Compile Include="DataModels\Results\SearchProgramResult.cs" />
+    <Compile Include="DataModels\Results\SearchRadioResult.cs" />
+    <Compile Include="DataModels\Results\SearchSuggestResult.cs" />
+    <Compile Include="DataModels\SearchProgramResultItem.cs" />
+    <Compile Include="DataModels\SearchRadioResultItem.cs" />
     <Compile Include="DataModels\TestDateModel.cs" />
+    <Compile Include="DataModels\TimerStatus.cs" />
+    <Compile Include="DataModels\UserProfile.cs" />
     <Compile Include="LocalRadioManage\DataModelTransform\ChannalAlbumTransform.cs" />
     <Compile Include="LocalRadioManage\DataModelTransform\DateTransform.cs" />
     <Compile Include="LocalRadioManage\DataModelTransform\RadioTransform.cs" />
@@ -145,6 +201,7 @@
     <Compile Include="LocalRadioManage\DBBuilder\TableOperate\Select.cs" />
     <Compile Include="LocalRadioManage\DBBuilder\TableOperate\TableChange.cs" />
     <Compile Include="LocalRadioManage\DBBuilder\TableOperate\Update.cs" />
+    <Compile Include="LocalRadioManage\LocalService\Service.cs" />
     <Compile Include="LocalRadioManage\LocalService\Service\Default.cs" />
     <Compile Include="LocalRadioManage\LocalService\Service.cs" />
     <Compile Include="LocalRadioManage\LocalService\Service\ServiceUser.cs" />
@@ -162,11 +219,18 @@
     <Compile Include="LocalRadioManage\StorageOperate\FolderOperate\FolderGet.cs" />
     <Compile Include="LocalRadioManage\test\LocalRadioTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\AppViewModel.cs" />
+    <Compile Include="ViewModels\RadioViewModel.cs" />
+    <Compile Include="ViewModels\SettingsViewModel.cs" />
+    <Compile Include="ViewModels\UserViewModel.cs" />
     <Compile Include="Views\ContentPage.xaml.cs">
       <DependentUpon>ContentPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\LibraryPage.xaml.cs">
       <DependentUpon>LibraryPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MoreRadioPage.xaml.cs">
+      <DependentUpon>MoreRadioPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\RadioPage.xaml.cs">
       <DependentUpon>RadioPage.xaml</DependentUpon>
@@ -322,6 +386,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\MoreRadioPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\RadioPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -335,8 +403,8 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SettingsPage.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\UserPage.xaml">
       <SubType>Designer</SubType>
@@ -347,11 +415,23 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.13</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Mvvm">
+      <Version>7.1.2</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI">
       <Version>7.1.2</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Animations">
+      <Version>7.1.3</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls.Media">
+      <Version>7.1.3</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
       <Version>2.8.1</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>13.0.1</Version>
     </PackageReference>
     <PackageReference Include="System.Data.SQLite.Core">
       <Version>1.0.116</Version>
@@ -368,7 +448,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Services\" />
-    <Folder Include="ViewModels\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

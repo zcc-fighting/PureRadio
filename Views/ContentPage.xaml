@@ -9,6 +9,48 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="WideLayout">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="640" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="DynamicBridge.Width" Value="182" />
+                        <Setter Target="DynamicBridge.Height" Value="150" />
+                        <Setter Target="DynamicBridgeCard.Width" Value="280" />
+                        <Setter Target="DynamicBridgeCard.Margin" Value="16" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="NarrowLayout">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="DynamicBridge.Width" Value="226" />
+                        <Setter Target="DynamicBridge.Height" Value="194" />
+                        <Setter Target="DynamicBridgeCard.Width" Value="226" />
+                        <Setter Target="DynamicBridgeCard.Margin" Value="8,16" />
+                        <Setter Target="contentSV.Padding" Value="12,0,12,0" />
+                        <Setter Target="contentSV.Margin" Value="0,20,0,0"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <Border x:Name="DynamicBridge" Visibility="Collapsed"/>
+        <Border x:Name="DynamicBridgeCard" Visibility="Collapsed"/>
 
+        <ScrollViewer
+            x:Name="contentSV"
+            Padding="56,0,56,0"
+            Margin="0,36,0,0"
+            IsTabStop="False"
+            VerticalScrollBarVisibility="Auto"
+            VerticalScrollMode="Auto">
+            <StackPanel HorizontalAlignment="Stretch" Margin="0,0,0,100">
+                
+            </StackPanel>
+        </ScrollViewer>
+        
     </Grid>
 </Page>

@@ -14,12 +14,15 @@ using PureRadio;
 using Windows.UI.Core;
 using Windows.System;
 using Windows.Foundation.Metadata;
+using Microsoft.Toolkit.Mvvm.Messaging;
+using PureRadio.ViewModels;
 
 namespace PureRadio.Views
 {
     public sealed partial class RootPage : Page
     {
         CoreApplicationViewTitleBar coreTitleBar;
+        private AppViewModel ViewModel { get; set; } = new AppViewModel();
         public RootPage()
         {
             this.InitializeComponent();
@@ -42,7 +45,18 @@ namespace PureRadio.Views
             coreTitleBar.IsVisibleChanged += CoreTitleBar_IsVisibleChanged;
 
 
-
+            WeakReferenceMessenger.Default.Register<NavToRadioDetailMessage>(this, (r, m) =>
+            {
+                m.Value.isFav = ViewModel.CheckFav(m.Value.channelID);
+                //ContentFrame.Navigate(typeof(DetailRadioPage), m.Value, new DrillInNavigationTransitionInfo());
+            });
+            WeakReferenceMessenger.Default.Register<NavToProgramDetailMessage>(this, (r, m) =>
+            {
+                m.Value.qingtingID = ViewModel.UserInfo.qingting_id;
+                m.Value.access_token = ViewModel.UserInfo.access_token;
+                m.Value.isFav = ViewModel.CheckFav(m.Value.programID);
+                //ContentFrame.Navigate(typeof(DetailProgramPage), m.Value, new DrillInNavigationTransitionInfo());
+            });
         }
 
         private void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
@@ -195,8 +209,36 @@ namespace PureRadio.Views
         private void On_Navigated(object sender, NavigationEventArgs e)
         {
             NavView.IsBackEnabled = ContentFrame.CanGoBack;
-            NavView.SelectedItem = (muxc.NavigationViewItem)NavView.FooterMenuItems[0];
-            NavView.Header = ((muxc.NavigationViewItem)NavView.SelectedItem)?.Content?.ToString();
+            if (ContentFrame.SourcePageType == typeof(SettingsPage))
+            {
+                //NavView.AlwaysShowHeader = true;
+                // SettingsItem is not part of NavView.MenuItems, and doesn't have a Tag.
+                NavView.SelectedItem = (muxc.NavigationViewItem)NavView.SettingsItem;
+                NavView.Header = ((muxc.NavigationViewItem)NavView.SelectedItem)?.Content?.ToString();
+            }
+            else if (ContentFrame.SourcePageType == typeof(UserPage))
+            {
+
+                NavView.Header = ((muxc.NavigationViewItem)NavView.SelectedItem)?.Content?.ToString();
+
+            }
+            else if (ContentFrame.SourcePageType == typeof(LibraryPage))
+            {
+                NavView.Header = ((muxc.NavigationViewItem)NavView.SelectedItem)?.Content?.ToString();
+
+            }
+            else if (ContentFrame.SourcePageType == typeof(RecommendPage))
+            {
+                NavView.Header = ((muxc.NavigationViewItem)NavView.SelectedItem)?.Content?.ToString();
+
+            }
+            else if (ContentFrame.SourcePageType != null)
+            {
+                NavView.Header = ((muxc.NavigationViewItem)NavView.SelectedItem)?.Content?.ToString();
+            }
+            
+            
+            
         }
 
 

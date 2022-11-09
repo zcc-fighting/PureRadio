@@ -7,6 +7,8 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -29,10 +31,84 @@ namespace PureRadio
         /// </summary>
         public App()
         {
-            
-            LocalRadioTest.TestServiceStart();
+            CheckLanguage();
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+        }
+
+        /// <summary>
+        /// 主题切换支持
+        /// </summary>
+        public static ElementTheme RootTheme
+        {
+            get
+            {
+                if (Window.Current.Content is FrameworkElement rootElement)
+                {
+                    return rootElement.RequestedTheme;
+                }
+
+                return ElementTheme.Default;
+            }
+            set
+            {
+                if (Window.Current.Content is FrameworkElement rootElement)
+                {
+                    rootElement.RequestedTheme = value;
+                }
+            }
+        }
+        /// <summary>
+        /// 主题切换支持
+        /// </summary>
+
+        public void CheckTheme()
+        {
+            ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
+            if (Windows.Storage.ApplicationData.Current.LocalSettings.Values["CurrentTheme"] != null)
+            {
+                string strCurrentTheme = Windows.Storage.ApplicationData.Current.LocalSettings.Values["CurrentTheme"].ToString();
+                switch (strCurrentTheme)
+                {
+                    case "Light":
+                        RootTheme = ElementTheme.Light;
+                        titleBar.ButtonForegroundColor = Colors.Black;
+                        break;
+                    case "Dark":
+                        RootTheme = ElementTheme.Dark;
+                        titleBar.ButtonForegroundColor = Colors.White;
+                        break;
+                    default:
+                        if (Current.RequestedTheme == ApplicationTheme.Dark)
+                        {
+                            titleBar.ButtonForegroundColor = Colors.White;
+                        }
+                        else
+                        {
+                            titleBar.ButtonForegroundColor = Colors.Black;
+                        }
+                        break;
+                }
+            }
+            else
+                RootTheme = ElementTheme.Default;
+        }
+
+        /// <summary>
+        /// 多语言支持
+        /// </summary>
+        void CheckLanguage()
+        {
+            if (Windows.Storage.ApplicationData.Current.LocalSettings.Values["CurrentLanguage"] != null)
+            {
+                string strCurrentLanguage = Windows.Storage.ApplicationData.Current.LocalSettings.Values["CurrentLanguage"].ToString();
+                if (strCurrentLanguage == "auto")
+                    Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = string.Empty;
+                else
+                    Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = strCurrentLanguage;
+            }
+            else
+                Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = "zh-CN";
         }
 
         /// <summary>

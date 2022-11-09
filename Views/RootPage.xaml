@@ -13,10 +13,10 @@
     <Page.Resources>
         <!--This top margin is the height of the custom TitleBar-->
         <Thickness x:Key="NavigationViewContentMargin">0,48,0,0</Thickness>
-        <!--<common:MediaPlaybackStateToButtonIconConverter x:Key="MediaPlaybackStateToButtonIconConverter"/>
+        <common:MediaPlaybackStateToButtonIconConverter x:Key="MediaPlaybackStateToButtonIconConverter"/>
         <common:MediaMuteStateToButtonIconConverter x:Key="MediaMuteStateToButtonIconConverter"/>
         <common:MediaPositionToTimeConverter x:Key="MediaPositionToTimeConverter"/>
-        <common:FavStateToButtonIconConverter x:Key="FavStateToButtonIconConverter"/>-->
+        <common:FavStateToButtonIconConverter x:Key="FavStateToButtonIconConverter"/>
     </Page.Resources>
 
     <Grid>
@@ -80,7 +80,6 @@
                     TextChanged="AutoSuggestBox_TextChanged"
                     QuerySubmitted="AutoSuggestBox_QuerySubmitted"
                     Height="32"/>
-                
             </Grid>
         </Border>
         <muxc:NavigationView 
@@ -92,6 +91,7 @@
             Loaded="NavView_Loaded"
             ItemInvoked="NavView_ItemInvoked"
             BackRequested="NavView_BackRequested"
+            AlwaysShowHeader="True"
             PaneOpening="NavigationViewControl_PaneOpening"
             PaneClosing="NavigationViewControl_PaneClosing"
             DisplayModeChanged="NavigationViewControl_DisplayModeChanged">
@@ -118,30 +118,11 @@
                     <Frame
                         x:Name="ContentFrame"
                         IsTabStop="False"/>
-                    <Grid
-                        x:Name="NowPlayFrame"
-                        VerticalAlignment="Bottom"
-                        Height="100"
-                        Background="Transparent">
-                        <Grid.Resources>
-                            <Storyboard x:Name="EnterStoryboard">
-                                <DoubleAnimation 
-                                    From="0" To="1" Duration="00:00:0.1" 
-                                    Storyboard.TargetName="DynamicBackground" 
-                                    Storyboard.TargetProperty="Opacity">
-                                </DoubleAnimation>
-                            </Storyboard>
-                            <Storyboard x:Name="ExitStoryboard">
-                                <DoubleAnimation 
-                                    From="1" To="0" Duration="00:00:0.1" 
-                                    Storyboard.TargetName="DynamicBackground" 
-                                    Storyboard.TargetProperty="Opacity">
-                                </DoubleAnimation>
-                            </Storyboard>
-                        </Grid.Resources>
-                    </Grid>
+                    
                 </Grid>
             </muxc:NavigationView.Content>
+            
+            
             <muxc:NavigationView.FooterMenuItems>
                 <muxc:NavigationViewItem Tag="user" x:Uid="navUser">
                     <muxc:NavigationViewItem.Icon>
