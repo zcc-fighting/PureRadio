@@ -8,19 +8,21 @@ using System.Threading.Tasks;
 namespace PureRadio.Uwp.Models.QingTing.Radio
 {
     /// <summary>
-    /// 电台分类请求响应
+    /// 电台地区排行榜响应
     /// </summary>
-    public class RadioCategoryResponse
+    [JsonObject(MemberSerialization.OptIn)]
+    public class RadioBillboardRegionResponse
     {
+
         /// <summary>
-        /// 电台分类请求成功标志
+        /// 电台地区排行榜成功标志
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore, PropertyName = "Success", Required = Required.Default)]
         public string Success { get; set; }
         /// <summary>
-        /// 电台分类请求响应数据
+        /// 电台地区排行榜响应数据
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore, PropertyName = "Data", Required = Required.Default)]
-        public List<RadioCategoryItem> Data { get; set; }
+        public List<RadioBillboardItem> Data { get; set; }
     }
 }

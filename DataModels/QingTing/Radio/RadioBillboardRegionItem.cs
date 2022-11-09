@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace PureRadio.Uwp.Models.QingTing.Radio
 {
     [JsonObject(MemberSerialization.OptIn)]
-    public class RadioCategoryItem
+    public class RadioBillboardItem
     {
         /// <summary>
         /// 电台ID
@@ -56,20 +56,4 @@ namespace PureRadio.Uwp.Models.QingTing.Radio
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore, PropertyName = "categories", Required = Required.Default)]
         public List<CategoriesItem> Categories { get; set; }
     }
-
-    [JsonObject(MemberSerialization.OptIn)]
-    public class CategoriesItem
-    {
-        /// <summary>
-        /// 分类Id
-        /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore, PropertyName = "id", Required = Required.Default)]
-        public int CategoryId { get; set; }
-        /// <summary>
-        /// 分类标题
-        /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore, PropertyName = "title", Required = Required.Default)]
-        public string Title { get; set; }
-    }
-
 }
