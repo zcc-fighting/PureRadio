@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -148,12 +148,19 @@
     <Compile Include="DataModels\QingTing\Content\ContentDetailResponse.cs" />
     <Compile Include="DataModels\QingTing\Content\ContentProgramListItem.cs" />
     <Compile Include="DataModels\QingTing\Content\ContentProgramListResponse.cs" />
+    <Compile Include="DataModels\QingTing\Network\IPAddrItem.cs" />
+    <Compile Include="DataModels\QingTing\Network\IPAddrResponse.cs" />
+    <Compile Include="DataModels\QingTing\Radio\RadioBillboardRegionItem.cs" />
+    <Compile Include="DataModels\QingTing\Radio\RadioBillboardRegionResponse.cs" />
     <Compile Include="DataModels\QingTing\Radio\RadioCategoryItem.cs" />
     <Compile Include="DataModels\QingTing\Radio\RadioCategoryResponse.cs" />
     <Compile Include="DataModels\QingTing\Radio\RadioDetailItem.cs" />
     <Compile Include="DataModels\QingTing\Radio\RadioDetailResponse.cs" />
     <Compile Include="DataModels\QingTing\Radio\RadioPlaylistItem.cs" />
     <Compile Include="DataModels\QingTing\Radio\RadioPlaylistResponse.cs" />
+    <Compile Include="DataModels\QingTing\Recommend\RecommendRadioLiveItem.cs" />
+    <Compile Include="DataModels\QingTing\Recommend\RecommendRadioReplayItem.cs" />
+    <Compile Include="DataModels\QingTing\Recommend\RecommendResponse.cs" />
     <Compile Include="DataModels\QingTing\Search\SearchContentItem.cs" />
     <Compile Include="DataModels\QingTing\Search\SearchContentResponse.cs" />
     <Compile Include="DataModels\QingTing\Search\SearchRadioItem.cs" />
