@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace PureRadio.Uwp.Models.QingTing.Radio
 {
     [JsonObject(MemberSerialization.OptIn)]
-    public class RadioCategoryItem
+    public class RadioBillboardItem
     {
         /// <summary>
         /// 电台ID
@@ -56,72 +56,4 @@ namespace PureRadio.Uwp.Models.QingTing.Radio
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore, PropertyName = "categories", Required = Required.Default)]
         public List<CategoriesItem> Categories { get; set; }
     }
-
-
-    //public class BroadcastersItem
-    //{
-    //    /// <summary>
-    //    /// 
-    //    /// </summary>
-    //    public int id { get; set; }
-    //    /// <summary>
-    //    /// 怀集音乐之声（肇庆站）
-    //    /// </summary>
-    //    public string username { get; set; }
-    //}
-
-    public class Nowplaying
-    {
-        /// <summary>
-        /// 
-        /// </summary>
-        public int id { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public int duration { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public string start_time { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public string end_time { get; set; }
-        /// <summary>
-        /// 最爱经典金曲
-        /// </summary>
-        public string name { get; set; }
-        /// <summary>
-        /// 最爱经典金曲
-        /// </summary>
-        public string title { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public int playbill_rid { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public int playbill_id { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public List<BroadcastersItem> broadcasters { get; set; }
-    }
-
-    public class CategoriesItem
-    {
-        /// <summary>
-        /// 分类Id
-        /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore, PropertyName = "id", Required = Required.Default)]
-        public int CategoryId { get; set; }
-        /// <summary>
-        /// 分类标题
-        /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore, PropertyName = "title", Required = Required.Default)]
-        public string Title { get; set; }
-    }
-
 }
