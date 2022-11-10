@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using System.IO;
+using System.Net;
+using System.Web;
 
 namespace LocalRadioManage.StorageOperate
 {
@@ -21,7 +23,8 @@ namespace LocalRadioManage.StorageOperate
                 item = await root_folder.TryGetItemAsync(file_name);
                 if (item != null && item.IsOfType(StorageItemTypes.File))
                 {
-                    return await root_folder.GetFileAsync(file_name);
+                
+                    return (StorageFile)item;
                 }
             }
             catch
@@ -90,5 +93,96 @@ namespace LocalRadioManage.StorageOperate
             return null;
 
         }
+
+
+        public static async Task<StorageFile> GetFile(StorageFolder root_folder, Uri uri)
+        {
+           StorageFile file = null;
+           string file_name = HttpUtility.UrlDecode(uri.Segments.Last());
+          
+           file= await GetFile(root_folder,file_name);
+
+            if (file == null)
+            {
+              return await  GetFile(uri);
+            }
+            return file;
+        }
+        public static async Task<StorageFile> GetFile( Uri uri)
+        {
+            try
+            {
+                return await StorageFile.GetFileFromPathAsync(uri.ToString());
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public static async Task<List<StorageFile>> GetFile(List<Uri> uris)
+        {
+            List<StorageFile> files = new List<StorageFile>();
+            foreach (Uri uri in uris)
+            {
+                files.Add(await GetFile(uri));
+            }
+            return files;
+        }
+        public static async Task<List<StorageFile>> GetFile(StorageFolder root_folder, List<Uri> uris)
+        {
+            List<StorageFile> files = new List<StorageFile>();
+            try
+            {
+                foreach (Uri uri in uris)
+                {
+                    try
+                    {
+                        StorageFile get_file = await GetFile(root_folder, uri);
+                        files.Add(get_file);
+                    }
+                    catch
+                    {
+                        files.Add(null);
+                    }
+                }
+                return files;
+
+            }
+            catch
+            {
+
+            }
+            return null;
+        }
+
+        public static async Task<bool> FileExists(StorageFolder root_folder,Uri uri)
+        {
+            try
+            {
+               string file_name = HttpUtility.UrlDecode(uri.Segments.Last());
+               
+               Windows.Storage.IStorageItem item=await root_folder.TryGetItemAsync(file_name);
+
+                List<string> folders = new List<string>();
+                string path = uri.AbsolutePath.Replace("/" + file_name, "");
+                
+
+                if (item == null || !item.IsOfType(StorageItemTypes.File))
+                {
+                    return false;
+                }
+            
+                return true;
+            }
+            catch
+            {
+                return true;
+            }
+
+
+        }
+
+
     }
 }

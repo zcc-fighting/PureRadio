@@ -102,14 +102,14 @@ namespace LocalRadioManage.DataModelTransform
             {
 
                 RadioFullContent radio = new RadioFullContent();
-                radio.id = (int)store[LocalRadio.ColLocation[LocalRadio.RadioId]];
-                radio.channel_id = (int)store[LocalRadio.ColLocation[LocalRadio.ChannalAlbumId]];
+                radio.id = (int)(long)store[LocalRadio.ColLocation[LocalRadio.RadioId]];
+                radio.channel_id = (int)(long)store[LocalRadio.ColLocation[LocalRadio.ChannalAlbumId]];
                 radio.title = (string)store[LocalRadio.ColLocation[LocalRadio.RadioName]];
-                radio.duration = (int)store[LocalRadio.ColLocation[LocalRadio.RadioDuration]];
+                radio.duration = (int)(long)store[LocalRadio.ColLocation[LocalRadio.RadioDuration]];
                 radio.radio_uri = new Uri((string)store[LocalRadio.ColLocation[LocalRadio.RadioLocalPath]]);
 
                 //一整个日期的填充
-                ulong radio_date = (ulong)store[LocalRadio.ColLocation[LocalRadio.RadioDate]];
+                ulong radio_date = (ulong)(long)store[LocalRadio.ColLocation[LocalRadio.RadioDate]];
                 DateTime date = new DateTime();
                 string start_time = "";
                 string end_time = "";
@@ -138,6 +138,31 @@ namespace LocalRadioManage.DataModelTransform
                     return null;
                 }
             }
+
+            public static RadioFullContent ToRadioFullContent(List<object> store,string user_name)
+            {
+                RadioFullContent radio = ToRadioFullContent(store);
+                radio.user = user_name;
+                return radio;
+            }
+            public static List<RadioFullContent> ToRadioFullContent(List<List<object>> stores,string user_name)
+            {
+                List<RadioFullContent> radios = new List<RadioFullContent>();
+
+                try
+                {
+                    foreach (List<object> store in stores)
+                    {
+                        radios.Add(ToRadioFullContent(store,user_name));
+                    }
+                    return radios;
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+
         }
       
 

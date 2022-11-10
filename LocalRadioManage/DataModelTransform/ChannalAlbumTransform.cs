@@ -25,7 +25,7 @@ namespace LocalRadioManage.DataModelTransform
                 try
                 {
                     local_store[LocalChannalAlbum.ColLocation[LocalChannalAlbum.ChannalAlbumId]] = radio_album.id;
-                    local_store[LocalChannalAlbum.ColLocation[LocalChannalAlbum.ChannalAlbumType]] = 0;
+                    local_store[LocalChannalAlbum.ColLocation[LocalChannalAlbum.ChannalAlbumType]] = radio_album.type;
                     local_store[LocalChannalAlbum.ColLocation[LocalChannalAlbum.ChannalAlbumName]] = radio_album.title;
                     local_store[LocalChannalAlbum.ColLocation[LocalChannalAlbum.ChannalAlbumDesc]] = radio_album.description;
                     local_store[LocalChannalAlbum.ColLocation[LocalChannalAlbum.ChannalAlbumCover]] = radio_album.cover.ToString();
@@ -95,10 +95,11 @@ namespace LocalRadioManage.DataModelTransform
                 RadioFullAlbum album = new RadioFullAlbum();
                 try
                 {
-                    album.id = (int)store[LocalChannalAlbum.ColLocation[LocalChannalAlbum.ChannalAlbumId]];
+                    album.id = (int)(long)store[LocalChannalAlbum.ColLocation[LocalChannalAlbum.ChannalAlbumId]];
                     album.title = (string)store[LocalChannalAlbum.ColLocation[LocalChannalAlbum.ChannalAlbumName]];
                     album.description = (string)store[LocalChannalAlbum.ColLocation[LocalChannalAlbum.ChannalAlbumDesc]];
                     album.cover =new Uri((string)store[LocalChannalAlbum.ColLocation[LocalChannalAlbum.ChannalAlbumCover]]);
+                    album.user = "0";
                     return album;
                 }
                 catch
@@ -123,6 +124,30 @@ namespace LocalRadioManage.DataModelTransform
                 }
 
             }
+
+            public static RadioFullAlbum ToRadioFullAlbum(List<object> store,string user_name)
+            {
+                RadioFullAlbum album = ToRadioFullAlbum(store);
+                album.user = user_name;
+                return album;
+            }
+
+            public static List<RadioFullAlbum> ToRadioFullAlbum(List<List<object>> stores, string user_name)
+            {
+                List<RadioFullAlbum> albums = new List<RadioFullAlbum>();
+                try
+                {
+                    foreach (List<object> store in stores)
+                    {
+                        albums.Add(ToRadioFullAlbum(store,user_name));
+                    }
+                    return albums;
+                }
+                catch
+                {
+                    return null;
+                }
+            }
         }
 
     }
@@ -141,7 +166,7 @@ namespace LocalRadioManage.DataModelTransform
                 try
                 {
                     local_store[UserFavChannalAlbum.ColLocation[UserFavChannalAlbum.ChannalAlbumId]] = radio_album.id;
-                    local_store[UserFavChannalAlbum.ColLocation[UserFavChannalAlbum.ChannalAlbumType]] = 0;
+                    local_store[UserFavChannalAlbum.ColLocation[UserFavChannalAlbum.ChannalAlbumType]] = radio_album.type;
                     local_store[UserFavChannalAlbum.ColLocation[UserFavChannalAlbum.ChannalAlbumName]] = radio_album.title;
                     local_store[UserFavChannalAlbum.ColLocation[UserFavChannalAlbum.ChannalAlbumDesc]] = radio_album.description;
                     local_store[UserFavChannalAlbum.ColLocation[UserFavChannalAlbum.ChannalAlbumCover]] = radio_album.cover;
@@ -176,7 +201,7 @@ namespace LocalRadioManage.DataModelTransform
                 try
                 {
                     album.user = (string)store[UserFavChannalAlbum.ColLocation[UserFavChannalAlbum.UserName]];
-                    album.id = (int)store[UserFavChannalAlbum.ColLocation[UserFavChannalAlbum.ChannalAlbumId]];
+                    album.id = (int)(long)store[UserFavChannalAlbum.ColLocation[UserFavChannalAlbum.ChannalAlbumId]];
                     album.title = (string)store[UserFavChannalAlbum.ColLocation[UserFavChannalAlbum.ChannalAlbumName]];
                     album.description = (string)store[UserFavChannalAlbum.ColLocation[UserFavChannalAlbum.ChannalAlbumDesc]];
                     album.cover =new Uri((string)store[UserFavChannalAlbum.ColLocation[UserFavChannalAlbum.ChannalAlbumCover]]);

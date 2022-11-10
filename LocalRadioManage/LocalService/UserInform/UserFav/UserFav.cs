@@ -13,6 +13,8 @@ namespace LocalRadioManage.LocalService.UserInforms
 {
     public partial class UserFav
     {
+
+        private string user_name = "0";
         /// <summary>
         /// 收藏节目表参数
         /// </summary>
@@ -62,6 +64,7 @@ namespace LocalRadioManage.LocalService.UserInforms
 
         private void SetUserFav()
         {
+            user_name = "0";
             user_program_name = UserFavChannalAlbum.TableName;
             selected_col_program = SQLiteConnect.TableHandle.GetColNames(user_program_name).ToList();
             user_radio_name = UserFavRadio.TableName;
@@ -71,6 +74,7 @@ namespace LocalRadioManage.LocalService.UserInforms
      public void SetUserFav(string user_name)
         {
             SetUserFav();
+            this.user_name = user_name;
             condition_express_program = UserFavChannalAlbum.UserName[0] + "=" + user_name;
         }
         
@@ -80,6 +84,7 @@ namespace LocalRadioManage.LocalService.UserInforms
             try
             {
                 SetUserFav(album.user);
+                user_name = album.user;
                 condition_express_program += UserFavChannalAlbum.ChannalAlbumId[0] + "=" + album.id;
                 return true;
             }
@@ -94,6 +99,7 @@ namespace LocalRadioManage.LocalService.UserInforms
             SetUserFav(radio.user);
             try
             {
+                user_name = radio.user;
                 condition_express_radio = UserFavRadio.RadioId[0] + "=" + radio.id;
                 ulong date = DateTransform.DateToInt(DateTransform.GetDateTime(radio.day), radio.start_time, radio.end_time);
                 condition_express_radio = " and " + UserFavRadio.RadioDate[0] + "=" + date;

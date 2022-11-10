@@ -20,9 +20,9 @@ namespace LocalRadioManage.DBBuilder.TableObj
         public readonly static string[] ChannalAlbumId = { "ChannalAlbumId", "INTEGER" };
 
         public readonly static string[] PrimaryKey = { UserName[0], RadioId[0],RadioDate[0] };
-        public readonly static string[] ForeignKey_0 = { UserName[0], Users.TableName, Users.UserName[0] };
-        public readonly static string[] ForeignKey_1 = { RadioId[0],RadioDate[0], LocalRadio.TableName, LocalRadio.RadioId[0],LocalRadio.RadioDate[0]};
-        public readonly static string[] ForeignKey_2 = {UserName[0],ChannalAlbumId[0],UserDownChannalAlbum.TableName, UserDownChannalAlbum.UserName[0],UserDownChannalAlbum.ChannalAlbumId[0]};
+        public readonly static string[] ForeignKey_0 = { UserName[0], Users.TableName, Users.UserName[0], TableInform.FOREIGN_CASCADE };
+        public readonly static string[] ForeignKey_1 = { RadioId[0],RadioDate[0], LocalRadio.TableName, LocalRadio.RadioId[0],LocalRadio.RadioDate[0], TableInform.FOREIGN_CASCADE };
+        public readonly static string[] ForeignKey_2 = {UserName[0],ChannalAlbumId[0],UserDownChannalAlbum.TableName, UserDownChannalAlbum.UserName[0],UserDownChannalAlbum.ChannalAlbumId[0], TableInform.FOREIGN_CASCADE };
         public readonly static List<string[]> ForeignKey_List = new List<string[]> { ForeignKey_0, ForeignKey_1,ForeignKey_2 };
         
 

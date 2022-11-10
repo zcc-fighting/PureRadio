@@ -18,13 +18,20 @@ namespace LocalRadioManage.DBBuilder.TableOperate
             if (is_constrant)
             {
                 sql_str += "PRAGMA foreign_keys=ON;";
+                sql_str += "PRAGMA recursive_triggers = true;";
+            }
+            else
+            {
+                sql_str += "PRAGMA foreign_keys=OFF;";
+                sql_str += "PRAGMA recursive_triggers = false;";
             }
             sql_str += "delete from " + table_name + " " +
                           "where " + condition_express+";";
             return sql_str;
         }
 
-        public static string GetDeleteQuery(List<string> need_delete,List<string> table_name, string condition_express, bool is_constrant)
+        //单表的连接删除(不支持多表删除)
+        public static string GetDeleteQuery(string need_delete,List<string> table_name, string condition_express, bool is_constrant)
         {
 
             if (table_name.Count == 0)
@@ -35,26 +42,33 @@ namespace LocalRadioManage.DBBuilder.TableOperate
             if (is_constrant)
             {
                 sql_str += "PRAGMA foreign_keys=ON;";
-            }
-            if (need_delete.Count == table_name.Count|| need_delete == null||need_delete.Count==0)
-            {
-                sql_str += "delete from " + table_name[0];
+                sql_str += "PRAGMA recursive_triggers = true;";
             }
             else
             {
-                sql_str = "delete "+need_delete[0];
-                for(int i = 1; i < need_delete.Count; i++)
-                {
-                    sql_str += "," + need_delete[i];
-                }
-                sql_str+=" from " + table_name[0];
+                sql_str += "PRAGMA foreign_keys=OFF;";
+                sql_str += "PRAGMA recursive_triggers = false;";
             }
-            
-             for(int i = 1; i < table_name.Count; i++)
+           
+            sql_str += "delete from " + need_delete;
+           
+           
+            List<string> selected_col =new List<string>{ "*"};
+            Dictionary<string,List<string>> col_tables = new Dictionary<string, List<string>>();
+            foreach(string str in table_name)
             {
-                sql_str += " inner join " + table_name[i];
+                if (str == need_delete)
+                {
+                 
+                }
+                else
+                {
+                    col_tables.Add(str, selected_col);
+                }
             }
-            sql_str += " where " + condition_express;
+            string select_str = Select.GetSelectQuery(col_tables, condition_express);
+
+            sql_str += " where exists(" + select_str + ");";
             return sql_str;
         }
 

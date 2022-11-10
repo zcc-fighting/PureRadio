@@ -8,6 +8,7 @@ using System.IO;
 using System.Net;
 using System.Web;
 
+
 namespace LocalRadioManage.StorageOperate
 {
 
@@ -21,7 +22,8 @@ namespace LocalRadioManage.StorageOperate
             StorageFile file=null;
             try
             {
-                file=await root_folder.CreateFileAsync(file_name, CreationCollisionOption.OpenIfExists);                return file;
+                file=await root_folder.CreateFileAsync(file_name, CreationCollisionOption.OpenIfExists);               
+                return file;
             }
             catch
             {
@@ -83,16 +85,23 @@ namespace LocalRadioManage.StorageOperate
            
         }
 
+        //文件创建uri
         public static async Task<StorageFile> CreateFile(StorageFolder root_folder,Uri uri)
         {
-            StorageFile temp_file=null;
+            StorageFile temp_file = null;
             StorageFile store_file = null;
             string file_name = "";
 
             try
             {
                 file_name = HttpUtility.UrlDecode(uri.Segments.Last());
-                temp_file =await StorageFile.CreateStreamedFileFromUriAsync(file_name,uri,null);
+                store_file = await MyFile.GetFile(root_folder, file_name);
+                if (store_file != null)
+                {
+                    return store_file;
+                }
+
+                temp_file = await StorageFile.CreateStreamedFileFromUriAsync(file_name, uri, null);
                 store_file = await CreateFile(root_folder, file_name);
                 await temp_file.CopyAndReplaceAsync(store_file);
                 return store_file;
@@ -103,30 +112,9 @@ namespace LocalRadioManage.StorageOperate
             }
         }
 
-        public static async Task<List<StorageFile>> CreateFile(StorageFolder root_folder, List<Uri> uris)
-        {
-            List<StorageFile> store_files = new List<StorageFile>();
-            StorageFile store_file = null;
-            try
-            {
-                foreach(Uri uri in uris)
-                {
-                    try
-                    {
-                        store_file =await CreateFile(root_folder, uri);
-                        store_files.Add(store_file);
-                    }
-                    catch
-                    {
-                        store_files.Add(null);
-                    }
-                }
-                return store_files;
-            }
-            catch
-            {
-                return null;
-            }
-        }
+      
+  
+
+      
     }
 }

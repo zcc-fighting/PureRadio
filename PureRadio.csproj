@@ -148,10 +148,19 @@
     <Compile Include="DataModels\QingTing\Content\ContentDetailResponse.cs" />
     <Compile Include="DataModels\QingTing\Content\ContentProgramListItem.cs" />
     <Compile Include="DataModels\QingTing\Content\ContentProgramListResponse.cs" />
+    <Compile Include="DataModels\QingTing\Network\IPAddrItem.cs" />
+    <Compile Include="DataModels\QingTing\Network\IPAddrResponse.cs" />
+    <Compile Include="DataModels\QingTing\Radio\RadioBillboardRegionItem.cs" />
+    <Compile Include="DataModels\QingTing\Radio\RadioBillboardRegionResponse.cs" />
+    <Compile Include="DataModels\QingTing\Radio\RadioCategoryItem.cs" />
+    <Compile Include="DataModels\QingTing\Radio\RadioCategoryResponse.cs" />
     <Compile Include="DataModels\QingTing\Radio\RadioDetailItem.cs" />
     <Compile Include="DataModels\QingTing\Radio\RadioDetailResponse.cs" />
     <Compile Include="DataModels\QingTing\Radio\RadioPlaylistItem.cs" />
     <Compile Include="DataModels\QingTing\Radio\RadioPlaylistResponse.cs" />
+    <Compile Include="DataModels\QingTing\Recommend\RecommendRadioLiveItem.cs" />
+    <Compile Include="DataModels\QingTing\Recommend\RecommendRadioReplayItem.cs" />
+    <Compile Include="DataModels\QingTing\Recommend\RecommendResponse.cs" />
     <Compile Include="DataModels\QingTing\Search\SearchContentItem.cs" />
     <Compile Include="DataModels\QingTing\Search\SearchContentResponse.cs" />
     <Compile Include="DataModels\QingTing\Search\SearchRadioItem.cs" />
@@ -201,6 +210,8 @@
     <Compile Include="LocalRadioManage\DBBuilder\TableOperate\Update.cs" />
     <Compile Include="LocalRadioManage\LocalService\Service.cs" />
     <Compile Include="LocalRadioManage\LocalService\Service\Default.cs" />
+    <Compile Include="LocalRadioManage\LocalService\Service\ServiceUser.cs" />
+    <Compile Include="LocalRadioManage\LocalService\UserInform\UserDown\LocalDown.cs" />
     <Compile Include="LocalRadioManage\LocalService\Service\ServiceUserDown.cs" />
     <Compile Include="LocalRadioManage\LocalService\Service\ServiceUserFav.cs" />
     <Compile Include="LocalRadioManage\LocalService\UserInform\UserDown\UserDown.cs" />
@@ -209,6 +220,7 @@
     <Compile Include="LocalRadioManage\StorageOperate\FileOperate\FileCreate.cs" />
     <Compile Include="LocalRadioManage\StorageOperate\FileOperate\FileDelete.cs" />
     <Compile Include="LocalRadioManage\StorageOperate\FileOperate\FileGet.cs" />
+    <Compile Include="LocalRadioManage\StorageOperate\FileOperate\RadioFile.cs" />
     <Compile Include="LocalRadioManage\StorageOperate\FolderOperate\FolderCreate.cs" />
     <Compile Include="LocalRadioManage\StorageOperate\FolderOperate\FolderDelere.cs" />
     <Compile Include="LocalRadioManage\StorageOperate\FolderOperate\FolderGet.cs" />
@@ -387,6 +399,7 @@
     <Content Include="LocalRadioManage\DBBuilder\sqlite\sqlite3.dll" />
     <Content Include="LocalRadioManage\DBBuilder\sqlite\sqlite3.exe" />
     <Content Include="LocalRadioManage\DBBuilder\sqlite\sqlite3_analyzer.exe" />
+    <Content Include="LocalRadioManage\Document\ServiceDescript.txt" />
     <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -479,6 +492,9 @@
     <PackageReference Include="System.Runtime.WindowsRuntime.UI.Xaml">
       <Version>4.7.0</Version>
     </PackageReference>
+    <PackageReference Include="TagLibSharp">
+      <Version>2.3.0</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="Strings\zh-CN\Resources.resw" />
@@ -486,7 +502,10 @@
   <ItemGroup>
     <PRIResource Include="Strings\en-US\Resources.resw" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="RemoteRadioManage\" />
+    <Folder Include="Services\" />
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

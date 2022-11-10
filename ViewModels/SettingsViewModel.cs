@@ -1,4 +1,4 @@
-﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.Toolkit.Mvvm.Messaging.Messages;
@@ -41,7 +41,7 @@ namespace PureRadio.ViewModels
             _timerStatus = timerStatus.isOn;
             _delay = timerStatus.delay;
             _closeTime = timerStatus.closeTime;
-            _networkStatus = (bool)Windows.Storage.ApplicationData.Current.LocalSettings.Values["CurrentNetworkMode"];
+            _networkStatus = Windows.Storage.ApplicationData.Current.LocalSettings.Values["CurrentNetworkMode"] == null ? true : (bool)Windows.Storage.ApplicationData.Current.LocalSettings.Values["CurrentNetworkMode"];
         }
 
         public ElementTheme Theme

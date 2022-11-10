@@ -14,8 +14,11 @@ namespace LocalRadioManage.LocalService
     class ServiceUserFav
     {
         UserInform user_inform = new UserInform();
+
+        //保存收藏节目
         public bool SaveFavProgram(RadioFullAlbum album)
         {
+            user_inform.SaveUser(album.user);
             user_inform.SetUserInform(album.user);
             try
             {
@@ -26,7 +29,6 @@ namespace LocalRadioManage.LocalService
                 return false;
             }
         }
-
         public void SaveFavProgram(List<RadioFullAlbum> albums)
         {
             foreach (RadioFullAlbum album in albums)
@@ -34,7 +36,6 @@ namespace LocalRadioManage.LocalService
                 SaveFavProgram(album);
             }
         }
-
         public bool SaveFavProgram(RadioFullAlbum album, List<RadioFullContent> radios)
         {
             if (!SaveFavProgram(album))
@@ -47,6 +48,7 @@ namespace LocalRadioManage.LocalService
 
         public bool FavRadio(RadioFullContent radio)
         {
+            user_inform.SaveUser(radio.user);
             user_inform.SetUserInform(radio.user);
             try
             {
@@ -57,12 +59,11 @@ namespace LocalRadioManage.LocalService
                 return false;
             }
         }
-
         public void FavRadio(List<RadioFullContent> radios)
         {
             foreach (RadioFullContent radio in radios)
             {
-                 FavRadio(radio);
+                FavRadio(radio);
             }
         }
 
@@ -78,7 +79,6 @@ namespace LocalRadioManage.LocalService
                 return null;
             }
         }
-
         public List<RadioFullContent> LoadRadio(RadioFullAlbum album)
         {
             try
@@ -92,7 +92,7 @@ namespace LocalRadioManage.LocalService
             }
         }
 
-        public bool DeleteProgram(string user_name,bool is_constrant)
+        public bool DeleteProgram(string user_name, bool is_constrant)
         {
             try
             {
@@ -104,13 +104,37 @@ namespace LocalRadioManage.LocalService
                 return false;
             }
         }
-
-        public bool DeleteProgram(RadioFullAlbum album,bool is_constrant)
+        public bool DeleteProgram(RadioFullAlbum album, bool is_constrant)
         {
             try
             {
                 user_inform.UserFav.SetUserFav(album);
                 return user_inform.UserFav.DeleteUserFavProgram(is_constrant);
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public bool DeleteRadio(RadioFullAlbum album, bool is_constrant)
+        {
+            try
+            {
+                user_inform.UserFav.SetUserFav(album);
+                return user_inform.UserFav.DeleteUserFavRadios(is_constrant);
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        public bool DeleteRadio(RadioFullContent radio, bool is_constrant)
+        {
+            try
+            {
+                user_inform.UserFav.SetUserFav(radio);
+                return user_inform.UserFav.DeleteUserFavRadios(is_constrant);
             }
             catch
             {

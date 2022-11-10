@@ -77,12 +77,18 @@ namespace LocalRadioManage.LocalService.UserInforms
             }
             return true;
         }
+        public bool SetUserInform(string user,string user_pass)
+        {
+            List<object> user_l = new List<object>() { user,user_pass};
+            return SetUserInform(user);
+        }
         public bool SetUserInform(List<object> user)
         {
             try
             {
                 SetUserInform();
-                condition_express = Users.UserName[0] + "=" + (string)(user.ElementAt(Users.ColLocation[Users.UserName]));
+                condition_express = Users.UserName[0] + "=" + (string)(user.ElementAt(Users.ColLocation[Users.UserName]))
+                 +" and "+Users.UserPass[0]+"="+(string)(user.ElementAt(Users.ColLocation[Users.UserPass]));
                 UserDown.SetUserDown((string)user[0]);
                 UserFav.SetUserFav((string)user[0]);
             }
@@ -157,6 +163,12 @@ namespace LocalRadioManage.LocalService.UserInforms
             }
         }
 
+        public bool UpdateUsr(string user_name,string old_pass,string new_pass)
+        {
+            SetUserInform(user_name, old_pass);
+            List<object> new_record = new List<object>() { user_name, new_pass };
+            return SQLiteConnect.TableHandle.UpdateRecord(table_name,condition_express,new_record);
+        }
 
         //自定义查询
         public void SetConditionExpress(string express)
