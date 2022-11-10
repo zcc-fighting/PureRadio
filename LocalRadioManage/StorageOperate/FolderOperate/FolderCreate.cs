@@ -19,6 +19,11 @@ namespace LocalRadioManage.StorageOperate
             StorageFolder folder=null;
             try
             {
+                folder =await GetFolder(root_folder, folder_name);
+                if (folder != null)
+                {
+                    return folder;
+                }
                 folder = await root_folder.CreateFolderAsync(folder_name, CreationCollisionOption.OpenIfExists);
                 return folder;
             }

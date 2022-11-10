@@ -18,7 +18,7 @@ namespace LocalRadioManage.LocalService
         public  DownProgress Progress = new DownProgress();
        
         //保存节目->节目表+文件(图片)
-        public async Task<bool> SaveDownProgram(RadioFullAlbum album)
+        public async Task<StorageFile> SaveDownProgram(RadioFullAlbum album)
         {
             user_inform.SaveUser(album.user);
             user_inform.SetUserInform(album.user);
@@ -28,21 +28,22 @@ namespace LocalRadioManage.LocalService
                 //用户已存在该节目则返回
                 if (user_inform.UserDown.LoadUserDownProgram()!= null)
                 {
-                    return true;
+                    return null;
                 }
-                //本地已存在该节目则不下载
-                if (user_inform.UserDown.LocalDown.LoadLocalDownProgram() == null)
-                {
-                    user_inform.UserDown.SetUserDown(album.user);
-                    //修改图片本地名称
-                    StorageFile img_flie = await MyFile.CreateFile(Default.DefalutStorage.image_folder, album.cover);
-                    album.cover = new Uri(img_flie.Path);
-                }
-               return  user_inform.UserDown.SaveUserDownProgram(album);
+              
+                user_inform.UserDown.SetUserDown(album.user);
+                //修改图片本地名称
+                StorageFolder album_folder = await MyFolder.CreateFolder(Default.DefalutStorage.radio_folder, album.id.ToString());
+                StorageFile img_flie = await MyFile.CreateFile(album_folder, album.cover);
+                album.cover = new Uri(img_flie.Path);
+           
+                user_inform.UserDown.SaveUserDownProgram(album);
+
+                return img_flie;
             }
             catch
             {
-                return false;
+                return null;
             }
             
         }
@@ -55,7 +56,9 @@ namespace LocalRadioManage.LocalService
         }
         public async Task<bool> SaveDownProgram(RadioFullAlbum album, List<RadioFullContent> radios)
         {
-           if(!await SaveDownProgram(album))
+            StorageFile img_file = await SaveDownProgram(album);
+
+            if (img_file == null)
             {
                 return false;
             }
@@ -77,14 +80,11 @@ namespace LocalRadioManage.LocalService
                 {
                     return true;
                 }
-                //本地已存在该音频则不下载
-                if (user_inform.UserDown.LocalDown.LoadLocalDownRadio() == null)
-                {
-                    user_inform.UserDown.SetUserDown(radio.user);
-                    //修改音频本地名称
-                    StorageFile radio_file = await MyFile.CreateFile(Default.DefalutStorage.radio_folder, radio.radio_uri);
-                    radio.radio_uri = new Uri(radio_file.Path);
-                }
+                user_inform.UserDown.SetUserDown(radio.user);
+                //修改音频本地名称
+                StorageFolder album_folder =await MyFolder.CreateFolder(Default.DefalutStorage.radio_folder,radio.channel_id.ToString());
+                StorageFile radio_file = await MyFile.CreateFile(album_folder, radio.radio_uri);
+                radio.radio_uri = new Uri(radio_file.Path);
                 return user_inform.UserDown.SaveUserDownRadio(radio);
             }
             catch
@@ -184,9 +184,11 @@ namespace LocalRadioManage.LocalService
                 //获取已无用户依赖的本地节目/音频
                 List<RadioFullAlbum> lonely_albums = user_inform.UserDown.LocalDown.LoadLocalDownProgram_Check();
                 List<RadioFullContent> lonely_radios = user_inform.UserDown.LocalDown.LoadLocalDownRaio_Check();
-                
+
+                List<string> album_folders = new List<string>();
                 List<Uri> img_uris = new List<Uri>();
                 List<Uri> radio_uris = new List<Uri>();
+              
 
                 //删除对应专辑
                 if (lonely_albums!= null)
@@ -195,6 +197,7 @@ namespace LocalRadioManage.LocalService
                     foreach (RadioFullAlbum album in lonely_albums)
                     {
                         img_uris.Add(album.cover);
+                        album_folders.Add(album.id.ToString());
                     }
                 }
 
@@ -211,8 +214,9 @@ namespace LocalRadioManage.LocalService
 
                 try
                 {
-                    await MyFile.DeleteFile(Default.DefalutStorage.image_folder, img_uris);
-                    await MyFile.DeleteFile(Default.DefalutStorage.radio_folder, radio_uris);
+                    await MyFile.DeleteFile(img_uris);
+                    await MyFile.DeleteFile(radio_uris);
+                    await MyFolder.DeleteFolder(Default.DefalutStorage.radio_folder, album_folders);
                     return true;
                 }
                 catch
@@ -276,7 +280,7 @@ namespace LocalRadioManage.LocalService
 
                 try
                 {
-                    await MyFile.DeleteFile(Default.DefalutStorage.radio_folder, radio_uris);
+                    await MyFile.DeleteFile(radio_uris);
                     return true;
                 }
                 catch

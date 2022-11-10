@@ -40,5 +40,23 @@ namespace LocalRadioManage.LocalService
         {
           return  user_inform.LoadUser();
         }
+
+        public bool CheckUsr(string user_name, string user_pass)
+        {
+           user_inform.SetUserInform(user_name, user_pass);
+           return (user_inform.LoadUser()!=null);
+        }
+
+        public bool UpdateUsr(string user_name, string old_pass,string new_pass)
+        {
+            if (CheckUsr(user_name, old_pass))
+            {
+                return user_inform.UpdateUsr(user_name, old_pass,new_pass);
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }

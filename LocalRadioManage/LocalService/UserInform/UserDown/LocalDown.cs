@@ -17,8 +17,9 @@ using DataModels;
 
 namespace LocalRadioManage.LocalService.UserInforms
 {
-  public partial  class LocalDown
+  public partial  class AllLocalDown
     {
+        string user_name = "0";
         /// <summary>
         /// 下载节目表参数
         /// </summary>
@@ -47,27 +48,28 @@ namespace LocalRadioManage.LocalService.UserInforms
 
     }
 
-    public partial class LocalDown
+    public partial class AllLocalDown
     {
 
-        public LocalDown()
+        public AllLocalDown()
         {
             SetLocalDown();
         }
-        public LocalDown(RadioFullAlbum album)
+        public AllLocalDown(RadioFullAlbum album)
         {
             SetLocalDown(album);
         }
 
-        public LocalDown(RadioFullContent radio)
+        public AllLocalDown(RadioFullContent radio)
         {
             SetLocalDown(radio);
         }
 
         //所有program/radio
-        private void SetLocalDown()
+        public void SetLocalDown()
         {
-           
+            user_name = "0";
+
             local_program_name = LocalChannalAlbum.TableName;
             local_radio_name = LocalRadio.TableName;
 
@@ -102,12 +104,14 @@ namespace LocalRadioManage.LocalService.UserInforms
         public void SetLocalDown(RadioFullAlbum album)
         {
             SetLocalDown();
+            user_name = album.user;
             condition_express_program =local_program_name+"."+LocalChannalAlbum.ChannalAlbumId[0] + "=" + album.id;
             condition_express_radio =local_radio_name+"."+ LocalRadio.ChannalAlbumId[0] + "=" + album.id;
         }
         //radio->单个radio
         public void SetLocalDown(RadioFullContent radio)
         {
+            user_name = radio.user;
             ulong date = DateTransform.DateToInt(DateTransform.GetDateTime(radio.day), radio.start_time, radio.end_time);
             SetLocalDown();
             condition_express_radio =local_radio_name+"."+ LocalRadio.RadioId[0] + "=" + radio.id
@@ -115,7 +119,7 @@ namespace LocalRadioManage.LocalService.UserInforms
         }
     }
 
-    public partial class LocalDown
+    public partial class AllLocalDown
     {
         public bool SaveLocalDownProgram(RadioFullAlbum album)
         {
@@ -181,6 +185,7 @@ namespace LocalRadioManage.LocalService.UserInforms
             try
             {
                 SQLiteConnect.TableHandle.SelectRecords(local_program_name,selected_col_program, condition_express_program, ref local_down_programs_inform);
+                
                 return GetProgramInforms();
             }
             catch
@@ -233,7 +238,6 @@ namespace LocalRadioManage.LocalService.UserInforms
         {
             try
             {
-             
                 return SQLiteConnect.TableHandle.DeleteRecords(local_radio_name, condition_express_radio, is_constrant);
             }
             catch
@@ -284,7 +288,7 @@ namespace LocalRadioManage.LocalService.UserInforms
         {
             if (local_down_programs_inform.Count > 0)
             {
-                return ChannalAlbumTransform.Local.ToRadioFullAlbum(local_down_programs_inform);
+                return ChannalAlbumTransform.Local.ToRadioFullAlbum(local_down_programs_inform,user_name);
             }
             else
             {
@@ -295,7 +299,7 @@ namespace LocalRadioManage.LocalService.UserInforms
         {
             if (local_down_radios_inform.Count > 0)
             {
-                return RadioTransform.Local.ToRadioFullContent(local_down_radios_inform);
+                return RadioTransform.Local.ToRadioFullContent(local_down_radios_inform,user_name);
             }
             else
             {

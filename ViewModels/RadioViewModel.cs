@@ -1,4 +1,4 @@
-﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 using PureRadio.DataModel;
 using PureRadio.DataModel.Results;
 using System;
@@ -65,14 +65,17 @@ namespace PureRadio.ViewModels
         public void UpdateRadioInfo()
         {
             //根据网络状态获取网络或本地数据
-            if ((bool)Windows.Storage.ApplicationData.Current.LocalSettings.Values["CurrentNetworkMode"])
+            if (Windows.Storage.ApplicationData.Current.LocalSettings.Values["CurrentNetworkMode"] != null)
             {
-                _rankRadioItems = RadioRank.Radios("407");
-                
+                if ((bool)Windows.Storage.ApplicationData.Current.LocalSettings.Values["CurrentNetworkMode"])
+                {
+                    _rankRadioItems = RadioRank.Radios("407");
+
+                }
             }
             else
             {
-                _rankRadioItems= RadioRank.Radios("409");
+                _rankRadioItems = RadioRank.Radios("409");
             }
 
             //热门电台数据获取失败

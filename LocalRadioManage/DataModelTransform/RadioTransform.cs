@@ -138,6 +138,31 @@ namespace LocalRadioManage.DataModelTransform
                     return null;
                 }
             }
+
+            public static RadioFullContent ToRadioFullContent(List<object> store,string user_name)
+            {
+                RadioFullContent radio = ToRadioFullContent(store);
+                radio.user = user_name;
+                return radio;
+            }
+            public static List<RadioFullContent> ToRadioFullContent(List<List<object>> stores,string user_name)
+            {
+                List<RadioFullContent> radios = new List<RadioFullContent>();
+
+                try
+                {
+                    foreach (List<object> store in stores)
+                    {
+                        radios.Add(ToRadioFullContent(store,user_name));
+                    }
+                    return radios;
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+
         }
       
 

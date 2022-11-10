@@ -54,14 +54,15 @@ namespace LocalRadioManage.LocalService
             {
                 try
                 {
-                    radio_folder = await StorageOperate.MyFolder.CreateFolder(KnownFolders.MusicLibrary, default_radio_folder);
-                    image_folder = await StorageOperate.MyFolder.CreateFolder(KnownFolders.PicturesLibrary, default_image_folder);
+                    radio_folder = await StorageOperate.MyFolder.CreateFolder(default_radio_folder);
+                    image_folder = await StorageOperate.MyFolder.CreateFolder(default_image_folder);
                     return true;
                 }
                 catch
                 {
-                    radio_folder = await StorageOperate.MyFolder.CreateFolder(default_radio_folder);
-                    image_folder = await StorageOperate.MyFolder.CreateFolder(default_image_folder);
+                    radio_folder = await StorageOperate.MyFolder.CreateFolder(KnownFolders.MusicLibrary, default_radio_folder);
+                    image_folder = await StorageOperate.MyFolder.CreateFolder(KnownFolders.PicturesLibrary, default_image_folder);
+
                     return false;
                 }
             }

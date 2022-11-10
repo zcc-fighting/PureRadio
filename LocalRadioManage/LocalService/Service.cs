@@ -12,7 +12,7 @@ using LocalRadioManage.StorageOperate;
 namespace LocalRadioManage.LocalService
 {
     //启动项
-   public partial class LocalService
+   public partial class LocalServ
     {
         /// <summary>
         /// 访问此变量需加锁，用于异步结果读取
@@ -21,35 +21,33 @@ namespace LocalRadioManage.LocalService
         ServiceUserDown UserDownService = null;
         ServiceUserFav UserFavService = null;
         ServiceUser UserService = null;
+        UserInforms.AllLocalDown LocalDownload  = null;
 
         /// <summary>
         /// 启动项设为单例
         /// </summary>
-        private static readonly Lazy<LocalService> lazy = new Lazy<LocalService>(() => new LocalService());
-        public static LocalService Instance
+        private static readonly Lazy<LocalServ> lazy = new Lazy<LocalServ>(() => new LocalServ());
+        public static LocalServ Instance
         {
             get
             {
                 return lazy.Value;
             }
         }
-        private LocalService()
+        private LocalServ()
         {
             Start();
             complete = new MissionComplete();
             UserDownService = new ServiceUserDown();
             UserFavService = new ServiceUserFav();
             UserService = new ServiceUser();
+            LocalDownload = new UserInforms.AllLocalDown();
         }
-
-
         public class MissionComplete
         {
             public bool is_complete = false;
             public bool is_success = false;
         }
-        
-       
         private bool Start()
         {
             //暂有数据库的创建/获取->默认用户设置->默认存放文件夹
@@ -87,7 +85,6 @@ namespace LocalRadioManage.LocalService
                 }
             }
         }
-
         public MissionComplete GetMissionComplete()
         {
             lock (complete)
@@ -97,12 +94,12 @@ namespace LocalRadioManage.LocalService
         }
     }
 
-    public partial class LocalService
+    public partial class LocalServ
     { 
       /// <summary>
       /// 本地用户管理
       /// </summary>
-        public class LocalUser : LocalService
+        public class LocalUser : LocalServ
         {
             public bool SaveUser(string user_name)
             {
@@ -119,7 +116,7 @@ namespace LocalRadioManage.LocalService
                 return await UserService.DeleteUser(user_name);
             }
 
-            public bool DeleteUsr(string user_name)
+            public bool RemoveUsr(string user_name)
             {
                 Task<Task<bool>> task = new Task<Task<bool>>(() => RemoveUser_Asyc(user_name));
                 task.Start();
@@ -127,28 +124,43 @@ namespace LocalRadioManage.LocalService
                 return task.Result.Result;
             }
 
+            public bool CheckUsr(string user_name,string user_pass)
+            {
+
+                return UserService.CheckUsr(user_name,user_pass);
+            }
+
+            public bool UpdateUsr(string user_name,string old_pass,string new_pass)
+            {
+                return UserService.UpdateUsr(user_name,old_pass,new_pass);
+            }
+
         }
     }
   
-    public partial class LocalService
+    public partial class LocalServ
     {
         /// <summary>
         /// 本地下载服务
         /// </summary>
-        public class LocalDown:LocalService
+        public class LocalDown:LocalServ
         {
+            ExportProgress progress = new ExportProgress();
             //异步下载
             public async Task<bool> Download_Asyc(RadioFullAlbum album, List<RadioFullContent> radio)
             {
                 bool flag = false;
-                flag &= await UserDownService.SaveDownProgram(album);
+                StorageFile img_file= await UserDownService.SaveDownProgram(album);
+                flag &= (img_file != null);
                 flag &= await UserDownService.DownRadio(radio);
                 return flag;
             }
             public async Task<bool> Download_Asyc(RadioFullAlbum album, RadioFullContent radio)
             {
                 bool flag = true;
-                flag &= await UserDownService.SaveDownProgram(album);
+                StorageFile img_file = await UserDownService.SaveDownProgram(album);
+             
+                flag &= (img_file != null);
                 flag &= await UserDownService.DownRadio(radio);
                 return flag;
             }
@@ -168,14 +180,29 @@ namespace LocalRadioManage.LocalService
                 return task.Result.Result;
             }
 
+            public List<RadioFullAlbum> Load()
+            {
+                LocalDownload.SetLocalDown();
+                return LocalDownload.LoadLocalDownProgram();
+            }
+
             public List<RadioFullAlbum> Load(string user_name)
             {
                 return UserDownService.LoadProgram(user_name);
             }
-            public List<RadioFullContent> Load(RadioFullAlbum album)
+            public List<RadioFullContent> Load(RadioFullAlbum album,bool is_user)
             {
-                return UserDownService.LoadRadio(album);
+                if (is_user)
+                {
+                    return UserDownService.LoadRadio(album);
+                }
+                else
+                {
+                    LocalDownload.SetLocalDown(album);
+                    return LocalDownload.LoadLocalDownRadio();
+                }
             }
+
             public StorageFile Load(RadioFullContent radio)
             {
                 Task<Task<StorageFile>> task = new Task<Task<StorageFile>>(() => Load_Asyc(radio));
@@ -187,7 +214,46 @@ namespace LocalRadioManage.LocalService
             //异步加载
             public async Task<StorageFile> Load_Asyc(RadioFullContent radio)
             {
-                return await MyFile.GetFile(Default.DefalutStorage.radio_folder, radio.radio_uri);
+
+                radio = LoadRadioContent(radio);
+                StorageFolder root_folder =await MyFolder.GetFolder(Default.DefalutStorage.radio_folder, radio.channel_id.ToString());
+                //实际音频已不存在，用户依赖删除
+                if (!await MyFile.FileExists(root_folder,radio.radio_uri))
+                {
+                    LocalDownload.SetLocalDown(radio);
+                    LocalDownload.DeleteLocalDownRadios(true);
+                    await RemoveRadio_Asyc(radio, true);
+                }
+
+                StorageFile get_file= await MyFile.GetFile(root_folder,radio.radio_uri);
+
+                return get_file;
+            }
+            private RadioFullContent LoadRadioContent(RadioFullContent radio)
+            {
+                LocalDownload.SetLocalDown(radio);
+
+                List<RadioFullContent> radio_list = LocalDownload.LoadLocalDownRadio();
+                if (radio_list == null)
+                {
+                    return radio;
+                }
+                else
+                {
+                    return radio_list[0];
+                }
+
+
+            }
+            private async Task<StorageFile> LoadAlbumImge(RadioFullAlbum album)
+            {
+                LocalDownload.SetLocalDown(album);
+                List<RadioFullAlbum> albums = LocalDownload.LoadLocalDownProgram();
+                if (albums != null)
+                {
+                    album = albums[0];
+                }
+                return await MyFile.GetFile(album.cover);
             }
 
             //异步删除
@@ -225,7 +291,6 @@ namespace LocalRadioManage.LocalService
             public async Task<bool> RemoveRadio_Asyc(RadioFullContent radio, bool is_constrant)
             {
                 return await UserDownService.DeleteRadio(radio, is_constrant);
-
             }
 
             //同步删除
@@ -244,6 +309,103 @@ namespace LocalRadioManage.LocalService
                 return task.Result.Result;
             }
 
+            //导出到本地音频库
+            public async Task<bool> Export_Aysc(string user_name,StorageFolder root_folder)
+            {
+                try
+                {
+                    if (root_folder == null)
+                    {
+                        root_folder = Windows.Storage.KnownFolders.MusicLibrary;
+                    }
+                    List<RadioFullAlbum> albums = Load(user_name);
+                    lock (progress)
+                    {
+                        progress.album_total_counts = albums.Count;
+                    }
+                    foreach (RadioFullAlbum album in albums)
+                    {
+                        await Task.Run(() => Export_Aysc(album, true, root_folder));
+                    }
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
+
+            }
+            public async Task<bool> Export_Aysc(RadioFullAlbum album,RadioFullContent radio,StorageFolder root_folder)
+            {
+                lock (progress)
+                {
+                    if (progress.current_radio_total_counts == 0)
+                    {
+                        progress.current_radio_total_counts = 1;
+                    }
+                }
+                StorageFile radio_file = await Load_Asyc(radio);
+                StorageFile img_file = await LoadAlbumImge(album);
+                lock (progress)
+                {
+                    progress.current_radio_finish_counts += 1;
+                }
+                if (root_folder == null)
+                {
+                    root_folder = Windows.Storage.KnownFolders.MusicLibrary;
+                }
+                if(await MyFile.CreateRadioFile(root_folder, radio_file, img_file, radio, album))
+                {
+                    lock (progress)
+                    {
+                        progress.album_finish_counts += 1;
+                        progress.radio_total_success_counts += 1;
+                    }
+                    return true;
+                }
+                return false;
+               
+            }
+        
+            public async Task<bool> Export_Aysc(RadioFullAlbum album,bool is_user, StorageFolder root_folder)
+            {
+                try
+                {
+                    lock (progress)
+                    {
+                        if (progress.album_total_counts == 0)
+                        {
+                            progress.album_total_counts = 1;
+                        }
+                    }
+                    List<RadioFullContent> radios = Load(album, is_user);
+                    lock (progress)
+                    {
+                        progress.current_radio_total_counts = radios.Count;
+                    }
+                    if (root_folder == null)
+                    {
+                        root_folder = Windows.Storage.KnownFolders.MusicLibrary;
+                    }
+                    root_folder = await MyFolder.CreateFolder(Windows.Storage.KnownFolders.MusicLibrary, album.title);
+                    foreach (RadioFullContent radio in radios)
+                    {
+                        await Task.Run(() => Export_Aysc(album, radio, root_folder));
+                    }
+                    lock (progress)
+                    {
+                        progress.album_finish_counts += 1;
+                    }
+                        return true;
+                }
+                catch
+                {
+                    return false;
+                }
+
+            }
+
+
             //获取多音频下载进度
             public ServiceUserDown.DownProgress GetDownProgress()
             {
@@ -253,20 +415,40 @@ namespace LocalRadioManage.LocalService
                 }
             }
 
+            public ExportProgress GetExportProgress()
+            {
+                lock (progress)
+                {
+                    return progress;
+                }
+            }
+          
+            public class ExportProgress
+            {
+              public  int album_total_counts = 0;
+              public  int album_finish_counts = 0; 
+              public  int current_radio_total_counts = 0;
+              public  int current_radio_finish_counts =0;
+              public  int radio_total_success_counts = 0;
+            }
+
         }
         
     }
    
-    public partial class LocalService
+    public partial class LocalServ
     {
         /// <summary>
         ///本地收藏服务
         /// </summary>
-        public class LocalFav: LocalService
+        public class LocalFav: LocalServ
         {
             public bool Favor(RadioFullAlbum album, List<RadioFullContent> radio)
             {
                 bool flag = false;
+                Task<Task> task = new Task<Task>(() => FavorChannalReplayDownload(album, radio));
+                task.Start();
+
                 flag &= UserFavService.SaveFavProgram(album);
                 UserFavService.FavRadio(radio);
                 return flag;
@@ -274,9 +456,29 @@ namespace LocalRadioManage.LocalService
             public bool Favor(RadioFullAlbum album, RadioFullContent radio)
             {
                 bool flag = true;
+                Task<Task> task = new Task<Task>(() => FavorChannalReplayDownload(album, radio));
+                task.Start();
+
                 flag &= UserFavService.SaveFavProgram(album);
                 flag &= UserFavService.FavRadio(radio);
                 return flag;
+            }
+
+            private async Task FavorChannalReplayDownload(RadioFullAlbum album, List<RadioFullContent> radios)
+            {
+                if (album.type == 0)
+                {
+                   LocalDown local_down = new LocalDown();
+                   await local_down.Download_Asyc(album, radios);
+                }
+            }
+            private async Task FavorChannalReplayDownload(RadioFullAlbum album, RadioFullContent radio)
+            {
+                if (album.type == 0)
+                {
+                    LocalDown local_down = new LocalDown();
+                    await local_down.Download_Asyc(album, radio);
+                }
             }
 
             public List<RadioFullAlbum> Load(string user_name)

@@ -21,7 +21,9 @@ namespace LocalRadioManage.LocalService.UserInforms
     public partial class UserDown
     {
 
-       public LocalDown LocalDown = new LocalDown();
+       public AllLocalDown LocalDown = new AllLocalDown();
+
+        private string user_name = "0";
         /// <summary>
         /// 用户下载节目表参数
         /// </summary>
@@ -74,6 +76,7 @@ namespace LocalRadioManage.LocalService.UserInforms
     
      private void SetUserDown()
         {
+            user_name = "0";
             user_program_name = UserDownChannalAlbum.TableName;
             local_program_name = LocalChannalAlbum.TableName;
             user_radio_name = UserDownRadio.TableName;
@@ -96,8 +99,9 @@ namespace LocalRadioManage.LocalService.UserInforms
         }
         //某一用户->所有program
      public void SetUserDown(string user_name)
-        {
+        {    
             SetUserDown();
+            this.user_name = user_name;
             condition_express_program =user_program_name+"."+UserDownChannalAlbum.UserName[0] + "=" + user_name;//找到用户
             condition_express_program += " and " + user_program_name + "." + UserDownChannalAlbum.ChannalAlbumId[0] 
                 + "=" + local_program_name + "." + LocalChannalAlbum.ChannalAlbumId[0];//匹配用户所有专辑
@@ -109,6 +113,7 @@ namespace LocalRadioManage.LocalService.UserInforms
             {
                 LocalDown.SetLocalDown(album);
                 SetUserDown(album.user);
+                user_name = album.user;
                 condition_express_radio = user_radio_name + "." + UserDownRadio.UserName[0] + "=" + album.user;//找到用户
                 condition_express_radio += " and " + user_radio_name + "." + UserDownRadio.ChannalAlbumId[0] + "=" + album.id;//匹配某一专辑
                 condition_express_radio += " and " + local_radio_name + "." + LocalRadio.RadioId[0]
@@ -130,6 +135,7 @@ namespace LocalRadioManage.LocalService.UserInforms
             {
                 LocalDown.SetLocalDown(radio);
                 SetUserDown(radio.user);
+                user_name = radio.user;
                 condition_express_radio = user_radio_name + "." + UserDownRadio.UserName[0] + "=" + radio.user;//找到用户
                 condition_express_radio += " and " + user_radio_name + "." + UserDownRadio.RadioId[0] + "=" + radio.id;
                 ulong date = DateTransform.DateToInt(DateTransform.GetDateTime(radio.day), radio.start_time, radio.end_time);
@@ -267,7 +273,7 @@ namespace LocalRadioManage.LocalService.UserInforms
         {
             if (user_down_programs_inform.Count > 0)
             {
-                return ChannalAlbumTransform.Local.ToRadioFullAlbum(user_down_programs_inform);
+                return ChannalAlbumTransform.Local.ToRadioFullAlbum(user_down_programs_inform,user_name);
             }
             else
             {
@@ -278,7 +284,7 @@ namespace LocalRadioManage.LocalService.UserInforms
         {
             if (user_down_radios_inform.Count > 0)
             {
-                return RadioTransform.Local.ToRadioFullContent(user_down_radios_inform);
+                return RadioTransform.Local.ToRadioFullContent(user_down_radios_inform,user_name);
             }
             else
             {

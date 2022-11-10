@@ -92,15 +92,17 @@ namespace LocalRadioManage.DBBuilder
     }
 
     //应用于此应用的数据模型
-   
     public static partial class SQLiteConnect
     {
         public static VTable TableHandle = new VTable();
+        private static bool only_one_create = true;
        
         public static bool CreateLocalRadioManage()
         {
-            if (SQLiteConnect.Connect())
+            if (SQLiteConnect.Connect()&&only_one_create)
             {
+                only_one_create = false;
+
                 LocalChannalAlbum local_channel_album = new LocalChannalAlbum();
                 LocalRadio local_radio = new LocalRadio();
                 Users user = new Users();

@@ -11,13 +11,15 @@ using LocalRadioManage.DataModelTransform;
 using DataModels;
 
 
+
 namespace LocalRadioManage.test
 {
   class LocalRadioTest
     {
         public async static void TestServiceStart()
         {
-            LocalService.LocalService.LocalDown down_service = new LocalService.LocalService.LocalDown();
+            LocalService.LocalServ.LocalDown down_service = new LocalService.LocalServ.LocalDown();
+            LocalServ.LocalUser user = new LocalServ.LocalUser();
             RadioFullContent radio = new RadioFullContent();
             radio.channel_id = 468;
             radio.id = 2571788;
@@ -41,18 +43,27 @@ namespace LocalRadioManage.test
             album.user = "523523523";
             radio.user = "523523523";
            await down_service.Download_Asyc(album, radio);
-           List<RadioFullAlbum>  albums= down_service.Load(album.user);
-           List<RadioFullContent> radios = down_service.Load(album);
+            bool ss = user.CheckUsr("523523523", "0");
+            ss = user.UpdateUsr("523523523", "0", "123456");
+            ss = user.CheckUsr("523523523", "123456");
+            List<RadioFullAlbum>  albums= down_service.Load(album.user);
+           List<RadioFullContent> radios = down_service.Load(album,true);
            StorageFile radio_file= down_service.Load(radio);
             bool a = down_service.RemoveProgram(album, true);
             bool b = down_service.RemoveRadio(album, true);
             album.user = "0";
+            Task<Task<bool>> task = new Task<Task<bool>>(() => down_service.Export_Aysc(album, radio,null));
+            
+            //task.Start();
+            //task.Result.Wait();
+          
             albums = down_service.Load(album.user);
-            radios = down_service.Load(album);
+            radios = down_service.Load(album,true);
             a = down_service.RemoveProgram(album, true);
             b = down_service.RemoveRadio(album, true);
-        
 
+           
+            
             bool c = down_service.RemoveProgram(album, true);
  
         }

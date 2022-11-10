@@ -125,5 +125,39 @@ namespace LocalRadioManage.StorageOperate
             }
             return null;
         }
+
+        public static async Task<bool> DeleteFile(Uri uri)
+        {
+            try
+            {
+                StorageFile file = await MyFile.GetFile(uri);
+                if (file != null)
+                {
+                    await file.DeleteAsync();
+                }
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        public static async Task<bool> DeleteFile(List<Uri> uris)
+        {
+            try
+            {
+                foreach(Uri uri in uris)
+                {
+                  await  DeleteFile(uri);
+                }
+                return true;
+              
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
     }
 }

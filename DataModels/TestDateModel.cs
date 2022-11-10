@@ -42,6 +42,7 @@ namespace DataModels
         /// 标题
         /// </summary>
         public string title { get; set; }
+      
 
         public string user = "0";
         public Uri radio_uri { get; set; }
@@ -85,6 +86,10 @@ namespace DataModels
         /// 更新时间
         /// </summary>
         public string update_time { get; set; }
+        /// <summary>
+        /// 类型 电台->0/专辑->1
+        /// </summary>
+        public int type { get; set; }
 
         public string user = "0";
         

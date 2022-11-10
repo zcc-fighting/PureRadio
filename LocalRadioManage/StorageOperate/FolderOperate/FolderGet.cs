@@ -21,7 +21,7 @@ namespace LocalRadioManage.StorageOperate
                 item = await root_folder.TryGetItemAsync(folder_name);
                 if (item != null && item.IsOfType(StorageItemTypes.Folder))
                 {
-                    return await root_folder.GetFolderAsync(folder_name);
+                    return (StorageFolder)item;
                 }
             }
             catch
@@ -33,9 +33,10 @@ namespace LocalRadioManage.StorageOperate
         public static async Task<StorageFolder> GetFolder(string folder_name)
         {
             StorageFolder root_folder=null;
-           
+            
             try
             {
+                
                 root_folder = Windows.Storage.ApplicationData.Current.LocalFolder;
                 return await GetFolder(root_folder,folder_name);
             }
@@ -90,6 +91,8 @@ namespace LocalRadioManage.StorageOperate
             return null;
 
         }
+
+       
 
     }
 }
