@@ -393,8 +393,8 @@
   <data name="SettingsLanguageZhCN.Content" xml:space="preserve">
     <value>中文 (简体)</value>
   </data>
-  <data name="SettingsNetworkStatus" xml:space="preserve">
-    <value>Network</value>
+  <data name="SettingsNetworkStatus.Text" xml:space="preserve">
+    <value>Offline</value>
   </data>
   <data name="SettingsReferencesTitle.Text" xml:space="preserve">
     <value>References</value>

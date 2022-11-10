@@ -1,56 +1,30 @@
 ﻿<Page
-    x:Class="PureRadio.ContentPage"
+    x:Class="PureRadio.Views.ContentPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:PureRadio"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup>
-                <VisualState x:Name="WideLayout">
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="640" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="DynamicBridge.Width" Value="182" />
-                        <Setter Target="DynamicBridge.Height" Value="150" />
-                        <Setter Target="DynamicBridgeCard.Width" Value="280" />
-                        <Setter Target="DynamicBridgeCard.Margin" Value="16" />
-                    </VisualState.Setters>
-                </VisualState>
-                <VisualState x:Name="NarrowLayout">
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="0" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="DynamicBridge.Width" Value="226" />
-                        <Setter Target="DynamicBridge.Height" Value="194" />
-                        <Setter Target="DynamicBridgeCard.Width" Value="226" />
-                        <Setter Target="DynamicBridgeCard.Margin" Value="8,16" />
-                        <Setter Target="contentSV.Padding" Value="12,0,12,0" />
-                        <Setter Target="contentSV.Margin" Value="0,20,0,0"/>
-                    </VisualState.Setters>
-                </VisualState>
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
-        <Border x:Name="DynamicBridge" Visibility="Collapsed"/>
-        <Border x:Name="DynamicBridgeCard" Visibility="Collapsed"/>
-
-        <ScrollViewer
-            x:Name="contentSV"
-            Padding="56,0,56,0"
-            Margin="0,36,0,0"
-            IsTabStop="False"
-            VerticalScrollBarVisibility="Auto"
-            VerticalScrollMode="Auto">
-            <StackPanel HorizontalAlignment="Stretch" Margin="0,0,0,100">
-                
-            </StackPanel>
-        </ScrollViewer>
-        
+        <muxc:NavigationView
+            x:Name="ContentTypeNavView"
+            Canvas.ZIndex="0"
+            PaneDisplayMode="Top"
+            Loaded="ContentTypeNavView_Loaded"
+            ItemInvoked="ContentTypeNavView_ItemInvoked"
+            IsBackButtonVisible="Collapsed"
+            IsSettingsVisible="False">
+            <muxc:NavigationView.MenuItems>
+                <muxc:NavigationViewItem Margin="40,0,0,0" Tag="545" x:Uid="ContentNavHeadlines" Content="Toutiao"/>
+                <muxc:NavigationViewItem Tag="0" x:Uid="ContentNavCategories" Content="Categories"/>
+            </muxc:NavigationView.MenuItems>
+            <muxc:NavigationView.Content>
+                <Frame x:Name="ContentView" Background="Transparent"/>
+            </muxc:NavigationView.Content>
+        </muxc:NavigationView>
     </Grid>
 </Page>

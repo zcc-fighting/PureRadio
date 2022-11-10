@@ -121,7 +121,8 @@
                                         Text="{x:Bind title}" 
                                         Style="{StaticResource BaseTextBlockStyle}"
                                         x:Phase="0"
-                                        MaxLines="2"
+                                        MaxLines="1"
+                                        TextTrimming="CharacterEllipsis"
                                         HorizontalAlignment="Left"
                                         VerticalAlignment="Top"/>
                                     <TextBlock     

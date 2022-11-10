@@ -1,0 +1,122 @@
+﻿<Page
+    x:Class="PureRadio.Views.ProgramContentPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:PureRadio.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:datamodel="using:PureRadio.DataModel"
+    mc:Ignorable="d"
+    Background="Transparent">
+
+    <Grid>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="WideLayout">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="640" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="DynamicBridge.Width" Value="280" />
+                        <Setter Target="DynamicBridge.Margin" Value="16" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="NarrowLayout">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="DynamicBridge.Width" Value="226" />
+                        <Setter Target="DynamicBridge.Margin" Value="8,16" />
+                        <Setter Target="ProgramResult.Padding" Value="6,2,6,100" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <Border x:Name="DynamicBridge" Visibility="Collapsed"/>
+        <GridView 
+            x:Name="ProgramResult"
+            Padding="50,6,50,100"
+            ItemsSource="{x:Bind _programs, Mode=TwoWay}"
+            IsItemClickEnabled="True"
+            ItemClick="ProgramResult_ItemClick">
+            <GridView.ItemContainerStyle>
+                <Style TargetType="GridViewItem">
+                    <Setter Property="Margin" Value="6"/>
+                </Style>
+            </GridView.ItemContainerStyle>
+            <GridView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <ItemsWrapGrid x:Name="MaxItemsWrapGrid"
+                           MaximumRowsOrColumns="6"
+                           Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </GridView.ItemsPanel>
+            <GridView.ItemTemplate>
+                <DataTemplate x:DataType="datamodel:ContentItem">
+                    <Grid
+                        x:Name="CardCantainer"
+                        CornerRadius="8"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        Height="132"
+                        Width="{Binding ElementName=DynamicBridge, Path=Width}"
+                        Canvas.ZIndex="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Border 
+                            Grid.Column="0"                                    
+                            Height="100" Width="100"
+                            BorderThickness="0"
+                            Margin="{Binding ElementName=DynamicBridge, Path=Margin}"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"
+                            CornerRadius="4">
+                            <Image                                   
+                                Height="100" Width="100"                            
+                                Source="{x:Bind cover}"
+                                x:Phase="1"/>
+                        </Border>
+                        <Grid 
+                            Grid.Column="1"
+                            Margin="0,16,16,16"
+                            Height="100">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <TextBlock 
+                                Grid.Row="0"
+                                Text="{x:Bind title}" 
+                                Style="{StaticResource BaseTextBlockStyle}"
+                                x:Phase="0"
+                                MaxLines="1"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top"/>
+                            <TextBlock     
+                                Grid.Row="1"
+                                Text="{x:Bind description}" 
+                                Style="{StaticResource BodyTextBlockStyle}"
+                                x:Phase="0"
+                                MaxLines="2"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top"/>
+                            <TextBlock
+                                Grid.Row="2"
+                                Text="{x:Bind playcount}"
+                                Style="{StaticResource BodyTextBlockStyle}"
+                                x:Phase="0"
+                                MaxLines="1"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Bottom"/>
+                        </Grid>
+                    </Grid>                    
+                </DataTemplate>
+            </GridView.ItemTemplate>
+        </GridView>
+    </Grid>
+</Page>

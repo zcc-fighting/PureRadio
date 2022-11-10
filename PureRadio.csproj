@@ -148,8 +148,6 @@
     <Compile Include="DataModels\QingTing\Content\ContentDetailResponse.cs" />
     <Compile Include="DataModels\QingTing\Content\ContentProgramListItem.cs" />
     <Compile Include="DataModels\QingTing\Content\ContentProgramListResponse.cs" />
-    <Compile Include="DataModels\QingTing\Radio\RadioCategoryItem.cs" />
-    <Compile Include="DataModels\QingTing\Radio\RadioCategoryResponse.cs" />
     <Compile Include="DataModels\QingTing\Radio\RadioDetailItem.cs" />
     <Compile Include="DataModels\QingTing\Radio\RadioDetailResponse.cs" />
     <Compile Include="DataModels\QingTing\Radio\RadioPlaylistItem.cs" />
@@ -216,18 +214,36 @@
     <Compile Include="LocalRadioManage\StorageOperate\FolderOperate\FolderGet.cs" />
     <Compile Include="LocalRadioManage\test\LocalRadioTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\PlaybackService.cs" />
     <Compile Include="ViewModels\AppViewModel.cs" />
+    <Compile Include="ViewModels\DetailRadioViewModel.cs" />
+    <Compile Include="ViewModels\PlayerViewModel.cs" />
     <Compile Include="ViewModels\RadioViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\UserViewModel.cs" />
     <Compile Include="Views\ContentPage.xaml.cs">
       <DependentUpon>ContentPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\DetailProgramPage.xaml.cs">
+      <DependentUpon>DetailProgramPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DetailRadioPage.xaml.cs">
+      <DependentUpon>DetailRadioPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\LibraryPage.xaml.cs">
       <DependentUpon>LibraryPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MoreRadioPage.xaml.cs">
       <DependentUpon>MoreRadioPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\NULLPage.xaml.cs">
+      <DependentUpon>NULLPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ProgramContentJumpPage.xaml.cs">
+      <DependentUpon>ProgramContentJumpPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ProgramContentPage.xaml.cs">
+      <DependentUpon>ProgramContentPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\RadioPage.xaml.cs">
       <DependentUpon>RadioPage.xaml</DependentUpon>
@@ -238,11 +254,14 @@
     <Compile Include="Views\RootPage.xaml.cs">
       <DependentUpon>RootPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\SearchProgramPage.xaml.cs">
+      <DependentUpon>SearchProgramPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SearchRadioPage.xaml.cs">
+      <DependentUpon>SearchRadioPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\UserPage.xaml.cs">
-      <DependentUpon>UserPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -379,6 +398,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\DetailProgramPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DetailRadioPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\LibraryPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -386,6 +413,18 @@
     <Page Include="Views\MoreRadioPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\NULLPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ProgramContentJumpPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\ProgramContentPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\RadioPage.xaml">
       <SubType>Designer</SubType>
@@ -399,13 +438,17 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\SearchProgramPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SearchRadioPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\SettingsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\UserPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -443,9 +486,7 @@
   <ItemGroup>
     <PRIResource Include="Strings\en-US\Resources.resw" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

@@ -16,6 +16,7 @@ using Windows.System;
 using Windows.Foundation.Metadata;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using PureRadio.ViewModels;
+using Windows.UI.Xaml.Media.Animation;
 
 namespace PureRadio.Views
 {
@@ -48,7 +49,7 @@ namespace PureRadio.Views
             WeakReferenceMessenger.Default.Register<NavToRadioDetailMessage>(this, (r, m) =>
             {
                 m.Value.isFav = ViewModel.CheckFav(m.Value.channelID);
-                //ContentFrame.Navigate(typeof(DetailRadioPage), m.Value, new DrillInNavigationTransitionInfo());
+                ContentFrame.Navigate(typeof(DetailRadioPage), m.Value, new DrillInNavigationTransitionInfo());
             });
             WeakReferenceMessenger.Default.Register<NavToProgramDetailMessage>(this, (r, m) =>
             {
@@ -92,7 +93,6 @@ namespace PureRadio.Views
             ("recommend",typeof(RecommendPage)),
             ("radio",typeof(RadioPage)),
             ("content",typeof(ContentPage)),
-            ("user",typeof(UserPage)),
             ("library",typeof(LibraryPage)),
         };
 
@@ -216,12 +216,6 @@ namespace PureRadio.Views
                 NavView.SelectedItem = (muxc.NavigationViewItem)NavView.SettingsItem;
                 NavView.Header = ((muxc.NavigationViewItem)NavView.SelectedItem)?.Content?.ToString();
             }
-            else if (ContentFrame.SourcePageType == typeof(UserPage))
-            {
-
-                NavView.Header = ((muxc.NavigationViewItem)NavView.SelectedItem)?.Content?.ToString();
-
-            }
             else if (ContentFrame.SourcePageType == typeof(LibraryPage))
             {
                 NavView.Header = ((muxc.NavigationViewItem)NavView.SelectedItem)?.Content?.ToString();
@@ -304,6 +298,7 @@ namespace PureRadio.Views
                 }
             }
         }
+
     }
 
 }
