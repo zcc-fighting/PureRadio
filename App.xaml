@@ -8,53 +8,18 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <controls:XamlControlsResources ControlsResourcesVersion="Version2"/>
+                <ResourceDictionary>
+                    <FontFamily x:Key="FluentIcons">ms-appx:///Assets/Font/SegoeFluentIcons.ttf#Segoe Fluent Icons</FontFamily>
+                </ResourceDictionary>
+                <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
+                <ResourceDictionary Source="ms-appx:///Styles/Style.Overwrite.xaml"/>
+                <ResourceDictionary Source="ms-appx:///Styles/Style.Dimensions.xaml"/>
+                <ResourceDictionary Source="ms-appx:///Styles/Style.DataTemplate.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-
             <ResourceDictionary.ThemeDictionaries>
-                <ResourceDictionary x:Key="Light">
-                    <SolidColorBrush x:Key="HomePageBackgroundBrush" Color="Transparent"/>
-                    <SolidColorBrush x:Key="PageHeaderForegroundBrush" Color="Black"/>
-                    <StaticResource x:Key="ControlExampleDisplayBrush" ResourceKey="SolidBackgroundFillColorBaseBrush" />
-                    <SolidColorBrush x:Key="SearchBoxBorderBrush" Color="Transparent" />
-                    <Thickness x:Key="SearchBoxBorderThickness">0</Thickness>
-                    <Thickness x:Key="ControlExampleDisplayBorderThickness">0</Thickness>
-                    <SolidColorBrush x:Key="NavigationViewExpandedPaneBackground" Color="Transparent"/>
-                    <AcrylicBrush
-                        x:Key="AcrylicMediaContainerBrush"
-                        TintColor="#FCFCFC"
-                        TintOpacity="0.6"
-                        FallbackColor="#F9F9F9"
-                        BackgroundSource="Backdrop"/>
-                    <SolidColorBrush x:Key="MediaContainerHoverBrush" Color="#33000000"/>
-                </ResourceDictionary>
-                <ResourceDictionary x:Key="Dark">
-                    <SolidColorBrush x:Key="HomePageBackgroundBrush" Color="Transparent"/>
-                    <SolidColorBrush x:Key="PageHeaderForegroundBrush" Color="White"/>
-                    <StaticResource x:Key="ControlExampleDisplayBrush" ResourceKey="SolidBackgroundFillColorBaseBrush" />
-                    <SolidColorBrush x:Key="SearchBoxBorderBrush" Color="Transparent" />
-                    <Thickness x:Key="SearchBoxBorderThickness">0</Thickness>
-                    <Thickness x:Key="ControlExampleDisplayBorderThickness">0</Thickness>
-                    <SolidColorBrush x:Key="NavigationViewExpandedPaneBackground" Color="Transparent"/>
-                    <AcrylicBrush
-                        x:Key="AcrylicMediaContainerBrush"
-                        TintColor="#2C2C2C"
-                        TintOpacity="0.6"
-                        FallbackColor="#2C2C2C"
-                        BackgroundSource="Backdrop"/>
-                    <SolidColorBrush x:Key="MediaContainerHoverBrush" Color="#33FFFFFF"/>
-                </ResourceDictionary>
-                <ResourceDictionary x:Key="HighContrast">
-                    <SolidColorBrush x:Key="HomePageBackgroundBrush" Color="{ThemeResource SystemColorWindowColor}" />
-                    <SolidColorBrush x:Key="PageHeaderForegroundBrush" Color="{ThemeResource SystemColorWindowTextColor}"/>
-                    <SolidColorBrush x:Key="ControlExampleDisplayBrush" Color="{ThemeResource SystemColorWindowColor}" />
-                    <SolidColorBrush x:Key="SearchBoxBorderBrush" Color="{ThemeResource SystemColorWindowTextColor}" />
-                    <Thickness x:Key="SearchBoxBorderThickness">2</Thickness>
-                    <Thickness x:Key="ControlExampleDisplayBorderThickness">1</Thickness>
-                    <SolidColorBrush x:Key="NavigationViewExpandedPaneBackground" Color="Transparent"/>
-                    <SolidColorBrush x:Key="AcrylicMediaContainerBrush" Color="{ThemeResource SystemColorWindowColor}"/>
-                    <SolidColorBrush x:Key="MediaContainerHoverBrush" Color="Transparent"/>
-                </ResourceDictionary>
+                <ResourceDictionary x:Key="Light" Source="ms-appx:///Styles/Theme.Light.xaml" />
+                <ResourceDictionary x:Key="Dark" Source="ms-appx:///Styles/Theme.Dark.xaml" />
+                <ResourceDictionary x:Key="HighContrast" Source="ms-appx:///Styles/Theme.HighContrast.xaml" />
             </ResourceDictionary.ThemeDictionaries>
         </ResourceDictionary>
     </Application.Resources>

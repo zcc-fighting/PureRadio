@@ -1,8 +1,10 @@
-using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.Input;
-using Microsoft.Toolkit.Mvvm.Messaging;
-using Microsoft.Toolkit.Mvvm.Messaging.Messages;
-using PureRadio.DataModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.Input;
+using Newtonsoft.Json.Linq;
+using PureRadio.Uwp.Models.Data.Constants;
+using PureRadio.Uwp.Models.Enums;
+using PureRadio.Uwp.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,140 +12,130 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.ApplicationModel.Core;
-using Windows.System.Threading;
-using Windows.UI;
-using Windows.UI.Core;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace PureRadio.ViewModels
 {
-    public class SettingsViewModel : ObservableRecipient
+    public sealed partial class SettingsViewModel : ObservableRecipient
     {
+        private readonly ISettingsService settings;// = Ioc.Default.GetRequiredService<ISettingsService>();
+        // 展示重启窗体事件
+        public event EventHandler ShowRestartDialog;
+
+        private string savedLanguage;
+
         private ElementTheme _theme;
-        private string _language;
-        private bool _timerStatus = false;
-        private TimeSpan _delay;
-        private string _closeTime;
-        private bool _networkStatus = false;
-
-
-        public SettingsViewModel()
-        {
-            IsActive = true;                       
-        }
-
-        protected override void OnActivated()
-        {
-            _language = (string)Windows.Storage.ApplicationData.Current.LocalSettings.Values["CurrentLanguage"];
-            _theme = App.RootTheme;
-            TimerStatus timerStatus = Messenger.Send<TimerRequestMessage>();
-            _timerStatus = timerStatus.isOn;
-            _delay = timerStatus.delay;
-            _closeTime = timerStatus.closeTime;
-            _networkStatus = Windows.Storage.ApplicationData.Current.LocalSettings.Values["CurrentNetworkMode"] == null ? true : (bool)Windows.Storage.ApplicationData.Current.LocalSettings.Values["CurrentNetworkMode"];
-        }
-
         public ElementTheme Theme
         {
             get => _theme;
             set
             {
                 SetProperty(ref _theme, value);
-                SendThemeMessage();
-                SaveTheme();
+                SetTheme();
             }
-        }
 
+        }
+        private string _language;
         public string Language
         {
             get => _language;
             set
             {
+                if (savedLanguage != value && savedLanguage == _language) ShowRestartDialog?.Invoke(this, new EventArgs());
                 SetProperty(ref _language, value);
-                SaveLanguage();
             }
         }
-
+        private bool _timerStatus;
         public bool TimerStatus
         {
             get => _timerStatus;
             set
             {
-                SetProperty(ref _timerStatus, value);
-                CloseTime = DateTime.Now.AddMilliseconds(_delay.TotalMilliseconds).ToString("g");
-                SendTimerMessage();
+                if (value != _timerStatus)
+                {
+                    if (_timerStatus) settings.CancelTimer();
+                    else if (!_timerStatus && Delay is not null) settings.SetTimer((TimeSpan)Delay);
+                    SetProperty(ref _timerStatus, value);
+                    CloseTime = settings.ShutdownTimeString;
+                    Delay = null;
+                }
             }
         }
-
-        public TimeSpan Delay
+        private TimeSpan? _delay;
+        public TimeSpan? Delay
         {
             get => _delay;
             set
             {
                 SetProperty(ref _delay, value);
+                TimerToggleEnabled = (value is not null || TimerStatus);
             }
         }
-
+        private string _closeTime;
         public string CloseTime
         {
-            get
-            {
-                var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
-                return resourceLoader.GetString("SettingsTimerDelay") + _closeTime;
-            }
+            get => _closeTime;
             set
             {
                 SetProperty(ref _closeTime, value);
             }
         }
-
-        public bool NetworkStatus
+        private bool _timerToggleEnabled;
+        public bool TimerToggleEnabled
         {
-            get => _networkStatus;
+            get => _timerToggleEnabled;
             set
             {
-                SetProperty(ref _networkStatus, value);
-                SaveNetwork();
+                SetProperty(ref _timerToggleEnabled, value);
             }
         }
+        [ObservableProperty]
+        private bool _clearingCache;
 
-        public void SaveNetwork()
+        public SettingsViewModel(ISettingsService settings)
         {
-            Windows.Storage.ApplicationData.Current.LocalSettings.Values["CurrentNetworkMode"] = NetworkStatus;
+            this.settings = settings;
+            IsActive = true;
+        }
+
+        protected override void OnActivated()
+        {
+            base.OnActivated();
+            _theme = App.RootTheme;
+            savedLanguage = _language = settings.GetValue<string>(AppConstants.SettingsKey.ConfigLanguage) ?? AppConstants.SettingsValue.Auto;
+            _timerStatus = settings.TimerStatus;
+            _closeTime = settings.ShutdownTimeString;
+            Delay = null;
         }
 
 
-        public void SendThemeMessage()
+        private void SetTheme()
         {
-            Messenger.Send(new ThemeChangedMessage(Theme));
-        }
-
-        public void SendTimerMessage()
-        {
-            Messenger.Send(new TimerChangedMessage(new TimerStatus(Delay, TimerStatus, _closeTime)));
-        }
-
-        private void SaveLanguage()
-        {
-            Windows.Storage.ApplicationData.Current.LocalSettings.Values["CurrentLanguage"] = Language;
-        }
-
-        private void SaveTheme()
-        {
-            if(Theme == ElementTheme.Light)
+            settings.SetTheme(Theme);
+            string value = Theme switch
             {
-                Windows.Storage.ApplicationData.Current.LocalSettings.Values["CurrentTheme"] = "Light";
-            }
-            else if(Theme == ElementTheme.Dark)
-            {
-                Windows.Storage.ApplicationData.Current.LocalSettings.Values["CurrentTheme"] = "Dark";
-            }
-            else
-            {
-                Windows.Storage.ApplicationData.Current.LocalSettings.Values["CurrentTheme"] = "Default";
-            }
+                ElementTheme.Light => AppConstants.SettingsValue.Light,
+                ElementTheme.Dark => AppConstants.SettingsValue.Dark,
+                _ => AppConstants.SettingsValue.Default
+            };
+            settings.SetValue(AppConstants.SettingsKey.ConfigTheme, value);
         }
 
+        public async Task RestartAsync()
+        {
+            settings.SetValue(AppConstants.SettingsKey.ConfigLanguage, Language);
+            await CoreApplication.RequestRestartAsync(string.Empty);
+        }
+
+        public void ResetLanguageSelected()
+        {
+            Language = savedLanguage;
+        }
+
+        public void ClearCache()
+        {
+            ClearingCache = true;
+        }
     }
 }

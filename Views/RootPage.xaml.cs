@@ -1,304 +1,185 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.DependencyInjection;
+using Microsoft.Toolkit.Uwp.UI;
+using PureRadio.Uwp.Models.Data.Constants;
+using PureRadio.Uwp.Models.Enums;
+using PureRadio.Uwp.Models.QingTing.Network;
+using PureRadio.Uwp.Models.QingTing.User;
+using PureRadio.Uwp.Providers.Interfaces;
+using PureRadio.Uwp.Services.Interfaces;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
+using System.Net.Http;
+using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
+using Windows.Foundation;
+using Windows.Foundation.Collections;
 using Windows.UI;
+using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
-using muxc = Microsoft.UI.Xaml.Controls;
-using PureRadio;
-using Windows.UI.Core;
-using Windows.System;
-using Windows.Foundation.Metadata;
-using Microsoft.Toolkit.Mvvm.Messaging;
-using PureRadio.ViewModels;
+using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
+using Windows.UI.Xaml.Navigation;
+
+
+// https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
 namespace PureRadio.Views
 {
+    /// <summary>
+    /// 可用于自身或导航至 Frame 内部的空白页。
+    /// </summary>
     public sealed partial class RootPage : Page
     {
-        CoreApplicationViewTitleBar coreTitleBar;
-        private AppViewModel ViewModel { get; set; } = new AppViewModel();
-        public RootPage()
+        internal Rect splashImageRect; // Rect to store splash screen image coordinates.
+        private SplashScreen splash; // Variable to hold the splash screen object.
+        internal bool dismissed = false; // Variable to track splash screen dismissal status.
+
+        public RootPage(SplashScreen splashscreen, bool loadState)
         {
             this.InitializeComponent();
+
+            Loaded += RootPage_Loaded;
+            Unloaded += RootPage_Unloaded;
+
             // Hide default title bar.
-            coreTitleBar =
-                CoreApplication.GetCurrentView().TitleBar;
+            CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
             coreTitleBar.ExtendViewIntoTitleBar = true;
 
             // Set caption buttons background to transparent.
-            ApplicationViewTitleBar titleBar =
-                ApplicationView.GetForCurrentView().TitleBar;
+            ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
             titleBar.ButtonBackgroundColor = Colors.Transparent;
             titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
 
-            // Set XAML element as a drag region.
-            Window.Current.SetTitleBar(AppTitleBar);
+            // Listen for window resize events to reposition the extended splash screen image accordingly.
+            // This ensures that the extended splash screen formats properly in response to window resizing.
+            Window.Current.SizeChanged += new WindowSizeChangedEventHandler(ExtendedSplash_OnResize);
 
-            // Register a handler for when the title bar visibility changes.
-            // For example, when the title bar is invoked in full screen mode.
-            coreTitleBar.IsVisibleChanged += CoreTitleBar_IsVisibleChanged;
-
-
-            WeakReferenceMessenger.Default.Register<NavToRadioDetailMessage>(this, (r, m) =>
+            splash = splashscreen;
+            if (splash != null)
             {
-                m.Value.isFav = ViewModel.CheckFav(m.Value.channelID);
-                ContentFrame.Navigate(typeof(DetailRadioPage), m.Value, new DrillInNavigationTransitionInfo());
+                // Register an event handler to be executed when the splash screen has been dismissed.
+                splash.Dismissed += new TypedEventHandler<SplashScreen, Object>(DismissedEventHandler);
+
+                // Retrieve the window coordinates of the splash screen image.
+                splashImageRect = splash.ImageLocation;
+
+                extendedSplash.Visibility = Visibility.Visible;
+
+                PositionImage();
+
+                PositionRing();
+            }
+
+            // Restore the saved session state if necessary
+            RestoreState(loadState);
+        }
+
+        private void RootPage_Unloaded(object sender, RoutedEventArgs e)
+        {
+            Ioc.Default.GetRequiredService<INavigateService>().Navigating -= Navigate_Navigating;
+
+        }
+
+        private void RootPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            Ioc.Default.GetRequiredService<INavigateService>().Navigating += Navigate_Navigating;
+        }
+
+
+        private void Navigate_Navigating(object sender, Uwp.Models.Args.AppNavigationEventArgs e)
+        {
+            if (e.Type == Uwp.Models.Enums.NavigationType.Player)
+            {
+                RootFrame.Navigate(typeof(PlayerPage), e.Parameter);
+            }
+            else if (RootFrame.SourcePageType == typeof(PlayerPage))
+            {
+                RootFrame.Navigate(typeof(MainPage), e.Parameter);
+            }
+        }
+
+        private void PositionImage()
+        {
+            extendedSplashImage.SetValue(Canvas.LeftProperty, splashImageRect.X);
+            extendedSplashImage.SetValue(Canvas.TopProperty, splashImageRect.Y);
+            extendedSplashImage.Height = splashImageRect.Height;
+            extendedSplashImage.Width = splashImageRect.Width;
+        }
+
+        private void PositionRing()
+        {
+            splashProgressRing.SetValue(Canvas.LeftProperty, splashImageRect.X + (splashImageRect.Width * 0.5) - (splashProgressRing.Width * 0.5));
+            splashProgressRing.SetValue(Canvas.TopProperty, (splashImageRect.Y + splashImageRect.Height + splashImageRect.Height * 0.1));
+        }
+
+        // Include code to be executed when the system has transitioned from the splash screen to the extended splash screen (application's first view).
+        private async void DismissedEventHandler(SplashScreen sender, object e)
+        {
+            dismissed = true;
+
+            // Complete app setup operations here...
+            try
+            {
+                var httpProvider = Ioc.Default.GetRequiredService<IHttpProvider>();
+                var request = await httpProvider.GetRequestMessageAsync(ApiConstants.Network.IpAddr, HttpMethod.Get, null, RequestType.Default, false, false);
+                var response = await httpProvider.SendAsync(request);
+                var result = await httpProvider.ParseAsync<IPAddrResponse>(response);
+                if (result?.Code == 0)
+                {
+
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            ImageCache.Instance.CacheDuration = TimeSpan.FromHours(24);
+            ImageCache.Instance.MaxMemoryCacheCount = 100;
+
+
+            await Ioc.Default.GetRequiredService<IAccountProvider>().TrySignInAsync();
+            DismissExtendedSplash();
+        }
+
+        private async void DismissExtendedSplash()
+        {
+            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+                extendedSplash.Visibility = Visibility.Collapsed;
+
+                RootFrame.Navigate(typeof(MainPage));
             });
-            WeakReferenceMessenger.Default.Register<NavToProgramDetailMessage>(this, (r, m) =>
-            {
-                m.Value.qingtingID = ViewModel.UserInfo.qingting_id;
-                m.Value.access_token = ViewModel.UserInfo.access_token;
-                m.Value.isFav = ViewModel.CheckFav(m.Value.programID);
-                //ContentFrame.Navigate(typeof(DetailProgramPage), m.Value, new DrillInNavigationTransitionInfo());
-            });
         }
 
-        private void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        private void ExtendedSplash_OnResize(Object sender, WindowSizeChangedEventArgs e)
         {
-
-        }
-
-        private void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
-        {
-
-        }
-
-        private void CoreTitleBar_IsVisibleChanged(CoreApplicationViewTitleBar sender, object args)
-        {
-            if (sender.IsVisible)
+            // Safely update the extended splash screen image coordinates. This function will be executed when a user resizes the window.
+            if (splash != null)
             {
-                AppTitleBar.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                AppTitleBar.Visibility = Visibility.Collapsed;
+                // Update the coordinates of the splash screen image.
+                splashImageRect = splash.ImageLocation;
+                PositionImage();
+
+                PositionRing();
             }
         }
 
-        private void ContentFrame_NavigationFailed(object sender, NavigationFailedEventArgs e)
+        private void RestoreState(bool loadState)
         {
-            throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
-        }
-
-        // List of ValueTuple holding the Navigation Tag and the relative Navigation Page
-        private readonly List<(string Tag, Type Page)> _pages = new List<(string Tag, Type Page)>
-        {
-            ("recommend",typeof(RecommendPage)),
-            ("radio",typeof(RadioPage)),
-            ("content",typeof(ContentPage)),
-            ("library",typeof(LibraryPage)),
-        };
-
-        private void NavView_Loaded(object sender, RoutedEventArgs e)
-        {
-            // Add handler for ContentFrame navigation.
-            ContentFrame.Navigated += On_Navigated;
-            // NavView doesn't load any page by default, so load home page.
-            NavView.SelectedItem = NavView.MenuItems[0];
-            // If navigation occurs on SelectionChanged, this isn't needed.
-            // Because we use ItemInvoked to navigate, we need to call Navigate
-            // here to load the home page.
-            NavView_Navigate("recommend", new Windows.UI.Xaml.Media.Animation.EntranceNavigationTransitionInfo());
-
-            // Listen to the window directly so the app responds
-            // to accelerator keys regardless of which element has focus.
-            Window.Current.CoreWindow.Dispatcher.AcceleratorKeyActivated +=
-                CoreDispatcher_AcceleratorKeyActivated;
-
-            Window.Current.CoreWindow.PointerPressed += CoreWindow_PointerPressed;
-
-            SystemNavigationManager.GetForCurrentView().BackRequested += System_BackRequested;
-        }
-
-        private void NavView_ItemInvoked(muxc.NavigationView sender,
-                                         muxc.NavigationViewItemInvokedEventArgs args)
-        {
-            if (args.IsSettingsInvoked == true)
+            if (loadState)
             {
-                NavView_Navigate("settings", args.RecommendedNavigationTransitionInfo);
-            }
-            else if (args.InvokedItemContainer != null)
-            {
-                var navItemTag = args.InvokedItemContainer.Tag.ToString();
-                NavView_Navigate(navItemTag, args.RecommendedNavigationTransitionInfo);
+                // code to load your app's state here
             }
         }
-
-        private void NavView_Navigate(
-            string navItemTag,
-            Windows.UI.Xaml.Media.Animation.NavigationTransitionInfo transitionInfo)
-        {
-            Type _page = null;
-            if (navItemTag == "settings")
-            {
-                _page = typeof(SettingsPage);
-            }
-            else
-            {
-                var item = _pages.FirstOrDefault(p => p.Tag.Equals(navItemTag));
-                _page = item.Page;
-            }
-            // Get the page type before navigation so you can prevent duplicate
-            // entries in the backstack.
-            var preNavPageType = ContentFrame.CurrentSourcePageType;
-
-            // Only navigate if the selected page isn't currently loaded.
-            if (!(_page is null) && !Type.Equals(preNavPageType, _page))
-            {
-                ContentFrame.Navigate(_page, null, transitionInfo);
-            }
-        }
-
-        private void NavView_BackRequested(muxc.NavigationView sender,
-                                           muxc.NavigationViewBackRequestedEventArgs args)
-        {
-            TryGoBack();
-        }
-
-        private void CoreDispatcher_AcceleratorKeyActivated(CoreDispatcher sender, AcceleratorKeyEventArgs e)
-        {
-            // When Alt+Left are pressed navigate back
-            if (e.EventType == CoreAcceleratorKeyEventType.SystemKeyDown
-                && e.VirtualKey == VirtualKey.Left
-                && e.KeyStatus.IsMenuKeyDown == true
-                && !e.Handled)
-            {
-                e.Handled = TryGoBack();
-            }
-        }
-
-        private void System_BackRequested(object sender, BackRequestedEventArgs e)
-        {
-            if (!e.Handled)
-            {
-                e.Handled = TryGoBack();
-            }
-        }
-
-        private void CoreWindow_PointerPressed(CoreWindow sender, PointerEventArgs e)
-        {
-            // Handle mouse back button.
-            if (e.CurrentPoint.Properties.IsXButton1Pressed)
-            {
-                e.Handled = TryGoBack();
-            }
-        }
-
-        private bool TryGoBack()
-        {
-            if (!ContentFrame.CanGoBack)
-                return false;
-
-            // Don't go back if the nav pane is overlayed.
-            if (NavView.IsPaneOpen &&
-                (NavView.DisplayMode == muxc.NavigationViewDisplayMode.Compact ||
-                 NavView.DisplayMode == muxc.NavigationViewDisplayMode.Minimal))
-                return false;
-
-            ContentFrame.GoBack();
-            return true;
-        }
-
-        private void On_Navigated(object sender, NavigationEventArgs e)
-        {
-            NavView.IsBackEnabled = ContentFrame.CanGoBack;
-            if (ContentFrame.SourcePageType == typeof(SettingsPage))
-            {
-                //NavView.AlwaysShowHeader = true;
-                // SettingsItem is not part of NavView.MenuItems, and doesn't have a Tag.
-                NavView.SelectedItem = (muxc.NavigationViewItem)NavView.SettingsItem;
-                NavView.Header = ((muxc.NavigationViewItem)NavView.SelectedItem)?.Content?.ToString();
-            }
-            else if (ContentFrame.SourcePageType == typeof(LibraryPage))
-            {
-                NavView.Header = ((muxc.NavigationViewItem)NavView.SelectedItem)?.Content?.ToString();
-
-            }
-            else if (ContentFrame.SourcePageType == typeof(RecommendPage))
-            {
-                NavView.Header = ((muxc.NavigationViewItem)NavView.SelectedItem)?.Content?.ToString();
-
-            }
-            else if (ContentFrame.SourcePageType != null)
-            {
-                NavView.Header = ((muxc.NavigationViewItem)NavView.SelectedItem)?.Content?.ToString();
-            }
-            
-            
-            
-        }
-
-
-        private void NavigationViewControl_PaneClosing(Microsoft.UI.Xaml.Controls.NavigationView sender, Microsoft.UI.Xaml.Controls.NavigationViewPaneClosingEventArgs args)
-        {
-            UpdateAppTitleMargin(sender);
-        }
-
-        private void NavigationViewControl_PaneOpening(Microsoft.UI.Xaml.Controls.NavigationView sender, object args)
-        {
-            UpdateAppTitleMargin(sender);
-        }
-
-        private void NavigationViewControl_DisplayModeChanged(Microsoft.UI.Xaml.Controls.NavigationView sender, Microsoft.UI.Xaml.Controls.NavigationViewDisplayModeChangedEventArgs args)
-        {
-            Thickness currMargin = AppTitleBar.Margin;
-            if (sender.DisplayMode == Microsoft.UI.Xaml.Controls.NavigationViewDisplayMode.Minimal)
-            {
-                AppTitleBar.Margin = new Thickness((sender.CompactPaneLength * 2), currMargin.Top, currMargin.Right, currMargin.Bottom);
-                AppTitleSearch.Visibility = Visibility.Collapsed;
-                ContentFrame.Padding = new Thickness(0, 0, 0, 0);
-            }
-            else
-            {
-                AppTitleBar.Margin = new Thickness(sender.CompactPaneLength, currMargin.Top, currMargin.Right, currMargin.Bottom);
-                AppTitleSearch.Visibility = Visibility.Visible;
-                ContentFrame.Padding = new Thickness(0, 0, 0, 0);
-            }
-
-            UpdateAppTitleMargin(sender);
-        }
-
-        private void UpdateAppTitleMargin(Microsoft.UI.Xaml.Controls.NavigationView sender)
-        {
-            const int smallLeftIndent = 4, largeLeftIndent = 24;
-
-            if (ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 7))
-            {
-                AppTitleTextBlock.TranslationTransition = new Vector3Transition();
-
-                if ((sender.DisplayMode == Microsoft.UI.Xaml.Controls.NavigationViewDisplayMode.Expanded && sender.IsPaneOpen) ||
-                         sender.DisplayMode == Microsoft.UI.Xaml.Controls.NavigationViewDisplayMode.Minimal)
-                {
-                    AppTitleTextBlock.Translation = new System.Numerics.Vector3(smallLeftIndent, 0, 0);
-                }
-                else
-                {
-                    AppTitleTextBlock.Translation = new System.Numerics.Vector3(largeLeftIndent, 0, 0);
-                }
-            }
-            else
-            {
-                Thickness currMargin = AppTitleTextBlock.Margin;
-
-                if ((sender.DisplayMode == Microsoft.UI.Xaml.Controls.NavigationViewDisplayMode.Expanded && sender.IsPaneOpen) ||
-                         sender.DisplayMode == Microsoft.UI.Xaml.Controls.NavigationViewDisplayMode.Minimal)
-                {
-                    AppTitleTextBlock.Margin = new Thickness(smallLeftIndent, currMargin.Top, currMargin.Right, currMargin.Bottom);
-                }
-                else
-                {
-                    AppTitleTextBlock.Margin = new Thickness(largeLeftIndent, currMargin.Top, currMargin.Right, currMargin.Bottom);
-                }
-            }
-        }
-
     }
-
 }

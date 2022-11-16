@@ -1,13 +1,15 @@
-﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.Messaging;
-using Microsoft.Toolkit.Mvvm.Messaging.Messages;
-using PureRadio.DataModel;
-using PureRadio.DataModel.Parameter;
-using PureRadio.DataModel.Results;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Uwp.UI;
+using PureRadio.Uwp.Models.Args;
+using PureRadio.Uwp.Models.Enums;
+using PureRadio.Uwp.Models.Local;
+using PureRadio.Uwp.Providers.Interfaces;
+using PureRadio.Uwp.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.System.Threading;
@@ -15,327 +17,210 @@ using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace PureRadio.ViewModels
 {
-    public class AppViewModel : ObservableRecipient
+    public sealed partial class AppViewModel : ObservableRecipient
     {
-        private ElementTheme _theme;
-        private ThreadPoolTimer _timer;
-        private TimeSpan _delay;
-        private bool _timerOn = false;
-        private string _closeTime;
-        private int _idNP;
-        private bool _isFavNP;
-        private bool _haveNP;
+        private readonly INavigateService navigate;// = Ioc.Default.GetRequiredService<INavigateService>();
+        private readonly ISearchProvider searchProvider;
+        private readonly IAccountProvider accountProvider;
+        private readonly DispatcherTimer _suggestionTimer;
+        private CancellationTokenSource _suggestionCancellationTokenSource;
+        private bool _isKeywordChanged;
 
-        public UserProfile UserInfo { get; set; }
-        private List<FavItem> FavCloud { get; set; }
-        private List<FavItem> FavLocal { get; set; }
-        //private List<FavItem> RecentListen { get; set; }
+        public string _noResultTip;
 
-        public AppViewModel()
+        private string _keyword;
+        public string Keyword
         {
-            _theme = App.RootTheme;
-            //UserInfo = UserProfile.GetAccount();
-            UserProfile user = UserProfile.GetAccount();
-            if (user == null) UserInfo = UserProfile.Login();
-            else UserInfo = user;
-            UpdateFavAsync();
-            IsActive = true;            
-        }
-
-        public ElementTheme Theme
-        {
-            get => _theme;
+            get => _keyword;
             set
             {
-                SetProperty(ref _theme, value);
-                UpdateTheme();
-            }
-                
-        }
-
-        public TimeSpan Delay
-        {
-            get => _delay;
-            set
-            {
-                SetProperty(ref _delay, value);
+                HandleKeywordChanged(value);
+                SetProperty(ref _keyword, value);
             }
         }
 
-        public bool TimerOn
-        {
-            get => _timerOn;
-            set
-            {
-                SetProperty(ref _timerOn, value);                
-            }
-        }
+        [ObservableProperty]
+        private AuthorizeState _accountState;
 
-        public string CloseTime
-        {
-            get
-            {
-                return  _closeTime;
-            }
-            set
-            {
-                SetProperty(ref _closeTime, value);
-            }
-        }
+        [ObservableProperty]
+        private List<string> _searchSuggest;
 
-        public bool IsFavNP
+        [ObservableProperty]
+        private BitmapImage _userPicture;
+
+        [ObservableProperty]
+        private string _userName;
+
+        [ObservableProperty]
+        private string _userPhone;
+
+        [ObservableProperty]
+        private string _userDescription;
+
+
+        public AppViewModel(
+            INavigateService navigate,
+            ISearchProvider searchProvider,
+            IAccountProvider accountProvider)
         {
-            get => _isFavNP;
-            set
+            this.navigate = navigate;
+            this.searchProvider = searchProvider;
+            this.accountProvider = accountProvider;
+            _suggestionTimer = new DispatcherTimer
             {
-                SetProperty(ref _isFavNP, value);
-            }
+                Interval = TimeSpan.FromMilliseconds(350),
+            };
+            _suggestionTimer.Tick += OnSuggestionTimerTickAsync;
+            var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
+            _noResultTip = resourceLoader.GetString("LangSearchNoResultTip");
+            UserPicture = new BitmapImage(new Uri("ms-appx:///Assets/Image/DefaultAvatar.png"));
+            IsActive = true;
         }
 
         protected override void OnActivated()
-        {            
-            Messenger.Register<AppViewModel, ThemeChangedMessage>(this, (r, m) => r.Theme= m.Value);
-            Messenger.Register<AppViewModel, TimerChangedMessage>(this, (r, m) =>
-            {
-                r._delay = m.Value.delay;
-                r.TimerOn = m.Value.isOn;
-                r.CloseTime = m.Value.closeTime;
-                CheckTimer();
-            });
-            Messenger.Register<AppViewModel, UserChangedMessage>(this, (r, m) =>
-            {
-                r.UserInfo = m.Value;
-                UpdateFavAsync();
-            });
-            Messenger.Register<AppViewModel, FavAddMessage>(this, (r, m) =>
-            {
-                AddFav(m.Value);
-            });
-            Messenger.Register<AppViewModel, FavDelMessage>(this, (r, m) =>
-            {
-                DelFav(m.Value);
-            });
-            Messenger.Register<AppViewModel, PlayStartMessage>(this, (r, m) =>
-            {
-                _haveNP = true;
-                r._idNP = m.Value;
-                IsFavNP = r.CheckFav(r._idNP);
-            });
-            Messenger.Register<AppViewModel, PlayEndMessage>(this, (r, m) =>
-            {
-                _haveNP = false;
-                r._idNP = 0;
-                IsFavNP = false;
-            });
-            Messenger.Register<AppViewModel, TimerRequestMessage>(this, (r, m) => m.Reply(new TimerStatus(Delay, TimerOn, CloseTime)));
-            Messenger.Register<AppViewModel, UserRequestMessage>(this, (r, m) => m.Reply(UserInfo));
-            Messenger.Register<AppViewModel, FavCloudRequestMessage>(this, (r, m) => m.Reply(FavCloud));
-            Messenger.Register<AppViewModel, FavLocalRequestMessage>(this, (r, m) => m.Reply(FavLocal));
-            //Messenger.Register<AppViewModel, RecentRequestMessage>(this, (r, m) => m.Reply(RecentListen));
+        {
+            base.OnActivated();
+            AccountState = accountProvider.State;
+            GetAccountInfo();
+            accountProvider.StateChanged += AccountStateChanged;
         }
 
-        private void UpdateTheme()
+        protected override void OnDeactivated()
         {
-            ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
-            App.RootTheme = Theme;
-            if (Theme == ElementTheme.Dark)
+            accountProvider.StateChanged -= AccountStateChanged;
+            base.OnDeactivated();
+        }
+
+        public void Navigate(PageIds pageId, object parameter = null)
+        {
+            var type = pageId.GetHashCode() switch
             {
-                titleBar.ButtonForegroundColor = Colors.White;
+                < 100 => NavigationType.Main,
+                < 1000 => NavigationType.Secondary,
+                _ => NavigationType.Player,
+            };
+
+            switch (type)
+            {
+                case NavigationType.Main:
+                    navigate.NavigateToMainView(pageId, parameter);
+                    break;
+                case NavigationType.Secondary:
+                    navigate.NavigateToSecondaryView(pageId, parameter);
+                    break;
+                case NavigationType.Player:
+                    navigate.NavigateToPlayView((PlaySnapshot)parameter);
+                    break;
+                default:
+                    break;
             }
-            else if (Theme == ElementTheme.Light)
+        }
+
+        private async Task LoadSearchSuggestionAsync()
+        {
+            if (string.IsNullOrEmpty(Keyword))
             {
-                titleBar.ButtonForegroundColor = Colors.Black;
+                return;
             }
-            else
+            try
             {
-                if (Application.Current.RequestedTheme == ApplicationTheme.Dark)
+                var suggestion = await searchProvider.GetSearchSuggestion(Keyword, _suggestionCancellationTokenSource.Token);
+                if (suggestion == null)
                 {
-                    titleBar.ButtonForegroundColor = Colors.White;
+                    return;
                 }
-                else
+                SearchSuggest = suggestion.Count > 0 ? suggestion : new List<string>() { _noResultTip };
+            }
+            catch (TaskCanceledException)
+            {
+                // 任务中止表示有新的搜索请求或者请求超时，这是预期的错误，不予处理.
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+
+        private void HandleKeywordChanged(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+            {
+                // 搜索关键词为空，表示用户或应用清除了内容，此时不进行请求，并重置状态.
+                _isKeywordChanged = false;
+                _suggestionTimer.Stop();
+                InitializeSuggestionCancellationTokenSource();
+                SearchSuggest = new List<string>();
+            }
+            else
+            {
+                _isKeywordChanged = true;
+                if (!_suggestionTimer.IsEnabled)
                 {
-                    titleBar.ButtonForegroundColor = Colors.Black;
+                    _suggestionTimer.Start();
                 }
             }
         }
 
-        public void CreateTimer()
+        private async void OnSuggestionTimerTickAsync(object sender, object e)
         {
-            _timer = ThreadPoolTimer.CreateTimer(
-                (timer) =>
-                {
-                    CoreApplication.Exit();
-                },
-                Delay);
-            
-        }
-
-        public void CancelTimer()
-        {
-            _timer.Cancel();
-        }
-
-        public void CheckTimer()
-        {
-            if (_timer != null) CancelTimer();
-            if (TimerOn == true)
+            if (_isKeywordChanged)
             {
-                CreateTimer();
+                _isKeywordChanged = false;
+                InitializeSuggestionCancellationTokenSource();
+                await LoadSearchSuggestionAsync();
             }
         }
 
-        public async void UpdateFavAsync()
+        private void InitializeSuggestionCancellationTokenSource()
         {
-            FavLocal = await FavResult.GetFav();
-            if (!UserInfo.localAccount)
+            if (_suggestionCancellationTokenSource != null
+                && !_suggestionCancellationTokenSource.IsCancellationRequested)
             {
-                FavCloud = FavResult.GetFav(UserInfo.qingting_id, UserInfo.access_token);                
+                _suggestionCancellationTokenSource.Cancel();
+                _suggestionCancellationTokenSource = null;
             }
-            else
+
+            _suggestionCancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(1));
+        }
+
+        public async Task<bool> TrySignIn(string phone, string password)
+        {
+            if (AccountState == AuthorizeState.SignedOut)
+                return await accountProvider.TrySignInAsync(phone, password);
+            else return true;
+        }
+
+        public async Task<bool> TrySignOut()
+        {
+            await accountProvider.SignOutAsync();
+            return true;
+        }
+
+        private void AccountStateChanged(object sender, AuthorizeStateChangedEventArgs e)
+        {
+            if (e.OldState == AuthorizeState.SignedOut && e.NewState == AuthorizeState.SignedIn && AccountState == AuthorizeState.SignedOut)
             {
-                FavCloud = new List<FavItem>();
+                AccountState = AuthorizeState.SignedIn;
+                GetAccountInfo();
             }
-            Messenger.Send(new FavUpdateMessage(true));
-        }
-
-        public bool CheckFav(int channelID)
-        {
-            return FavLocal.Contains(new FavItem(channelID));
-        }
-
-        public void AddFav(FavItem favItem)
-        {
-            if(!FavLocal.Contains(favItem)) FavLocal.Add(favItem);
-            if (favItem.id == _idNP) IsFavNP = true;
-            FavResult.SaveFav(FavLocal);
-        }
-
-        public void DelFav(int favItemID)
-        {
-            if (FavLocal.Remove(new FavItem(favItemID)))
+            else if (e.OldState == AuthorizeState.SignedIn && e.NewState == AuthorizeState.SignedOut && AccountState == AuthorizeState.SignedIn)
             {
-                FavResult.SaveFav(FavLocal);
-                if (favItemID == _idNP) IsFavNP = false;
-            }              
-        }
-
-        public void ToggleFav()
-        {
-            if (!_haveNP) return;
-            if (IsFavNP)
-            {
-                DelFav(_idNP);
-                //IsFavNP = false;
-            }
-            else
-            {
-                NowPlayingDetail nowPlaying = Messenger.Send<NowPlayingRequestMessage>();
-                FavItem favItem = new FavItem()
-                {
-                    id = _idNP,
-                    isRadio = nowPlaying.type == 2 ? false : true,
-                    album_cover = nowPlaying.cover,
-                    name = nowPlaying.title
-                };
-                AddFav(favItem);
-                //IsFavNP = true;
+                AccountState = AuthorizeState.SignedOut;
+                GetAccountInfo();
             }
         }
 
-    }
-
-    public sealed class ThemeChangedMessage : ValueChangedMessage<ElementTheme>
-    {
-        public ThemeChangedMessage(ElementTheme value) : base(value)
+        private async void GetAccountInfo()
         {
+            UserPicture = await ImageCache.Instance.GetFromCacheAsync(accountProvider.AccountInfo.Avatar);
+            UserName = accountProvider.AccountInfo.NickName;
+            UserPhone = accountProvider.AccountInfo.PhoneNumber;
+            UserDescription = accountProvider.AccountInfo.Signature;
         }
-    }
 
-    public sealed class TimerChangedMessage : ValueChangedMessage<TimerStatus>
-    {
-        public TimerChangedMessage(TimerStatus value) : base(value)
-        {
-        }
     }
-    public sealed class UserChangedMessage : ValueChangedMessage<UserProfile>
-    {
-        public UserChangedMessage(UserProfile value) : base(value)
-        {
-        }
-    }
-
-    public sealed class NavToRadioDetailMessage : ValueChangedMessage<RadioShot>
-    {
-        public NavToRadioDetailMessage(RadioShot value) : base(value)
-        {
-        }
-    }
-
-    public sealed class NavToProgramDetailMessage : ValueChangedMessage<ProgramShot>
-    {
-        public NavToProgramDetailMessage(ProgramShot value) : base(value)
-        {
-        }
-    }
-
-    public sealed class FavAddMessage : ValueChangedMessage<FavItem>
-    {
-        public FavAddMessage(FavItem value) : base(value)
-        {
-        }
-    }
-    public sealed class FavDelMessage : ValueChangedMessage<int>
-    {
-        public FavDelMessage(int value) : base(value)
-        {
-        }
-    }
-    public sealed class FavUpdateMessage : ValueChangedMessage<bool>
-    {
-        public FavUpdateMessage(bool value) : base(value)
-        {
-        }
-    }
-    public sealed class PlayStartMessage : ValueChangedMessage<int>
-    {
-        public PlayStartMessage(int value) : base(value)
-        {
-        }
-    }
-
-    public sealed class PlayEndMessage : ValueChangedMessage<int>
-    {
-        public PlayEndMessage(int value) : base(value)
-        {
-        }
-    }
-
-
-
-    public sealed class TimerRequestMessage : RequestMessage<TimerStatus>
-    {
-    }
-
-    public sealed class UserRequestMessage : RequestMessage<UserProfile>
-    {
-    }
-
-    public sealed class FavCloudRequestMessage : RequestMessage<List<FavItem>>
-    {
-    }
-    public sealed class FavLocalRequestMessage : RequestMessage<List<FavItem>>
-    {
-    }
-    /*
-    public sealed class RecentRequestMessage : RequestMessage<List<FavItem>>
-    {
-    }
-    */
-    public sealed class NowPlayingRequestMessage : RequestMessage<NowPlayingDetail>
-    {
-    }
-
 }

@@ -18,6 +18,7 @@
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
     <AppxPackageSigningEnabled>false</AppxPackageSigningEnabled>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -99,6 +100,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
+    <WarningLevel>2</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>bin\x64\Release\</OutputPath>
@@ -116,34 +118,39 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Adapters\AccountAdapter.cs" />
+    <Compile Include="Adapters\ContentAdapter.cs" />
+    <Compile Include="Adapters\Interfaces\IAccountAdapter.cs" />
+    <Compile Include="Adapters\Interfaces\IContentAdapter.cs" />
+    <Compile Include="Adapters\Interfaces\IRadioAdapter.cs" />
+    <Compile Include="Adapters\Interfaces\ISearchAdapter.cs" />
+    <Compile Include="Adapters\RadioAdapter.cs" />
+    <Compile Include="Adapters\SearchAdapter.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Common\BooleanToDisplayConverter.cs" />
-    <Compile Include="Common\BooleanToVisibilityConverter.cs" />
-    <Compile Include="Common\FavStateToButtonIconConverter.cs" />
-    <Compile Include="Common\HttpHelper.cs" />
-    <Compile Include="Common\LanguageDisplayConverter.cs" />
-    <Compile Include="Common\MediaMuteStateToButtonIconConverter.cs" />
-    <Compile Include="Common\MediaPlaybackStateToButtonIconConverter.cs" />
-    <Compile Include="Common\MediaPositionToDoubleConverter.cs" />
-    <Compile Include="Common\MediaPositionToTimeConverter.cs" />
-    <Compile Include="Common\QTDecoder.cs" />
-    <Compile Include="Common\ThemeDisplayConverter.cs" />
-    <Compile Include="DataModels\ContentIncrementalLoading.cs" />
-    <Compile Include="DataModels\ContentItem.cs" />
-    <Compile Include="DataModels\FavItem.cs" />
-    <Compile Include="DataModels\FullDetailRadio.cs" />
-    <Compile Include="DataModels\LeaderboardItem.cs" />
-    <Compile Include="DataModels\Message\ProgramDemanMessage.cs" />
-    <Compile Include="DataModels\Message\RadioDemandMessage.cs" />
-    <Compile Include="DataModels\MyIncrementalLoading.cs" />
-    <Compile Include="DataModels\MyIncrementalLoading30.cs" />
-    <Compile Include="DataModels\NowPlayingDetail.cs" />
-    <Compile Include="DataModels\Parameter\ProgramShot.cs" />
-    <Compile Include="DataModels\Parameter\RadioShot.cs" />
-    <Compile Include="DataModels\ProgramJumpItem.cs" />
-    <Compile Include="DataModels\ProvinceItem.cs" />
+    <Compile Include="DataModels\Args\AppNavigationEventArgs.cs" />
+    <Compile Include="DataModels\Args\AuthorizeStateChangedEventArgs.cs" />
+    <Compile Include="DataModels\Data\Constants\ApiConstants.cs" />
+    <Compile Include="DataModels\Data\Constants\AppConstants.cs" />
+    <Compile Include="DataModels\Data\Constants\ServiceConstants.cs" />
+    <Compile Include="DataModels\Data\Content\ContentInfoDetail.cs" />
+    <Compile Include="DataModels\Data\Content\ContentInfoSearch.cs" />
+    <Compile Include="DataModels\Data\Content\ContentPlaylistDetail.cs" />
+    <Compile Include="DataModels\Data\Radio\RadioInfoCard.cs" />
+    <Compile Include="DataModels\Data\Radio\RadioInfoDetail.cs" />
+    <Compile Include="DataModels\Data\Radio\RadioInfoSearch.cs" />
+    <Compile Include="DataModels\Data\Radio\RadioPlaylistDetail.cs" />
+    <Compile Include="DataModels\Data\Radio\RadioSet.cs" />
+    <Compile Include="DataModels\Data\Search\SearchSet.cs" />
+    <Compile Include="DataModels\Data\User\AccountInfo.cs" />
+    <Compile Include="DataModels\Enums\AuthorizeState.cs" />
+    <Compile Include="DataModels\Enums\NavigationType.cs" />
+    <Compile Include="DataModels\Enums\PageIds.cs" />
+    <Compile Include="DataModels\Enums\PlaylistDay.cs" />
+    <Compile Include="DataModels\Enums\RequestType.cs" />
+    <Compile Include="DataModels\Local\IncrementalLoadingObservableCollection.cs" />
+    <Compile Include="DataModels\Local\PlaySnapshot.cs" />
     <Compile Include="DataModels\QingTing\Content\ContentDetailItem.cs" />
     <Compile Include="DataModels\QingTing\Content\ContentDetailResponse.cs" />
     <Compile Include="DataModels\QingTing\Content\ContentProgramListItem.cs" />
@@ -171,109 +178,76 @@
     <Compile Include="DataModels\QingTing\User\SignInUserItem.cs" />
     <Compile Include="DataModels\QingTing\User\TokenInfo.cs" />
     <Compile Include="DataModels\QingTing\User\TokenInfoResponse.cs" />
-    <Compile Include="DataModels\RadioCategoriesItem.cs" />
-    <Compile Include="DataModels\Results\ContentResult.cs" />
-    <Compile Include="DataModels\Results\FavResult.cs" />
-    <Compile Include="DataModels\Results\LoginResult.cs" />
-    <Compile Include="DataModels\Results\ProgramDetailFull.cs" />
-    <Compile Include="DataModels\Results\RadioCategories.cs" />
-    <Compile Include="DataModels\Results\RadioDetailFull.cs" />
-    <Compile Include="DataModels\Results\RadioDetailSmallResult.cs" />
-    <Compile Include="DataModels\Results\RadioRankResult.cs" />
-    <Compile Include="DataModels\Results\RecommendProgramResult.cs" />
-    <Compile Include="DataModels\Results\RecommendRadioResult.cs" />
-    <Compile Include="DataModels\Results\SearchProgramResult.cs" />
-    <Compile Include="DataModels\Results\SearchRadioResult.cs" />
-    <Compile Include="DataModels\Results\SearchSuggestResult.cs" />
-    <Compile Include="DataModels\SearchProgramResultItem.cs" />
-    <Compile Include="DataModels\SearchRadioResultItem.cs" />
-    <Compile Include="DataModels\TestDateModel.cs" />
-    <Compile Include="DataModels\TimerStatus.cs" />
-    <Compile Include="DataModels\UserProfile.cs" />
-    <Compile Include="LocalRadioManage\DataModelTransform\ChannalAlbumTransform.cs" />
-    <Compile Include="LocalRadioManage\DataModelTransform\DateTransform.cs" />
-    <Compile Include="LocalRadioManage\DataModelTransform\RadioTransform.cs" />
-    <Compile Include="LocalRadioManage\DBBuilder\SQLiteConnect.cs" />
-    <Compile Include="LocalRadioManage\DBBuilder\TableObj\TableEntity\LocalChannalAlbum.cs" />
-    <Compile Include="LocalRadioManage\DBBuilder\TableObj\TableEntity\LocalRadio.cs" />
-    <Compile Include="LocalRadioManage\DBBuilder\TableObj\TableEntity\UserDownChannalAlbum.cs" />
-    <Compile Include="LocalRadioManage\DBBuilder\TableObj\TableEntity\UserDownRadio.cs" />
-    <Compile Include="LocalRadioManage\DBBuilder\TableObj\TableEntity\UserFavChannalAlbum.cs" />
-    <Compile Include="LocalRadioManage\DBBuilder\TableObj\TableEntity\UserFavRadio.cs" />
-    <Compile Include="LocalRadioManage\DBBuilder\TableObj\TableEntity\Users.cs" />
-    <Compile Include="LocalRadioManage\DBBuilder\TableObj\TableInform.cs" />
-    <Compile Include="LocalRadioManage\DBBuilder\TableObj\VTable.cs" />
-    <Compile Include="LocalRadioManage\DBBuilder\TableOperate\Delete.cs" />
-    <Compile Include="LocalRadioManage\DBBuilder\TableOperate\Insert.cs" />
-    <Compile Include="LocalRadioManage\DBBuilder\TableOperate\Select.cs" />
-    <Compile Include="LocalRadioManage\DBBuilder\TableOperate\TableChange.cs" />
-    <Compile Include="LocalRadioManage\DBBuilder\TableOperate\Update.cs" />
-    <Compile Include="LocalRadioManage\LocalService\Service.cs" />
-    <Compile Include="LocalRadioManage\LocalService\Service\Default.cs" />
-    <Compile Include="LocalRadioManage\LocalService\Service\ServiceUser.cs" />
-    <Compile Include="LocalRadioManage\LocalService\UserInform\UserDown\LocalDown.cs" />
-    <Compile Include="LocalRadioManage\LocalService\Service\ServiceUserDown.cs" />
-    <Compile Include="LocalRadioManage\LocalService\Service\ServiceUserFav.cs" />
-    <Compile Include="LocalRadioManage\LocalService\UserInform\UserDown\UserDown.cs" />
-    <Compile Include="LocalRadioManage\LocalService\UserInform\UserFav\UserFav.cs" />
-    <Compile Include="LocalRadioManage\LocalService\UserInform\UserInform.cs" />
-    <Compile Include="LocalRadioManage\StorageOperate\FileOperate\FileCreate.cs" />
-    <Compile Include="LocalRadioManage\StorageOperate\FileOperate\FileDelete.cs" />
-    <Compile Include="LocalRadioManage\StorageOperate\FileOperate\FileGet.cs" />
-    <Compile Include="LocalRadioManage\StorageOperate\FileOperate\RadioFile.cs" />
-    <Compile Include="LocalRadioManage\StorageOperate\FolderOperate\FolderCreate.cs" />
-    <Compile Include="LocalRadioManage\StorageOperate\FolderOperate\FolderDelere.cs" />
-    <Compile Include="LocalRadioManage\StorageOperate\FolderOperate\FolderGet.cs" />
-    <Compile Include="LocalRadioManage\test\LocalRadioTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Providers\AccountProvider.cs" />
+    <Compile Include="Providers\ContentProvider.cs" />
+    <Compile Include="Providers\HttpProvider.cs" />
+    <Compile Include="Providers\Interfaces\IAccountProvider.cs" />
+    <Compile Include="Providers\Interfaces\IContentProvider.cs" />
+    <Compile Include="Providers\Interfaces\IHttpProvider.cs" />
+    <Compile Include="Providers\Interfaces\IRadioProvider.cs" />
+    <Compile Include="Providers\Interfaces\ISearchProvider.cs" />
+    <Compile Include="Providers\RadioProvider.cs" />
+    <Compile Include="Providers\SearchProvider.cs" />
+    <Compile Include="Resources\Converter\AccountStateToDisplayConverter.cs" />
+    <Compile Include="Resources\Converter\BooleanToDisplayConverter.cs" />
+    <Compile Include="Resources\Converter\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Resources\Converter\InverseBooleanConverter.cs" />
+    <Compile Include="Resources\Converter\InverseBooleanToVisibilityConverter.cs" />
+    <Compile Include="Resources\Converter\LanguageToDisplayConverter.cs" />
+    <Compile Include="Resources\Converter\LanguageToIndexConverter.cs" />
+    <Compile Include="Resources\Converter\ThemeToDisplayConverter.cs" />
+    <Compile Include="Resources\Converter\ThemeToIndexConverter.cs" />
+    <Compile Include="Services\Interfaces\INavigateService.cs" />
+    <Compile Include="Services\Interfaces\ISettingsService.cs" />
+    <Compile Include="Services\NavigateService.cs" />
     <Compile Include="Services\PlaybackService.cs" />
+    <Compile Include="Services\SettingsService.cs" />
     <Compile Include="ViewModels\AppViewModel.cs" />
-    <Compile Include="ViewModels\DetailRadioViewModel.cs" />
-    <Compile Include="ViewModels\PlayerViewModel.cs" />
+    <Compile Include="ViewModels\ContentDetailViewModel.cs" />
+    <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\RadioDetailViewModel.cs" />
     <Compile Include="ViewModels\RadioViewModel.cs" />
+    <Compile Include="ViewModels\SearchViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
-    <Compile Include="ViewModels\UserViewModel.cs" />
-    <Compile Include="Views\ContentPage.xaml.cs">
+    <Compile Include="Views\MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Main\ContentPage.xaml.cs">
       <DependentUpon>ContentPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\DetailProgramPage.xaml.cs">
-      <DependentUpon>DetailProgramPage.xaml</DependentUpon>
+    <Compile Include="Views\PlayerPage.xaml.cs">
+      <DependentUpon>PlayerPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\DetailRadioPage.xaml.cs">
-      <DependentUpon>DetailRadioPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\LibraryPage.xaml.cs">
+    <Compile Include="Views\Main\LibraryPage.xaml.cs">
       <DependentUpon>LibraryPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\MoreRadioPage.xaml.cs">
+    <Compile Include="Views\Main\HomePage.xaml.cs">
+      <DependentUpon>HomePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Secondary\ContentDetailPage.xaml.cs">
+      <DependentUpon>ContentDetailPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Secondary\MoreRadioPage.xaml.cs">
       <DependentUpon>MoreRadioPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\NULLPage.xaml.cs">
+    <Compile Include="Views\Secondary\NULLPage.xaml.cs">
       <DependentUpon>NULLPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ProgramContentJumpPage.xaml.cs">
-      <DependentUpon>ProgramContentJumpPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ProgramContentPage.xaml.cs">
-      <DependentUpon>ProgramContentPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\RadioPage.xaml.cs">
+    <Compile Include="Views\Main\RadioPage.xaml.cs">
       <DependentUpon>RadioPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\RecommendPage.xaml.cs">
-      <DependentUpon>RecommendPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\RootPage.xaml.cs">
       <DependentUpon>RootPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SearchProgramPage.xaml.cs">
-      <DependentUpon>SearchProgramPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\SearchRadioPage.xaml.cs">
-      <DependentUpon>SearchRadioPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\SettingsPage.xaml.cs">
+    <Compile Include="Views\Main\SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Secondary\RadioDetailPage.xaml.cs">
+      <DependentUpon>RadioDetailPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Secondary\SearchPage.xaml.cs">
+      <DependentUpon>SearchPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -282,6 +256,56 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\AppIcon\LargeTile.scale-100.png" />
+    <Content Include="Assets\AppIcon\LargeTile.scale-125.png" />
+    <Content Include="Assets\AppIcon\LargeTile.scale-150.png" />
+    <Content Include="Assets\AppIcon\LargeTile.scale-200.png" />
+    <Content Include="Assets\AppIcon\LargeTile.scale-400.png" />
+    <Content Include="Assets\AppIcon\SmallTile.scale-100.png" />
+    <Content Include="Assets\AppIcon\SmallTile.scale-125.png" />
+    <Content Include="Assets\AppIcon\SmallTile.scale-150.png" />
+    <Content Include="Assets\AppIcon\SmallTile.scale-200.png" />
+    <Content Include="Assets\AppIcon\SmallTile.scale-400.png" />
+    <Content Include="Assets\AppIcon\SplashScreen.scale-100.png" />
+    <Content Include="Assets\AppIcon\SplashScreen.scale-125.png" />
+    <Content Include="Assets\AppIcon\SplashScreen.scale-150.png" />
+    <Content Include="Assets\AppIcon\SplashScreen.scale-200.png" />
+    <Content Include="Assets\AppIcon\SplashScreen.scale-400.png" />
+    <Content Include="Assets\AppIcon\Square150x150Logo.scale-100.png" />
+    <Content Include="Assets\AppIcon\Square150x150Logo.scale-125.png" />
+    <Content Include="Assets\AppIcon\Square150x150Logo.scale-150.png" />
+    <Content Include="Assets\AppIcon\Square150x150Logo.scale-200.png" />
+    <Content Include="Assets\AppIcon\Square150x150Logo.scale-400.png" />
+    <Content Include="Assets\AppIcon\Square44x44Logo.altform-lightunplated_targetsize-16.png" />
+    <Content Include="Assets\AppIcon\Square44x44Logo.altform-lightunplated_targetsize-24.png" />
+    <Content Include="Assets\AppIcon\Square44x44Logo.altform-lightunplated_targetsize-256.png" />
+    <Content Include="Assets\AppIcon\Square44x44Logo.altform-lightunplated_targetsize-32.png" />
+    <Content Include="Assets\AppIcon\Square44x44Logo.altform-lightunplated_targetsize-48.png" />
+    <Content Include="Assets\AppIcon\Square44x44Logo.altform-unplated_targetsize-16.png" />
+    <Content Include="Assets\AppIcon\Square44x44Logo.altform-unplated_targetsize-24.png" />
+    <Content Include="Assets\AppIcon\Square44x44Logo.altform-unplated_targetsize-256.png" />
+    <Content Include="Assets\AppIcon\Square44x44Logo.altform-unplated_targetsize-32.png" />
+    <Content Include="Assets\AppIcon\Square44x44Logo.altform-unplated_targetsize-48.png" />
+    <Content Include="Assets\AppIcon\Square44x44Logo.scale-100.png" />
+    <Content Include="Assets\AppIcon\Square44x44Logo.scale-125.png" />
+    <Content Include="Assets\AppIcon\Square44x44Logo.scale-150.png" />
+    <Content Include="Assets\AppIcon\Square44x44Logo.scale-200.png" />
+    <Content Include="Assets\AppIcon\Square44x44Logo.scale-400.png" />
+    <Content Include="Assets\AppIcon\Square44x44Logo.targetsize-16.png" />
+    <Content Include="Assets\AppIcon\Square44x44Logo.targetsize-24.png" />
+    <Content Include="Assets\AppIcon\Square44x44Logo.targetsize-256.png" />
+    <Content Include="Assets\AppIcon\Square44x44Logo.targetsize-32.png" />
+    <Content Include="Assets\AppIcon\Square44x44Logo.targetsize-48.png" />
+    <Content Include="Assets\AppIcon\StoreLogo.scale-100.png" />
+    <Content Include="Assets\AppIcon\StoreLogo.scale-125.png" />
+    <Content Include="Assets\AppIcon\StoreLogo.scale-150.png" />
+    <Content Include="Assets\AppIcon\StoreLogo.scale-200.png" />
+    <Content Include="Assets\AppIcon\StoreLogo.scale-400.png" />
+    <Content Include="Assets\AppIcon\Wide310x150Logo.scale-100.png" />
+    <Content Include="Assets\AppIcon\Wide310x150Logo.scale-125.png" />
+    <Content Include="Assets\AppIcon\Wide310x150Logo.scale-150.png" />
+    <Content Include="Assets\AppIcon\Wide310x150Logo.scale-200.png" />
+    <Content Include="Assets\AppIcon\Wide310x150Logo.scale-400.png" />
     <Content Include="Assets\Image\DefaultAvatar.png" />
     <Content Include="Assets\Image\DefaultCover.png" />
     <Content Include="Assets\Image\ProgramCategories\1599_ertong.png" />
@@ -342,64 +366,11 @@
     <Content Include="Assets\Image\Provinces\83_shanghai.png" />
     <Content Include="Assets\Image\Provinces\85_jiangsu.png" />
     <Content Include="Assets\Image\Provinces\99_zhejiang.png" />
-    <Content Include="Assets\LargeTile.scale-100.png" />
-    <Content Include="Assets\LargeTile.scale-125.png" />
-    <Content Include="Assets\LargeTile.scale-150.png" />
-    <Content Include="Assets\LargeTile.scale-200.png" />
-    <Content Include="Assets\LargeTile.scale-400.png" />
-    <Content Include="Assets\LockScreenLogo.scale-200.png" />
-    <Content Include="Assets\SmallTile.scale-100.png" />
-    <Content Include="Assets\SmallTile.scale-125.png" />
-    <Content Include="Assets\SmallTile.scale-150.png" />
-    <Content Include="Assets\SmallTile.scale-200.png" />
-    <Content Include="Assets\SmallTile.scale-400.png" />
-    <Content Include="Assets\SplashScreen.scale-100.png" />
-    <Content Include="Assets\SplashScreen.scale-125.png" />
-    <Content Include="Assets\SplashScreen.scale-150.png" />
-    <Content Include="Assets\SplashScreen.scale-200.png" />
-    <Content Include="Assets\SplashScreen.scale-400.png" />
-    <Content Include="Assets\Square150x150Logo.scale-100.png" />
-    <Content Include="Assets\Square150x150Logo.scale-125.png" />
-    <Content Include="Assets\Square150x150Logo.scale-150.png" />
-    <Content Include="Assets\Square150x150Logo.scale-200.png" />
-    <Content Include="Assets\Square150x150Logo.scale-400.png" />
-    <Content Include="Assets\Square44x44Logo.altform-lightunplated_targetsize-16.png" />
-    <Content Include="Assets\Square44x44Logo.altform-lightunplated_targetsize-24.png" />
-    <Content Include="Assets\Square44x44Logo.altform-lightunplated_targetsize-256.png" />
-    <Content Include="Assets\Square44x44Logo.altform-lightunplated_targetsize-32.png" />
-    <Content Include="Assets\Square44x44Logo.altform-lightunplated_targetsize-48.png" />
-    <Content Include="Assets\Square44x44Logo.altform-unplated_targetsize-16.png" />
-    <Content Include="Assets\Square44x44Logo.altform-unplated_targetsize-256.png" />
-    <Content Include="Assets\Square44x44Logo.altform-unplated_targetsize-32.png" />
-    <Content Include="Assets\Square44x44Logo.altform-unplated_targetsize-48.png" />
-    <Content Include="Assets\Square44x44Logo.scale-100.png" />
-    <Content Include="Assets\Square44x44Logo.scale-125.png" />
-    <Content Include="Assets\Square44x44Logo.scale-150.png" />
-    <Content Include="Assets\Square44x44Logo.scale-200.png" />
-    <Content Include="Assets\Square44x44Logo.scale-400.png" />
-    <Content Include="Assets\Square44x44Logo.targetsize-16.png" />
-    <Content Include="Assets\Square44x44Logo.targetsize-24.png" />
-    <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
-    <Content Include="Assets\Square44x44Logo.targetsize-256.png" />
-    <Content Include="Assets\Square44x44Logo.targetsize-32.png" />
-    <Content Include="Assets\Square44x44Logo.targetsize-48.png" />
-    <Content Include="Assets\StoreLogo.backup.png" />
-    <Content Include="Assets\StoreLogo.scale-100.png" />
-    <Content Include="Assets\StoreLogo.scale-125.png" />
-    <Content Include="Assets\StoreLogo.scale-150.png" />
-    <Content Include="Assets\StoreLogo.scale-200.png" />
-    <Content Include="Assets\StoreLogo.scale-400.png" />
-    <Content Include="Assets\Wide310x150Logo.scale-100.png" />
-    <Content Include="Assets\Wide310x150Logo.scale-125.png" />
-    <Content Include="Assets\Wide310x150Logo.scale-150.png" />
-    <Content Include="Assets\Wide310x150Logo.scale-200.png" />
-    <Content Include="Assets\Wide310x150Logo.scale-400.png" />
-    <Content Include="LocalRadioManage\DBBuilder\sqlite\sqldiff.exe" />
-    <Content Include="LocalRadioManage\DBBuilder\sqlite\sqlite3.def" />
-    <Content Include="LocalRadioManage\DBBuilder\sqlite\sqlite3.dll" />
-    <Content Include="LocalRadioManage\DBBuilder\sqlite\sqlite3.exe" />
-    <Content Include="LocalRadioManage\DBBuilder\sqlite\sqlite3_analyzer.exe" />
-    <Content Include="LocalRadioManage\Document\ServiceDescript.txt" />
+    <Content Include="Assets\SplashScreen\SplashScreen.scale-100.png" />
+    <Content Include="Assets\SplashScreen\SplashScreen.scale-125.png" />
+    <Content Include="Assets\SplashScreen\SplashScreen.scale-150.png" />
+    <Content Include="Assets\SplashScreen\SplashScreen.scale-200.png" />
+    <Content Include="Assets\SplashScreen\SplashScreen.scale-400.png" />
     <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -407,43 +378,63 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Views\ContentPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\DetailProgramPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\DetailRadioPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\LibraryPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\MoreRadioPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\NULLPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\ProgramContentJumpPage.xaml">
+    <Page Include="Styles\Style.DataTemplate.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\ProgramContentPage.xaml">
+    <Page Include="Styles\Style.Dimensions.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\RadioPage.xaml">
+    <Page Include="Styles\Style.Overwrite.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\Theme.Dark.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\Theme.HighContrast.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\Theme.Light.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\MainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\RecommendPage.xaml">
+    <Page Include="Views\Main\ContentPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PlayerPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Main\LibraryPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Main\HomePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Secondary\ContentDetailPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Secondary\MoreRadioPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Secondary\NULLPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Main\RadioPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -451,30 +442,36 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\SearchProgramPage.xaml">
+    <Page Include="Views\Main\SettingsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Secondary\RadioDetailPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\SearchRadioPage.xaml">
+    <Page Include="Views\Secondary\SearchPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\SettingsPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.2.13</Version>
+    <PackageReference Include="CommunityToolkit.Mvvm">
+      <Version>8.0.0</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.Toolkit.Mvvm">
-      <Version>7.1.2</Version>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection">
+      <Version>7.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
+      <Version>6.2.14</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI">
-      <Version>7.1.2</Version>
+      <Version>7.1.3</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Animations">
+      <Version>7.1.3</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
       <Version>7.1.3</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls.Media">
@@ -497,14 +494,13 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <PRIResource Include="Strings\zh-CN\Resources.resw" />
+    <PRIResource Include="Resources\Strings\zh-CN\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
-    <PRIResource Include="Strings\en-US\Resources.resw" />
+    <PRIResource Include="Resources\Strings\en-US\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="RemoteRadioManage\" />
-    <Folder Include="Services\" />
+    <Content Include="Assets\Font\SegoeFluentIcons.ttf" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

@@ -1,127 +1,104 @@
-using Microsoft.Toolkit.Mvvm.ComponentModel;
-using PureRadio.DataModel;
-using PureRadio.DataModel.Results;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using PureRadio.Uwp.Models.Data.Radio;
+using PureRadio.Uwp.Models.Enums;
+using PureRadio.Uwp.Models.Local;
+using PureRadio.Uwp.Providers.Interfaces;
+using PureRadio.Uwp.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace PureRadio.ViewModels
 {
     public sealed partial class RadioViewModel: ObservableRecipient
     {
-        public List<LeaderboardItem> _rankRadio = new List<LeaderboardItem>();
-        public List<RadioCategoriesItem> _categoriesRadio = new List<RadioCategoriesItem>();
-        public List<List<RadioCategoriesItem>> _categoriesRadioList = new List<List<RadioCategoriesItem>>();
-        private List<LeaderboardItem> _rankRadioItems = new List<LeaderboardItem>();
-        public List<RadioCategoriesItem> _categoriesRadioItems = new List<RadioCategoriesItem>();
-        private List<List<RadioCategoriesItem>> _categoriesRadioListItems = new List<List<RadioCategoriesItem>>();
-        
-        private bool _rankRadioEmptyReplace = true;
-        private bool _categoryRadioEmptyReplace = true;
+        private readonly INavigateService navigate;
+        private readonly IRadioProvider radioProvider;
 
-        private int _rankRadioTotal = 12;
-        private int _categoryRadioTotal = 12;
+        [ObservableProperty]
+        private bool _isRadioModuleShown;
 
-        public RadioViewModel()
+        [ObservableProperty]
+        private bool _isLoading;
+
+        [ObservableProperty]
+        private bool _isEmpty;
+
+        [ObservableProperty]
+        private bool _noResult;
+
+        public ICommand RadioResultCommand { get; }
+        public IncrementalLoadingObservableCollection<RadioInfoCard> RadioResult { get; set; }
+
+        public RadioViewModel(
+            INavigateService navigate,
+            IRadioProvider radioProvider)
         {
-            IsActive = true;
-        }
+            this.navigate = navigate;
+            this.radioProvider = radioProvider;
 
+            RadioResult = new IncrementalLoadingObservableCollection<RadioInfoCard>(GetRadioResult);
+
+            RadioResultCommand = new RelayCommand(SetRadioResult);
+
+            IsActive = true;
+
+            IsRadioModuleShown = true;
+        }
         protected override void OnActivated()
         {
-            UpdateRadioInfo();
+            base.OnActivated();
+            RadioResult.OnStartLoading += StartLoading;
+            RadioResult.OnEndLoading += EndLoading;        }
 
-        }
-        public List<LeaderboardItem> RankRadio
+        protected override void OnDeactivated()
         {
-            get=> _rankRadio;
-            set=> SetProperty(ref _rankRadio, value);
-        }
-        public List<RadioCategoriesItem> CategoryRadio
-        {
-            get => _categoriesRadio;
-            set=> SetProperty(ref _categoriesRadio, value);
-        }
-        public List<List<RadioCategoriesItem>> CategoriesRadioList
-        {
-            get => _categoriesRadioList;
-            set => SetProperty(ref _categoriesRadioList, value);
+            RadioResult.OnStartLoading -= StartLoading;
+            RadioResult.OnEndLoading -= EndLoading;
+            base.OnDeactivated();
         }
 
-        public bool RankRadioEmptyReplace
+        private async Task<IEnumerable<RadioInfoCard>> GetRadioResult(CancellationToken cancelToken)
         {
-            get=>_rankRadioEmptyReplace;
-            set=> SetProperty(ref _rankRadioEmptyReplace, value);
+            var resultSet = await radioProvider.GetRankRadio(cancelToken);
+            return resultSet.ToList();
         }
 
-        public bool CategoryRadioEmptyReplace
+        private void StartLoading()
         {
-            get=> _categoryRadioEmptyReplace;
-            set=> SetProperty(ref _categoryRadioEmptyReplace, value);
+            IsLoading = true;
         }
 
-        public void UpdateRadioInfo()
+        private void EndLoading()
         {
-            //根据网络状态获取网络或本地数据
-            if (Windows.Storage.ApplicationData.Current.LocalSettings.Values["CurrentNetworkMode"] != null)
+            IsLoading = false;
+            if (IsRadioModuleShown)
             {
-                if ((bool)Windows.Storage.ApplicationData.Current.LocalSettings.Values["CurrentNetworkMode"])
-                {
-                    _rankRadioItems = RadioRank.Radios("407");
-
-                }
+                IsEmpty = RadioResult.Count == 0;
             }
             else
             {
-                _rankRadioItems = RadioRank.Radios("409");
-            }
-
-            //热门电台数据获取失败
-            if (_rankRadioItems == null|| _rankRadioItems.Count==0)
-            {
-                RankRadioEmptyReplace = true;
-            }
-            else
-            {
-                RankRadio = _rankRadioItems.GetRange(0, _rankRadioTotal);
-                RankRadioEmptyReplace = false;
-            }
-
-            if(_categoriesRadioListItems == null)
-            {
-                CategoryRadioEmptyReplace = true;
-            }
-            else
-            {
-                //CategoriesRadioList = _categoriesRadioList;
+                IsEmpty = true;
             }
         }
-        //加载全部数据
-        public void UpdateRankRadio()
+
+        private void SetRadioResult()
         {
-            RankRadio = _rankRadioItems;
-            _rankRadioTotal = _rankRadioItems.Count;
-        }
-        //加载指定数目的数据
-        public void UpdateRankRadio(int total)
-        {
-            if(_rankRadioEmptyReplace)
-            {
-                _rankRadioTotal = 0;
-            }
-            else
-            {
-                _rankRadioTotal = total;
-            }
-            RankRadio = _rankRadioItems.GetRange(0, _rankRadioTotal);
+            IsRadioModuleShown = true;
         }
 
-        public void UpdateCategoriesRadio(int total)
+
+        public void Navigate(PageIds pageId, object parameter = null)
         {
-            _categoryRadioTotal = total;
-            _categoriesRadioList = _categoriesRadioListItems.GetRange(0, _categoryRadioTotal);
+            if (pageId == PageIds.RadioDetail || pageId == PageIds.ContentDetail)
+            {
+                navigate.NavigateToSecondaryView(pageId, parameter);
+            }
         }
     }
 }

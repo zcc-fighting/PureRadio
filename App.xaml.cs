@@ -7,8 +7,8 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-using Windows.UI;
 using Windows.UI.ViewManagement;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -16,7 +16,21 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using LocalRadioManage.test;
+using Windows.ApplicationModel.Core;
+using PureRadio.Views;
+using CommunityToolkit.Mvvm.DependencyInjection;
+using System.ComponentModel.Design;
+using Microsoft.Extensions.DependencyInjection;
+using PureRadio.Uwp.Services.Interfaces;
+using PureRadio.Uwp.Services;
+using Windows.Globalization;
+using PureRadio.ViewModels;
+using PureRadio.Uwp.Models.Enums;
+using PureRadio.Uwp.Models.Data.Constants;
+using PureRadio.Uwp.Providers.Interfaces;
+using PureRadio.Uwp.Providers;
+using PureRadio.Uwp.Adapters.Interfaces;
+using PureRadio.Uwp.Adapters;
 
 namespace PureRadio
 {
@@ -31,14 +45,12 @@ namespace PureRadio
         /// </summary>
         public App()
         {
-            LocalRadioTest.TestServiceStart();
-            CheckLanguage();
             this.InitializeComponent();
             this.Suspending += OnSuspending;
         }
 
         /// <summary>
-        /// 主题切换支持
+        /// 根主题
         /// </summary>
         public static ElementTheme RootTheme
         {
@@ -63,53 +75,43 @@ namespace PureRadio
         /// 主题切换支持
         /// </summary>
 
-        public void CheckTheme()
+        public void CheckTheme(ISettingsService settings)
         {
             ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
-            if (Windows.Storage.ApplicationData.Current.LocalSettings.Values["CurrentTheme"] != null)
+            string strCurrentTheme = (settings.GetValue<string>(AppConstants.SettingsKey.ConfigTheme) ?? AppConstants.SettingsValue.Default);
+            switch (strCurrentTheme)
             {
-                string strCurrentTheme = Windows.Storage.ApplicationData.Current.LocalSettings.Values["CurrentTheme"].ToString();
-                switch (strCurrentTheme)
-                {
-                    case "Light":
-                        RootTheme = ElementTheme.Light;
-                        titleBar.ButtonForegroundColor = Colors.Black;
-                        break;
-                    case "Dark":
-                        RootTheme = ElementTheme.Dark;
+                case AppConstants.SettingsValue.Light:
+                    RootTheme = ElementTheme.Light;
+                    titleBar.ButtonForegroundColor = Colors.Black;
+                    break;
+                case AppConstants.SettingsValue.Dark:
+                    RootTheme = ElementTheme.Dark;
+                    titleBar.ButtonForegroundColor = Colors.White;
+                    break;
+                default:
+                    if (Current.RequestedTheme == ApplicationTheme.Dark)
+                    {
                         titleBar.ButtonForegroundColor = Colors.White;
-                        break;
-                    default:
-                        if (Current.RequestedTheme == ApplicationTheme.Dark)
-                        {
-                            titleBar.ButtonForegroundColor = Colors.White;
-                        }
-                        else
-                        {
-                            titleBar.ButtonForegroundColor = Colors.Black;
-                        }
-                        break;
-                }
+                    }
+                    else
+                    {
+                        titleBar.ButtonForegroundColor = Colors.Black;
+                    }
+                    break;
             }
-            else
-                RootTheme = ElementTheme.Default;
         }
 
         /// <summary>
         /// 多语言支持
         /// </summary>
-        void CheckLanguage()
+        void CheckLanguage(ISettingsService settings)
         {
-            if (Windows.Storage.ApplicationData.Current.LocalSettings.Values["CurrentLanguage"] != null)
-            {
-                string strCurrentLanguage = Windows.Storage.ApplicationData.Current.LocalSettings.Values["CurrentLanguage"].ToString();
-                if (strCurrentLanguage == "auto")
-                    Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = string.Empty;
-                else
-                    Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = strCurrentLanguage;
-            }
+            string strCurrentLanguage = (settings.GetValue<string>(AppConstants.SettingsKey.ConfigLanguage) ?? AppConstants.SettingsValue.Auto);
+            if (strCurrentLanguage == AppConstants.SettingsValue.Auto)
+                ApplicationLanguages.PrimaryLanguageOverride = string.Empty;
             else
-                Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = "zh-CN";
+                ApplicationLanguages.PrimaryLanguageOverride = strCurrentLanguage;
         }
 
         /// <summary>
@@ -137,19 +139,53 @@ namespace PureRadio
 
                 // 将框架放在当前窗口中
                 Window.Current.Content = rootFrame;
+
+                Ioc.Default.ConfigureServices(
+                        new ServiceCollection()
+                        // Services
+                        .AddSingleton<ISettingsService, SettingsService>()
+                        .AddSingleton<INavigateService, NavigateService>()
+                        // Adapters
+                        .AddSingleton<IAccountAdapter, AccountAdapter>()
+                        .AddSingleton<IContentAdapter, ContentAdapter>()
+                        .AddSingleton<IRadioAdapter, RadioAdapter>()
+                        .AddSingleton<ISearchAdapter, SearchAdapter>()
+                        // Providers
+                        .AddSingleton<IAccountProvider, AccountProvider>()
+                        .AddSingleton<IHttpProvider, HttpProvider>()
+                        .AddSingleton<ISearchProvider, SearchProvider>()
+                        .AddSingleton<IRadioProvider, RadioProvider>()
+                        .AddSingleton<IContentProvider, ContentProvider>()
+                        // Viewmodels
+                        .AddTransient<MainViewModel>()
+                        .AddTransient<SettingsViewModel>()
+                        .AddTransient<SearchViewModel>()
+                        .AddTransient<RadioViewModel>()
+                        .AddTransient<RadioDetailViewModel>()
+                        .AddTransient<ContentDetailViewModel>()
+                        // Build
+                        .BuildServiceProvider());
             }
 
             if (e.PrelaunchActivated == false)
             {
+                ISettingsService settings = Ioc.Default.GetRequiredService<ISettingsService>();
+                CheckLanguage(settings);
                 if (rootFrame.Content == null)
                 {
+                    bool loadState = (e.PreviousExecutionState == ApplicationExecutionState.Terminated);
+                    RootPage extendedSplash = new RootPage(e.SplashScreen, loadState);
+                    Window.Current.Content = extendedSplash;
                     // 当导航堆栈尚未还原时，导航到第一页，
                     // 并通过将所需信息作为导航参数传入来配置
                     // 参数
-                    rootFrame.Navigate(typeof(Views.RootPage), e.Arguments);
+                    // rootFrame.Navigate(typeof(RootPage), e.Arguments);
                 }
+
                 // 确保当前窗口处于活动状态
                 Window.Current.Activate();
+                // Switch theme
+                CheckTheme(settings);
             }
         }
 
