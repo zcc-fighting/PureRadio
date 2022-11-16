@@ -1,4 +1,4 @@
-﻿using Microsoft.Toolkit.Mvvm.Messaging;
+using Microsoft.Toolkit.Mvvm.Messaging;
 using PureRadio.DataModel;
 using PureRadio.DataModel.Parameter;
 using PureRadio.ViewModels;
@@ -33,5 +33,6 @@ namespace PureRadio.Views
                 WeakReferenceMessenger.Default.Send(new NavToRadioDetailMessage(new RadioShot(radioItem.content_id)));
             }
         }
+
     }
 }

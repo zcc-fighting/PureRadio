@@ -190,8 +190,10 @@
     <Compile Include="DataModels\TestDateModel.cs" />
     <Compile Include="DataModels\TimerStatus.cs" />
     <Compile Include="DataModels\UserProfile.cs" />
+    <Compile Include="LocalRadioManage\Adapter\UserProfileAdapter.cs" />
     <Compile Include="LocalRadioManage\DataModelTransform\ChannalAlbumTransform.cs" />
     <Compile Include="LocalRadioManage\DataModelTransform\DateTransform.cs" />
+    <Compile Include="LocalRadioManage\DataModelTransform\LocalUserTransform.cs" />
     <Compile Include="LocalRadioManage\DataModelTransform\RadioTransform.cs" />
     <Compile Include="LocalRadioManage\DBBuilder\SQLiteConnect.cs" />
     <Compile Include="LocalRadioManage\DBBuilder\TableObj\TableEntity\LocalChannalAlbum.cs" />
@@ -227,6 +229,8 @@
     <Compile Include="LocalRadioManage\test\LocalRadioTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\AppViewModel.cs" />
+    <Compile Include="ViewModels\LocalRadioManageViewModels\LocalLibraryViewModel.cs" />
+    <Compile Include="ViewModels\LocalRadioManageViewModels\LocalUserLogViewModel.cs" />
     <Compile Include="ViewModels\RadioViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\UserViewModel.cs" />
@@ -458,7 +462,6 @@
     <PRIResource Include="Strings\en-US\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="RemoteRadioManage\" />
     <Folder Include="Services\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
