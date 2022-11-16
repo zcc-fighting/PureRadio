@@ -15,14 +15,18 @@ namespace LocalRadioManage.DBBuilder.TableObj
         public readonly static string TableName = "Users";
         public readonly static string[] UserName = { "UserName", "TEXT NOT NULL" };
         public readonly static string[] UserPass = { "UserPass", "TEXT NOT NULL" };
+        public readonly static string[] UserIcon = { "UserIcon", "TEXT " };
+        public readonly static string[] UserTrueName = { "UserIcon", "TEXT " };
 
         public readonly static string[] PrimaryKey = { UserName[0] };
-        public readonly static List<string[]> ForeignKey_List = new List<string[]> {  };
+        public readonly static List<string[]> ForeignKey_List = new List<string[]> { };
 
         public readonly static Dictionary<string[], int> ColLocation = new Dictionary<string[], int>
         {
-            {UserName,0 },
+            { UserName,0 },
             { UserPass,1 },
+            { UserIcon,2 },
+            { UserTrueName,3 }
         };
 
         public TableInform GetTableInform()
