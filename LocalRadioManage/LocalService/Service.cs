@@ -12,8 +12,9 @@ using LocalRadioManage.StorageOperate;
 namespace LocalRadioManage.LocalService
 {
     //启动项
-   public partial class LocalServ
+    public partial class LocalServ
     {
+
         /// <summary>
         /// 访问此变量需加锁，用于异步结果读取
         /// </summary>
@@ -109,6 +110,39 @@ namespace LocalRadioManage.LocalService
             public bool SaveUser(string user_name,string user_pass)
             {
               return UserService.SaveUser(user_name, user_pass);
+            }
+
+            public bool SaveUser(LocalUserInform user)
+            {
+                Task<Task<bool>> task = new Task<Task<bool>>(() => SaveUser_Asyc(user));
+                task.Start();
+                task.Result.Wait();
+                return task.Result.Result;
+            }
+
+            public LocalUserInform LoadUser(string user_name,string user_pass,bool is_check)
+            {
+                if (is_check) 
+                {
+                    if(!UserService.CheckUsr(user_name, user_pass))
+                    {
+                        return null;
+                    }
+                 }
+                List < LocalUserInform> users= UserService.LoadUser(user_name);
+                if (users.Count == 1)
+                {
+                    return users[0];
+                }
+                else{
+                    return null;
+                }
+
+            }
+
+            public async Task<bool> SaveUser_Asyc(LocalUserInform user)
+            {
+                return await UserService.SaveUser(user);
             }
 
             public async Task<bool> RemoveUser_Asyc(string user_name)
