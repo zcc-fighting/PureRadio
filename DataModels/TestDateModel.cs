@@ -94,16 +94,4 @@ namespace DataModels
         public string user = "0";
         
     }
-
-    //
-    public class LocalUserInform
-    {
-       //此对应用户名
-        public string user_true_name = "default";
-        //user_name对应蜻蜓id
-        public string user_name = "0";
-        public string user_pass = "0";
-        public Uri user_icon = null;
-
-    }
 }

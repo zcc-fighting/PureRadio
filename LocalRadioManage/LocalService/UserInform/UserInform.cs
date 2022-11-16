@@ -55,11 +55,6 @@ namespace LocalRadioManage.LocalService.UserInforms
             SetUserInform(album);
         }
 
-        public UserInform(LocalUserInform user)
-        {
-            SetUserInform(user);
-        }
-
 
         private void SetUserInform()
         {
@@ -84,34 +79,8 @@ namespace LocalRadioManage.LocalService.UserInforms
         }
         public bool SetUserInform(string user,string user_pass)
         {
-            try
-            {
-                SetUserInform();
-                List<object> user_l = new List<object>() { user, user_pass };
-                condition_express = Users.UserName[0] + "=" + user
-                    + " and " + Users.UserPass[0] + "=" + user_pass;
-                UserDown.SetUserDown(user);
-                UserFav.SetUserFav(user);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-           
-        }
-
-        public bool SetUserInform(LocalUserInform user)
-        {
-            try
-            {
-                SetUserInform(user.user_name,user.user_pass);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            List<object> user_l = new List<object>() { user,user_pass};
+            return SetUserInform(user);
         }
         public bool SetUserInform(List<object> user)
         {
@@ -145,20 +114,6 @@ namespace LocalRadioManage.LocalService.UserInforms
         /// 对用户表的访问控制
         /// </summary>
         /// <param name="user">"UserName","UserPass"</param>
-        
-        public bool SaveUser(LocalUserInform user)
-        {
-            List<object> store = LocalUserTransform.ToLocalUserStorage(user);
-            try
-            {
-                SQLiteConnect.TableHandle.AddRecord(table_name, store);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
         public bool SaveUser(List<object> user)
         {
             try
@@ -173,7 +128,7 @@ namespace LocalRadioManage.LocalService.UserInforms
         }
         public bool SaveUser(string user_name)
         {
-            List<object> user = new List<object>() { user_name, "0","" };
+            List<object> user = new List<object>() { user_name, "0" };
             try
             {
                 return SQLiteConnect.TableHandle.AddRecord(table_name, user);
