@@ -31,7 +31,7 @@ namespace PureRadio
         /// </summary>
         public App()
         {
-            //LocalRadioTest.TestServiceStart();
+            LocalRadioTest.TestServiceStart();
             CheckLanguage();
             this.InitializeComponent();
             this.Suspending += OnSuspending;

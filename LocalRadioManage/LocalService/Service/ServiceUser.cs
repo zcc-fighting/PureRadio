@@ -21,21 +21,8 @@ namespace LocalRadioManage.LocalService
         }
         public bool SaveUser(string user_name, string user_pass)
         {
-            List<object> user = new List<object>() { user_name, user_pass,"" };
+            List<object> user = new List<object>() { user_name, user_pass };
             return user_inform.SaveUser(user);
-        }
-        public async Task<bool> SaveUser(LocalUserInform user)
-        {
-            try
-            {
-                StorageFile img_file = await MyFile.CreateFile(Default.DefalutStorage.image_folder, user.user_icon);
-                user.user_icon = new Uri(img_file.Path);
-                return user_inform.SaveUser(user);
-            }
-           catch
-            {
-                return false;
-            }
         }
 
         //删除一个用户的所有信息
@@ -49,22 +36,9 @@ namespace LocalRadioManage.LocalService
             return user_inform.DeleteUsr(true);
         }
 
-        public List<LocalUserInform> LoadUser()
+        public List<List<object>> LoadUser()
         {
-            List<List<object>> users = user_inform.LoadUser();
-            List<LocalUserInform> users_ret = new List<LocalUserInform>();
-            foreach (List<object> user in users)
-            {
-                LocalUserInform inform = DataModelTransform.LocalUserTransform.ToLocalUserInform(user);
-                users_ret.Add(inform);
-            }
-            return users_ret;
-        }
-
-        public List<LocalUserInform> LoadUser(string user_name)
-        {
-            user_inform.SetUserInform(user_name);
-            return LoadUser();
+          return  user_inform.LoadUser();
         }
 
         public bool CheckUsr(string user_name, string user_pass)
