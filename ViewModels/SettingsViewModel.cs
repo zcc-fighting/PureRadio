@@ -25,7 +25,7 @@ namespace PureRadio.ViewModels
         private bool _timerStatus = false;
         private TimeSpan _delay;
         private string _closeTime;
-        private bool _networkStatus = true;
+        private bool _networkStatus = false;
 
 
         public SettingsViewModel()
