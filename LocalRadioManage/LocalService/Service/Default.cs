@@ -21,8 +21,8 @@ namespace LocalRadioManage.LocalService
         public static class DefalutUser
         {
            
-            //"UserName", "UserPass","icon","true_name"
-            public static readonly  object[] default_user =  {  "0", "0", "/ Assets / Image / DefaultAvatar.png", "default" };
+            //"UserName", "UserPass"
+            public static readonly  object[] default_user =  {  "0", "0" };
             // "UserName", "ChannalAlbumId" 
             public static readonly object[] default_local_down = { "0", 0 };
             //"UserName", "ChannalAlbumId", "ChannalAlbumType","ChannalAlbumDesc", "ChannalAlbumCover"
