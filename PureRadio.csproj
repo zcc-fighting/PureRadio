@@ -134,6 +134,7 @@
     <Compile Include="DataModels\Data\Constants\ApiConstants.cs" />
     <Compile Include="DataModels\Data\Constants\AppConstants.cs" />
     <Compile Include="DataModels\Data\Constants\ServiceConstants.cs" />
+    <Compile Include="DataModels\Data\Content\ContentInfoCard.cs" />
     <Compile Include="DataModels\Data\Content\ContentInfoDetail.cs" />
     <Compile Include="DataModels\Data\Content\ContentInfoSearch.cs" />
     <Compile Include="DataModels\Data\Content\ContentPlaylistDetail.cs" />

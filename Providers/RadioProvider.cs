@@ -30,6 +30,10 @@ namespace PureRadio.Uwp.Providers
         }
         public  async Task<IEnumerable<RadioInfoCard>> GetRankRadio(CancellationToken cancellationToken)
         {
+            Dictionary<string, string> parameters = new Dictionary<string, string>()
+            {
+                
+            };
             string url = ApiConstants.Radio.Billboards;
             var request = await _httpProvider.GetRequestMessageAsync(url, HttpMethod.Get);
             var response = await _httpProvider.SendAsync(request, cancellationToken);
