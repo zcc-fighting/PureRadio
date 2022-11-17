@@ -41,7 +41,7 @@ namespace PureRadio.Uwp.Providers
 
         public async Task<List<string>> GetSearchSuggestion(string keyword, CancellationToken cancellationToken)
         {
-            Dictionary<string, string> parameters = new Dictionary<string, string>()
+            Dictionary<string, string> parameters = new()
             {
                 {"k", keyword},
             };
@@ -55,7 +55,7 @@ namespace PureRadio.Uwp.Providers
 
         public async Task<SearchSet<RadioInfoSearch>> GetRadioSearchResultAsync(string keyword, CancellationToken cancellationToken)
         {
-            Dictionary<string, string> parameters = new Dictionary<string, string>()
+            Dictionary<string, string> parameters = new()
             {
                 {ApiConstants.Search.ParamKeyword, keyword},
                 {ApiConstants.Search.ParamPage, _radioPageNumber.ToString() },
@@ -74,7 +74,7 @@ namespace PureRadio.Uwp.Providers
 
         public async Task<SearchSet<ContentInfoSearch>> GetContentSearchResultAsync(string keyword, CancellationToken cancellationToken)
         {
-            Dictionary<string, string> parameters = new Dictionary<string, string>()
+            Dictionary<string, string> parameters = new()
             {
                 {ApiConstants.Search.ParamKeyword, keyword},
                 {ApiConstants.Search.ParamPage, _contentPageNumber.ToString() },

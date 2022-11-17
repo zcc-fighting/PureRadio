@@ -16,10 +16,10 @@ namespace PureRadio.Uwp.Adapters
             => item.Title;
 
         public RadioInfoSearch ConvertToSearchResultView(SearchRadioItem item)
-            => new RadioInfoSearch(item.RadioId, item.Title, item.Cover, item.Description, item.AudienceCount);
+            => new(item.RadioId, item.Title, item.Cover, item.Description, item.AudienceCount);
 
 
         public ContentInfoSearch ConvertToSearchResultView(SearchContentItem item)
-            => new ContentInfoSearch(item.ContentId, item.Title, item.Podcaster, item.Cover, item.Description, item.PlayCount);
+            => new(item.ContentId, item.Title, item.Podcaster, item.Cover, item.Description, item.PlayCount);
     }
 }

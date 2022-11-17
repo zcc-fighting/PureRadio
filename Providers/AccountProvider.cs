@@ -213,7 +213,7 @@ namespace PureRadio.Uwp.Providers
             }
             if (AccountInfo == null || AccountInfo.IsOnline)
             {
-                AccountInfo = new AccountInfo();
+                AccountInfo = new();
             }
             State = AuthorizeState.SignedOut;
             return Task.CompletedTask;
@@ -257,7 +257,7 @@ namespace PureRadio.Uwp.Providers
                 url = url.Replace("https://audio.qtfm.cn", string.Empty);
                 var queryList = parameters.Select(p => $"{p.Key}={p.Value}").ToList();
                 var query = string.Join('&', queryList);
-                var signQuery = url + query;
+                var signQuery = url + $"?{query}";
                 sign = HmacMD5(signQuery, ApiConstants.Key.Content);
             }
             return sign;

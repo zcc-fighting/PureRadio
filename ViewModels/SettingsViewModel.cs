@@ -15,7 +15,7 @@ using Windows.ApplicationModel.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace PureRadio.ViewModels
+namespace PureRadio.Uwp.ViewModels
 {
     public sealed partial class SettingsViewModel : ObservableRecipient
     {

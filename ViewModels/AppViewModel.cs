@@ -113,7 +113,7 @@ namespace PureRadio.ViewModels
                     navigate.NavigateToSecondaryView(pageId, parameter);
                     break;
                 case NavigationType.Player:
-                    navigate.NavigateToPlayView((PlaySnapshot)parameter);
+                    //navigate.NavigateToPlayView((PlaySnapshot)parameter);
                     break;
                 default:
                     break;

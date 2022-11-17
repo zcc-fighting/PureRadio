@@ -42,13 +42,13 @@ namespace PureRadio.Uwp.Providers
 
         public async Task<List<ContentPlaylistDetail>> GetContentProgramListFull(int contentId, string version, CancellationToken cancellationToken)
         {
-            List<ContentPlaylistDetail> items = new List<ContentPlaylistDetail>();
+            List<ContentPlaylistDetail> items = new();
             string url = ApiConstants.Content.PList + contentId.ToString() + "/programs/" + version.ToString();
             int _contentPageNumber = 1;
             int _total = 0;
             do
             {
-                Dictionary<string, string> parameters = new Dictionary<string, string>()
+                Dictionary<string, string> parameters = new()
                 {
                     {ServiceConstants.Params.CurPage, _contentPageNumber.ToString()},
                     {ServiceConstants.Params.PageSize, 30.ToString() },

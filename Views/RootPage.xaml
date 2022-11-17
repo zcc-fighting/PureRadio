@@ -1,14 +1,14 @@
 ﻿<Page
-    x:Class="PureRadio.Views.RootPage"
+    x:Class="PureRadio.Uwp.Views.RootPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:PureRadio"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations" 
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls" 
+    xmlns:animatedvisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
+    Background="Transparent">
     <Grid>
         <Canvas x:Name="extendedSplash">
             <Image x:Name="extendedSplashImage" Source="ms-appx:///Assets/SplashScreen/SplashScreen.png"/>
@@ -16,4 +16,5 @@
         </Canvas>
         <Frame Canvas.ZIndex="0" x:Name="RootFrame"/>
     </Grid>
+    
 </Page>

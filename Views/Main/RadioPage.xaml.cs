@@ -12,7 +12,7 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using PureRadio.Uwp.Models.Data.Radio;
 using PureRadio.Uwp.Models.Enums;
 
-namespace PureRadio.Views
+namespace PureRadio.Uwp.Views
 {
     public sealed partial class RadioPage:Page
     {

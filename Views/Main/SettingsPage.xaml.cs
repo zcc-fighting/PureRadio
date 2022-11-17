@@ -1,5 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.DependencyInjection;
-using PureRadio.ViewModels;
+using PureRadio.Uwp.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,7 +19,7 @@ using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
-namespace PureRadio.Views.Main
+namespace PureRadio.Uwp.Views.Main
 {
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。

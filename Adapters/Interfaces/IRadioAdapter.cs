@@ -14,12 +14,6 @@ namespace PureRadio.Uwp.Adapters.Interfaces
     public interface IRadioAdapter
     {
         /// <summary>
-        /// 将来自 Web 的电台排行榜条目 <see cref="RadioBillboardItem"/> 转换为本地电台详情条目 <see cref="RadioInfoCard"/> .
-        /// </summary>
-        /// <param name="item">来自 Web 的电台排行榜条目.</param>
-        /// <returns><see cref="RadioInfoCard"/>.</returns>
-        RadioInfoCard ConvertToRadioInfoCard(RadioBillboardItem item);
-        /// <summary>
         /// 将来自 Web 的电台详情条目 <see cref="RadioDetailItem"/> 转换为本地电台详情条目 <see cref="RadioInfoDetail"/> .
         /// </summary>
         /// <param name="item">来自 Web 的电台详情条目.</param>

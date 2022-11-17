@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 namespace PureRadio.Uwp.Models.Data.Content
 {
     /// <summary>
-    /// 内容(专辑)结果视图项
+    /// 内容(专辑)搜索结果视图项
     /// </summary>
     public class ContentInfoCard
     {

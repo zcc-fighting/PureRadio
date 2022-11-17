@@ -65,8 +65,9 @@ namespace PureRadio.ViewModels
 
         private async Task<IEnumerable<RadioInfoCard>> GetRadioResult(CancellationToken cancelToken)
         {
-            var resultSet = await radioProvider.GetRankRadio(cancelToken);
-            return resultSet.ToList();
+            //var resultSet = await radioProvider.GetRankRadio(cancelToken);
+            //return resultSet.ToList();
+            return new List<RadioInfoCard>();
         }
 
         private void StartLoading()

@@ -18,19 +18,19 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using CommunityToolkit.Mvvm.DependencyInjection;
-using PureRadio.ViewModels;
+using PureRadio.Uwp.ViewModels;
 using System.ComponentModel.Design.Serialization;
 using PureRadio.Uwp.Services.Interfaces;
 using PureRadio.Uwp.Models.Enums;
 using static System.Net.Mime.MediaTypeNames;
 using Windows.UI.Xaml.Media.Animation;
-using PureRadio.Views.Main;
+using PureRadio.Uwp.Views.Main;
 using Windows.UI;
-using PureRadio.Views.Secondary;
+using PureRadio.Uwp.Views.Secondary;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
-namespace PureRadio.Views
+namespace PureRadio.Uwp.Views
 {
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
@@ -41,7 +41,7 @@ namespace PureRadio.Views
         private readonly List<(string Tag, PageIds pageIds, Type Page)> _mainPages = new List<(string Tag, PageIds pageIds, Type Page)>
         {
             (((int)PageIds.Home).ToString(), PageIds.Home, typeof(HomePage)),
-            (((int)PageIds.Radio).ToString(),PageIds.Radio,typeof(RadioPage)),
+            //(((int)PageIds.Radio).ToString(),PageIds.Radio,typeof(RadioPage)),
             (((int)PageIds.Content).ToString(),PageIds.Content, typeof(ContentPage)),
             (((int)PageIds.Library).ToString(),PageIds.Library, typeof(LibraryPage)),
             (((int)PageIds.Settings).ToString(), PageIds.Settings, typeof(SettingsPage))
@@ -50,7 +50,7 @@ namespace PureRadio.Views
         private readonly List<(string Tag, PageIds pageIds, Type Page)> _secondaryPages = new List<(string Tag, PageIds pageIds, Type Page)>
         {
             (((int)PageIds.Search).ToString(), PageIds.Search, typeof(SearchPage)),
-            (((int)PageIds.Radio).ToString(), PageIds.RadioDetail,typeof(RadioDetailPage)),
+            //(((int)PageIds.Radio).ToString(), typeof(CategoriesPage)),
             //(((int)PageIds.Content).ToString(), typeof(RankPage)),
             //(((int)PageIds.Library).ToString(), typeof(ContentPage)),
             //(((int)PageIds.Settings).ToString(),typeof(SettingsPage))
@@ -59,6 +59,7 @@ namespace PureRadio.Views
         private PageIds _currentPageId;
 
         public MainViewModel ViewModel => (MainViewModel)DataContext;
+        public readonly NativePlayerViewModel PlayerViewModel;
 
         public MainPage()
         {
@@ -68,6 +69,7 @@ namespace PureRadio.Views
             Unloaded += MainPage_Unloaded;
 
             DataContext = Ioc.Default.GetRequiredService<MainViewModel>();
+            PlayerViewModel = Ioc.Default.GetRequiredService<NativePlayerViewModel>();
 
             CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
 
@@ -81,6 +83,8 @@ namespace PureRadio.Views
             // Register a handler for when the window activation changes.
             Window.Current.CoreWindow.Activated += CoreWindow_Activated;
 
+            MediaPosition.AddHandler(PointerReleasedEvent, new PointerEventHandler(MediaPositionLive_PointerReleased), true);
+            VolumeControl.AddHandler(PointerReleasedEvent, new PointerEventHandler(VolumeControl_PointerReleased), true);
         }
 
         private void MainPage_Unloaded(object sender, RoutedEventArgs e)
@@ -100,13 +104,13 @@ namespace PureRadio.Views
             TryGoBack();
         }
 
-        private void MainPage_Navigating(object sender, Uwp.Models.Args.AppNavigationEventArgs e)
+        private void MainPage_Navigating(object sender, Models.Args.AppNavigationEventArgs e)
         {
-            if (e.Type == NavigationType.Main)
+            if(e.Type == NavigationType.Main)
             {
                 NavigateToMainView(e.PageId, e.Parameter);
             }
-            else if (e.Type == NavigationType.Secondary)
+            else if(e.Type == NavigationType.Secondary)
             {
                 NavigateToSecondaryView(e.PageId, e.Parameter);
             }
@@ -150,7 +154,7 @@ namespace PureRadio.Views
             else
             {
                 AppTitleTextBlock.Foreground =
-                    new SolidColorBrush(App.RootTheme == ElementTheme.Dark ? Color.FromArgb(255, 255, 255, 255) : Color.FromArgb(255, 0, 0, 0));
+                    new SolidColorBrush(App.RootTheme == ElementTheme.Dark? Color.FromArgb(255,255,255,255) : Color.FromArgb(255,0,0,0));
             }
         }
 
@@ -183,7 +187,7 @@ namespace PureRadio.Views
                     pageType = typeof(HomePage);
                     break;
                 case PageIds.Radio:
-                    pageType = typeof(RadioPage);
+                    //pageType = typeof(RadioPage);
                     break;
                 case PageIds.Content:
                     pageType = typeof(ContentPage);
@@ -197,7 +201,7 @@ namespace PureRadio.Views
             }
             if (pageType != null)
             {
-                if (_currentPageId != pageId)
+                if(_currentPageId != pageId)
                 {
                     ContentFrame.Navigate(pageType, parameter, new EntranceNavigationTransitionInfo());
                     _currentPageId = pageId;
@@ -214,7 +218,7 @@ namespace PureRadio.Views
                 default:
                     break;
                 case PageIds.User:
-
+                    
                     break;
                 case PageIds.Search:
                     pageType = typeof(SearchPage);
@@ -248,7 +252,7 @@ namespace PureRadio.Views
         private void On_Navigated(object sender, NavigationEventArgs e)
         {
             var item = _mainPages.FirstOrDefault(p => p.Page == e.SourcePageType);
-
+            
             if (NavView.SelectedItem == null ||
                 (NavView.SelectedItem is muxc.NavigationViewItem navItem && item.Tag != null &&
                 navItem.Tag.ToString() != item.Tag))
@@ -312,17 +316,17 @@ namespace PureRadio.Views
 
         private void PlayerContainer_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
-
+            DynamicBackground.Visibility = Visibility.Visible;
         }
 
         private void PlayerContainer_PointerExited(object sender, PointerRoutedEventArgs e)
         {
-
+            DynamicBackground.Visibility = Visibility.Collapsed;
         }
 
         private void PlayerContainer_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
-
+            ViewModel.Navigate(PageIds.Player);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -340,7 +344,7 @@ namespace PureRadio.Views
             {
                 AppTitleContainer.Margin = new Thickness(18, 0, 22, 0);
             }
-
+                
         }
 
         private void AppTitleSearchBar_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
@@ -357,7 +361,7 @@ namespace PureRadio.Views
                 keyword = args.QueryText;
                 // ContentFrame.Navigate(typeof(SearchResultPage), args.QueryText);
             }
-            if (!string.IsNullOrEmpty(keyword) && keyword != ViewModel._noResultTip)
+            if (!string.IsNullOrEmpty(keyword) && keyword != ViewModel._noResultTip) 
             {
                 ViewModel.Navigate(PageIds.Search, keyword);
                 ViewModel.Keyword = string.Empty;
@@ -383,7 +387,7 @@ namespace PureRadio.Views
 
         private async void AccountStateButoon_Click(object sender, RoutedEventArgs e)
         {
-            if (ViewModel.AccountState == AuthorizeState.SignedOut)
+            if(ViewModel.AccountState == AuthorizeState.SignedOut)
             {
                 LoginDialog.RequestedTheme = App.RootTheme;
                 ContentDialogResult result = await LoginDialog.ShowAsync();
@@ -397,9 +401,9 @@ namespace PureRadio.Views
                     }
                     else
                     {
-                        if (!await ViewModel.TrySignIn(username, password))
+                        if (!await ViewModel.TrySignIn(username, password)) 
                             LoginDialogFailureTip.IsOpen = true;
-                        else
+                        else 
                             LoginDialogSuccessTip.IsOpen = true;
                     }
                 }
@@ -408,6 +412,46 @@ namespace PureRadio.Views
             {
                 if (await ViewModel.TrySignOut()) LogoutDialogSuccessTip.IsOpen = true;
             }
+        }
+
+        private void MediaPositionLive_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            PlayerViewModel.SetPosition((int)(sender as Slider).Value);
+        }
+
+        private void MediaPositionLive_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            PlayerViewModel.IsMoveMediaPosition = true;
+        }
+
+        private void MediaPositionLive_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            PlayerViewModel.IsMoveMediaPosition = false;
+        }
+
+        private void MediaPositionLive_PointerReleased(object sender, PointerRoutedEventArgs e)
+        {
+            PlayerViewModel.SetPosition((int)(sender as Slider).Value);
+        }
+
+        private void VolumeControl_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            PlayerViewModel.SetVolume((sender as Slider).Value);
+        }
+
+        private void VolumeControl_PointerReleased(object sender, PointerRoutedEventArgs e)
+        {
+            PlayerViewModel.SetVolume((sender as Slider).Value);
+        }
+
+        private void VolumeControl_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            PlayerViewModel.IsMoveVolume = true;
+        }
+
+        private void VolumeControl_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            PlayerViewModel.IsMoveVolume = false;
         }
     }
 }

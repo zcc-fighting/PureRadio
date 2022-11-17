@@ -33,7 +33,7 @@ using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
-namespace PureRadio.Views
+namespace PureRadio.Uwp.Views
 {
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
@@ -87,7 +87,7 @@ namespace PureRadio.Views
         private void RootPage_Unloaded(object sender, RoutedEventArgs e)
         {
             Ioc.Default.GetRequiredService<INavigateService>().Navigating -= Navigate_Navigating;
-
+            
         }
 
         private void RootPage_Loaded(object sender, RoutedEventArgs e)
@@ -96,13 +96,13 @@ namespace PureRadio.Views
         }
 
 
-        private void Navigate_Navigating(object sender, Uwp.Models.Args.AppNavigationEventArgs e)
+        private void Navigate_Navigating(object sender, Models.Args.AppNavigationEventArgs e)
         {
-            if (e.Type == Uwp.Models.Enums.NavigationType.Player)
+            if(e.Type == Models.Enums.NavigationType.Player)
             {
                 RootFrame.Navigate(typeof(PlayerPage), e.Parameter);
             }
-            else if (RootFrame.SourcePageType == typeof(PlayerPage))
+            else if(RootFrame.SourcePageType == typeof(PlayerPage))
             {
                 RootFrame.Navigate(typeof(MainPage), e.Parameter);
             }
@@ -139,9 +139,9 @@ namespace PureRadio.Views
 
                 }
             }
-            catch (Exception)
+            catch(Exception)
             {
-
+                
             }
 
             ImageCache.Instance.CacheDuration = TimeSpan.FromHours(24);

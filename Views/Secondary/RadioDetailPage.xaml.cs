@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.DependencyInjection;
+using PureRadio.Uwp.Models.Data.Radio;
 using PureRadio.Uwp.Models.Enums;
-using PureRadio.ViewModels;
+using PureRadio.Uwp.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,7 +19,7 @@ using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
-namespace PureRadio.Views.Secondary
+namespace PureRadio.Uwp.Views.Secondary
 {
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
@@ -43,7 +44,10 @@ namespace PureRadio.Views.Secondary
 
         private void PlayListView_ItemClick(object sender, ItemClickEventArgs e)
         {
-
+            var item = e.ClickedItem as RadioPlaylistDetail;
+            var list = sender as ListView;
+            int index = list.Items.IndexOf(item);
+            ViewModel.PlayRadioDemand(index);
         }
 
         private void NavList_Loaded(object sender, RoutedEventArgs e)

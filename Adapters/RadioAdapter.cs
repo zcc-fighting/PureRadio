@@ -13,26 +13,28 @@ namespace PureRadio.Uwp.Adapters
 {
     public class RadioAdapter : IRadioAdapter
     {
-        public RadioInfoCard ConvertToRadioInfoCard(RadioBillboardItem item)
-        {
-            var resourceLoader = new ResourceLoader();
-            string nowPlaying = item.Nowplaying?.Title ?? resourceLoader.GetString("LangLiveProgramUnknown");
-            return new RadioInfoCard(
-                item.RadioId,item.Title,item.Cover,item.Description,nowPlaying,item.AudienceCount.ToString());
-        }
         public RadioInfoDetail ConvertToRadioInfoDetail(RadioDetailItem item)
         {
             var resourceLoader = new ResourceLoader();
             string nowPlaying = item.Nowplaying?.Title ?? resourceLoader.GetString("LangLiveProgramUnknown");
+            //if ((item.Nowplaying?.EndTime ?? string.Empty) == "23:59:00") item.Nowplaying.EndTime = "23:59:59";
             TimeSpan timeSpan;
             if (item.Nowplaying != null && DateTime.TryParse(item.Nowplaying.EndTime, out DateTime updateTime))
+            {
+                if (item.Nowplaying.EndTime == "23:59:00")
+                {
+                    //item.Nowplaying.EndTime = "23:59:59";
+                    updateTime = updateTime.AddSeconds(90);
+                }
                 timeSpan = updateTime - DateTime.Now;
+            }
             else
                 timeSpan = TimeSpan.Zero;
             return new RadioInfoDetail(
-                item.RadioId, item.Title, item.Cover, item.Description, 
-                item.AudienceCount.ToString(), nowPlaying, item.TopCategoryId, 
-                item.TopCategoryTitle, item.RegionId, item.CityId, timeSpan);
+                item.RadioId, item.Title, item.Cover, item.Description,
+                item.AudienceCount.ToString(), nowPlaying, item.TopCategoryId,
+                item.TopCategoryTitle, item.RegionId, item.CityId, timeSpan,
+                item.Nowplaying?.StartTime ?? string.Empty, item.Nowplaying?.EndTime ?? string.Empty);
         }
 
         public RadioPlaylistDetail ConvertToRadioPlaylistItem(RadioPlaylistItem item)
@@ -45,6 +47,10 @@ namespace PureRadio.Uwp.Adapters
                 boardcasterList.Sort();
                 boardcasters = string.Join(',', boardcasterList);
             }
+            //if (item.EndTime == "23:59:00")
+            //{
+            //    item.EndTime = "23:59:59";
+            //}
             return new RadioPlaylistDetail(
                 item.StartTime, item.EndTime, item.Duration, item.Day, 
                 item.RadioId, item.ProgramId, item.Title, boardcasters);

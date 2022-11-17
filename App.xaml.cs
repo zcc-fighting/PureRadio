@@ -17,14 +17,14 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Windows.ApplicationModel.Core;
-using PureRadio.Views;
+using PureRadio.Uwp.Views;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using System.ComponentModel.Design;
 using Microsoft.Extensions.DependencyInjection;
 using PureRadio.Uwp.Services.Interfaces;
 using PureRadio.Uwp.Services;
 using Windows.Globalization;
-using PureRadio.ViewModels;
+using PureRadio.Uwp.ViewModels;
 using PureRadio.Uwp.Models.Enums;
 using PureRadio.Uwp.Models.Data.Constants;
 using PureRadio.Uwp.Providers.Interfaces;
@@ -140,31 +140,34 @@ namespace PureRadio
                 // 将框架放在当前窗口中
                 Window.Current.Content = rootFrame;
 
-                Ioc.Default.ConfigureServices(
-                        new ServiceCollection()
-                        // Services
-                        .AddSingleton<ISettingsService, SettingsService>()
-                        .AddSingleton<INavigateService, NavigateService>()
-                        // Adapters
-                        .AddSingleton<IAccountAdapter, AccountAdapter>()
-                        .AddSingleton<IContentAdapter, ContentAdapter>()
-                        .AddSingleton<IRadioAdapter, RadioAdapter>()
-                        .AddSingleton<ISearchAdapter, SearchAdapter>()
-                        // Providers
-                        .AddSingleton<IAccountProvider, AccountProvider>()
-                        .AddSingleton<IHttpProvider, HttpProvider>()
-                        .AddSingleton<ISearchProvider, SearchProvider>()
-                        .AddSingleton<IRadioProvider, RadioProvider>()
-                        .AddSingleton<IContentProvider, ContentProvider>()
-                        // Viewmodels
-                        .AddTransient<MainViewModel>()
-                        .AddTransient<SettingsViewModel>()
-                        .AddTransient<SearchViewModel>()
-                        .AddTransient<RadioViewModel>()
-                        .AddTransient<RadioDetailViewModel>()
-                        .AddTransient<ContentDetailViewModel>()
-                        // Build
-                        .BuildServiceProvider());
+                if (e.PreviousExecutionState != ApplicationExecutionState.Running)
+                    Ioc.Default.ConfigureServices(
+                            new ServiceCollection()
+                            // Services
+                            .AddSingleton<ISettingsService, SettingsService>()
+                            .AddSingleton<INavigateService, NavigateService>()
+                            .AddSingleton<IPlaybackService, PlaybackService>()
+                            // Adapters
+                            .AddSingleton<IAccountAdapter, AccountAdapter>()
+                            .AddSingleton<IContentAdapter, ContentAdapter>()
+                            .AddSingleton<IRadioAdapter, RadioAdapter>()
+                            .AddSingleton<ISearchAdapter, SearchAdapter>()
+                            .AddSingleton<IPlayerAdapter, PlayerAdapter>()
+                            // Providers
+                            .AddSingleton<IAccountProvider, AccountProvider>()
+                            .AddSingleton<IHttpProvider, HttpProvider>()
+                            .AddSingleton<ISearchProvider, SearchProvider>()
+                            .AddSingleton<IRadioProvider, RadioProvider>()
+                            .AddSingleton<IContentProvider, ContentProvider>()
+                            // Viewmodels
+                            .AddTransient<MainViewModel>()
+                            .AddTransient<SettingsViewModel>()
+                            .AddTransient<SearchViewModel>()
+                            .AddTransient<RadioDetailViewModel>()
+                            .AddTransient<ContentDetailViewModel>()
+                            .AddTransient<NativePlayerViewModel>()
+                            // Build
+                            .BuildServiceProvider());
             }
 
             if (e.PrelaunchActivated == false)

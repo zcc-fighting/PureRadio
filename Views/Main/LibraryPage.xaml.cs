@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 
-namespace PureRadio.Views
+namespace PureRadio.Uwp.Views
 {
     public sealed partial class LibraryPage : Page
     {

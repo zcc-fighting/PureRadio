@@ -21,7 +21,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
 
-namespace PureRadio.ViewModels
+namespace PureRadio.Uwp.ViewModels
 {
     public sealed partial class MainViewModel : ObservableRecipient
     {
@@ -115,7 +115,7 @@ namespace PureRadio.ViewModels
                     navigate.NavigateToSecondaryView(pageId, parameter);
                     break;
                 case NavigationType.Player:
-                    navigate.NavigateToPlayView((PlaySnapshot)parameter);
+                    navigate.NavigateToPlayView((PlayItemSnapshot)parameter);
                     break;
                 default:
                     break;
