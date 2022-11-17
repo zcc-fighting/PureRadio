@@ -196,6 +196,8 @@ namespace LocalRadioManage.LocalService.UserInforms
             }
 
         }
+
+
         public bool DeleteUsr(bool is_constraint)
         {
             try

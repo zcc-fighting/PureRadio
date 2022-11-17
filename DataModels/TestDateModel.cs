@@ -42,7 +42,11 @@ namespace DataModels
         /// 标题
         /// </summary>
         public string title { get; set; }
-      
+        /// <summary>
+        /// 日期
+        /// </summary>
+        public DateTime date { get; set; }
+
 
         public string user = "0";
         public Uri radio_uri { get; set; }
@@ -92,7 +96,7 @@ namespace DataModels
         public int type { get; set; }
 
         public string user = "0";
-        
+
     }
 
 
@@ -105,7 +109,26 @@ namespace DataModels
         public string user_name = "0";
         public string user_pass = "0";
         public Uri user_icon = null;
+    }
 
+    public class DownProgressInform
+    {
+        string file_name ="";
+        ulong file_size = 0;
+        ulong down_size = 0;
+        bool down_end = false;
+
+        public DownProgressInform()
+        {
+
+        }
+        public DownProgressInform(string _file_name,ulong _file_size,ulong _down_size,bool _down_end)
+        {
+            file_name = _file_name;
+            file_size = _file_size;
+            down_size = _down_size;
+            down_end = _down_end;
+        }
     }
 
 }

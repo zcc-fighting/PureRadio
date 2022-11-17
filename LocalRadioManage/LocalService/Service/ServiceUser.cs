@@ -41,11 +41,20 @@ namespace LocalRadioManage.LocalService
         //删除一个用户的所有信息
         public async Task<bool> DeleteUser(string user_name)
         {
+            DataModels.LocalUserInform user = LoadUser(user_name);
+            if (user == null)
+            {
+                return false;
+            }
+            await MyFile.DeleteFile(user.user_icon);
+
             ServiceUserDown userDown = new ServiceUserDown();
             ServiceUserFav userFav = new ServiceUserFav();
+            
             await userDown.DeleteProgram(user_name, true);
             userFav.DeleteProgram(user_name, true);
-            user_inform.SaveUser(user_name);
+
+            user_inform.SetUserInform(user_name);
             return user_inform.DeleteUsr(true);
         }
 
@@ -61,10 +70,18 @@ namespace LocalRadioManage.LocalService
             return users_ret;
         }
 
-        public List<LocalUserInform> LoadUser(string user_name)
+        public LocalUserInform LoadUser(string user_name)
         {
             user_inform.SetUserInform(user_name);
-            return LoadUser();
+            List<LocalUserInform> users= LoadUser();
+            if (users.Count == 1)
+            {
+                return users[0];
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public bool CheckUsr(string user_name, string user_pass)

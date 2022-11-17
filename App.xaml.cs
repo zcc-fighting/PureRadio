@@ -17,6 +17,10 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using LocalRadioManage.test;
+using LocalRadioManage.LocalService;
+using Microsoft.Extensions.DependencyInjection;
+using CommunityToolkit.Mvvm.DependencyInjection;
+using Autofac;
 
 namespace PureRadio
 {
@@ -31,11 +35,23 @@ namespace PureRadio
         /// </summary>
         public App()
         {
+           
+           Ioc.Default.ConfigureServices(
+                new ServiceCollection()
+                .AddSingleton<LocalServ.LocalFav>()
+                .AddSingleton<LocalServ.LocalDown>()
+                .AddSingleton<LocalServ.LocalUser>()
+                .BuildServiceProvider()
+                );
+
             LocalRadioTest.TestServiceStart();
             CheckLanguage();
             this.InitializeComponent();
             this.Suspending += OnSuspending;
         }
+    
+
+       
 
         /// <summary>
         /// 主题切换支持

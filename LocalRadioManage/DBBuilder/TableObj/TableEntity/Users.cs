@@ -16,7 +16,7 @@ namespace LocalRadioManage.DBBuilder.TableObj
         public readonly static string[] UserName = { "UserName", "TEXT NOT NULL" };
         public readonly static string[] UserPass = { "UserPass", "TEXT NOT NULL" };
         public readonly static string[] UserIcon = { "UserIcon", "TEXT " };
-        public readonly static string[] UserTrueName = { "UserIcon", "TEXT " };
+        public readonly static string[] UserTrueName = { "UserTrueName", "TEXT " };
 
         public readonly static string[] PrimaryKey = { UserName[0] };
         public readonly static List<string[]> ForeignKey_List = new List<string[]> { };

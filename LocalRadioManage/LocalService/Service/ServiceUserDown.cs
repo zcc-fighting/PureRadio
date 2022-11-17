@@ -15,7 +15,10 @@ namespace LocalRadioManage.LocalService
   public  class ServiceUserDown
     {
         UserInform user_inform = new UserInform();
+        //用于多音频进度
         public  DownProgress Progress = new DownProgress();
+        //用于单音频进度
+        public MyFile.CreateFileProgress.Progress RadioProgress = new MyFile.CreateFileProgress.Progress();
        
         //保存节目->节目表+文件(图片)
         public async Task<StorageFile> SaveDownProgram(RadioFullAlbum album)
@@ -83,7 +86,18 @@ namespace LocalRadioManage.LocalService
                 user_inform.UserDown.SetUserDown(radio.user);
                 //修改音频本地名称
                 StorageFolder album_folder =await MyFolder.CreateFolder(Default.DefalutStorage.radio_folder,radio.channel_id.ToString());
-                StorageFile radio_file = await MyFile.CreateFile(album_folder, radio.radio_uri);
+                MyFile.CreateFileProgress create = new MyFile.CreateFileProgress();
+                lock (create.progress)
+                {
+                    create.progress.file_name = radio.title;
+                    RadioProgress = create.progress;
+                    Progress.FileDownProgress.Add(RadioProgress);
+                }
+                StorageFile radio_file = await create.CreateFile(album_folder, radio.radio_uri);
+                if (radio_file == null)
+                {
+                    return false;
+                }
                 radio.radio_uri = new Uri(radio_file.Path);
                 return user_inform.UserDown.SaveUserDownRadio(radio);
             }
@@ -95,23 +109,27 @@ namespace LocalRadioManage.LocalService
         }
         public async Task<bool> DownRadio(List<RadioFullContent> radios)
         {
+        
             lock(Progress)
             {
                 Progress.down_counts = radios.Count;
                 Progress.down_progress = -1;
                 Progress.down_situation.Clear();
+                Progress.FileDownProgress.Clear();
             }
 
             try
             {
+                int id = 0;
                 foreach (RadioFullContent radio in radios)
                 {
-                  bool flag= await DownRadio(radio);
+                    bool flag= await DownRadio(radio);
                     lock (Progress)
                     {
                         Progress.down_progress += 1;
                         Progress.down_situation.Add(flag);
                     }
+                    id++;
 
                 }
                 return true;
@@ -121,6 +139,7 @@ namespace LocalRadioManage.LocalService
                 return false;
             }
         }
+
 
         //根据用户/专辑->载入节目/音频
         public List<RadioFullAlbum> LoadProgram(string user_name)
@@ -184,45 +203,50 @@ namespace LocalRadioManage.LocalService
                 //获取已无用户依赖的本地节目/音频
                 List<RadioFullAlbum> lonely_albums = user_inform.UserDown.LocalDown.LoadLocalDownProgram_Check();
                 List<RadioFullContent> lonely_radios = user_inform.UserDown.LocalDown.LoadLocalDownRaio_Check();
-
-                List<string> album_folders = new List<string>();
-                List<Uri> img_uris = new List<Uri>();
-                List<Uri> radio_uris = new List<Uri>();
-              
-
-                //删除对应专辑
-                if (lonely_albums!= null)
-                {
-                    user_inform.UserDown.LocalDown.DeleteLocalDownProgram_Check(true);
-                    foreach (RadioFullAlbum album in lonely_albums)
-                    {
-                        img_uris.Add(album.cover);
-                        album_folders.Add(album.id.ToString());
-                    }
-                }
+               
+                //记录删除失败的专辑/音频
+                List<RadioFullAlbum> fail_delete_albums = new List<RadioFullAlbum>();
+                List<RadioFullContent> fail_delete_radios = new List<RadioFullContent>();
 
                 //删除对应音频
                 if (lonely_radios != null)
                 {
-                    user_inform.UserDown.LocalDown.DeleteLocalDownRadios_Check(true);
                     foreach (RadioFullContent radio in lonely_radios)
                     {
-                        radio_uris.Add(radio.radio_uri);
+                        if (!await MyFile.DeleteFile(radio.radio_uri))
+                        {
+                            fail_delete_radios.Add(radio);
+                        }
                     }
                 }
-                 
+
+                //删除对应专辑
+                if (lonely_albums!= null)
+                {
+                    foreach (RadioFullAlbum album in lonely_albums)
+                    {
+                        if (!await MyFolder.DeleteFolder(Default.DefalutStorage.radio_folder, album.id.ToString()))
+                        {
+                            fail_delete_albums.Add(album);
+                        }
+                    }
+                }
+
+               
 
                 try
                 {
-                    await MyFile.DeleteFile(img_uris);
-                    await MyFile.DeleteFile(radio_uris);
-                    await MyFolder.DeleteFolder(Default.DefalutStorage.radio_folder, album_folders);
+                    user_inform.UserDown.LocalDown.DeleteLocalDownProgram_Check(true);
+                    user_inform.UserDown.LocalDown.DeleteLocalDownRadios_Check(true);
+                    user_inform.UserDown.LocalDown.SaveLocalDownProgram(fail_delete_albums);
+                    user_inform.UserDown.LocalDown.SaveLocalDownRadio(fail_delete_radios);
                     return true;
                 }
                 catch
                 {
                     return false;
                 }
+              
             }
             else
             {
@@ -263,24 +287,28 @@ namespace LocalRadioManage.LocalService
                 //获取已无用户依赖的音频
                 List<RadioFullContent> lonely_radios = user_inform.UserDown.LocalDown.LoadLocalDownRaio_Check();
 
-                //删除本地对应音频
-                List<Uri> radio_uris = new List<Uri>();
+                List<RadioFullContent> fail_delete_radios = new List<RadioFullContent>();
+               
 
                 if (lonely_radios != null)
                 {
-                    //删除表中数据
-                    user_inform.UserDown.LocalDown.DeleteLocalDownRadios_Check(true);
+                   
 
                     foreach (RadioFullContent radio in lonely_radios)
                     {
-                        radio_uris.Add(radio.radio_uri);
+                        if(! await MyFile.DeleteFile(radio.radio_uri))
+                        {
+                            fail_delete_radios.Add(radio);
+                        }
                     }
                 }
                 
 
                 try
                 {
-                    await MyFile.DeleteFile(radio_uris);
+                    //删除表中数据
+                    user_inform.UserDown.LocalDown.DeleteLocalDownRadios_Check(true);
+                    user_inform.UserDown.LocalDown.SaveLocalDownRadio(fail_delete_radios);
                     return true;
                 }
                 catch
@@ -299,6 +327,7 @@ namespace LocalRadioManage.LocalService
           public  int down_counts = 0;
           public  int down_progress = -1;
           public  List<bool> down_situation = new List<bool>();
+          public List<MyFile.CreateFileProgress.Progress> FileDownProgress = new List<MyFile.CreateFileProgress.Progress>();
         }
     }
 }

@@ -129,16 +129,7 @@ namespace LocalRadioManage.LocalService
                         return null;
                     }
                 }
-                List<LocalUserInform> users = UserService.LoadUser(user_name);
-                if (users.Count == 1)
-                {
-                    return users[0];
-                }
-                else
-                {
-                    return null;
-                }
-
+              return UserService.LoadUser(user_name);         
             }
 
             public async Task<bool> SaveUser_Asyc(LocalUserInform user)
@@ -194,7 +185,6 @@ namespace LocalRadioManage.LocalService
             {
                 bool flag = true;
                 StorageFile img_file = await UserDownService.SaveDownProgram(album);
-
                 flag &= (img_file != null);
                 flag &= await UserDownService.DownRadio(radio);
                 return flag;
@@ -441,13 +431,37 @@ namespace LocalRadioManage.LocalService
             }
 
 
-            //获取多音频下载进度
-            public ServiceUserDown.DownProgress GetDownProgress()
+            //is_single_down，是否为下载单个音频
+            public List<DownProgressInform> GetDownProgressInform(bool is_single_down)
             {
-                lock (UserDownService.Progress)
+                List<DownProgressInform> informs = new List<DownProgressInform>();
+                DownProgressInform inform;
+                if (is_single_down)
                 {
-                    return UserDownService.Progress;
+                    lock (UserDownService.RadioProgress) {
+                        inform = new DownProgressInform(UserDownService.RadioProgress.file_name, UserDownService.RadioProgress.file_size,
+                            UserDownService.RadioProgress.progress_size, UserDownService.RadioProgress.is_end);
+                        informs.Add(inform);
+                    }
+                  
                 }
+                else
+                {
+                    lock (UserDownService.Progress)
+                    {
+                        foreach(MyFile.CreateFileProgress.Progress temp in UserDownService.Progress.FileDownProgress)
+                        {
+                            lock (temp)
+                            {
+                                inform = new DownProgressInform(UserDownService.RadioProgress.file_name, UserDownService.RadioProgress.file_size,
+                           UserDownService.RadioProgress.progress_size, UserDownService.RadioProgress.is_end);
+                                informs.Add(inform);
+                            }
+                        }
+                    }
+                }
+
+                return informs;
             }
 
             public ExportProgress GetExportProgress()
