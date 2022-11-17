@@ -55,6 +55,11 @@ namespace LocalRadioManage.LocalService.UserInforms
             SetUserInform(album);
         }
 
+        public UserInform(LocalUserInform user)
+        {
+            SetUserInform(user);
+        }
+
 
         private void SetUserInform()
         {
@@ -77,10 +82,36 @@ namespace LocalRadioManage.LocalService.UserInforms
             }
             return true;
         }
-        public bool SetUserInform(string user,string user_pass)
+        public bool SetUserInform(string user, string user_pass)
         {
-            List<object> user_l = new List<object>() { user,user_pass};
-            return SetUserInform(user);
+            try
+            {
+                SetUserInform();
+                List<object> user_l = new List<object>() { user, user_pass };
+                condition_express = Users.UserName[0] + "=" + user
+                    + " and " + Users.UserPass[0] + "=" + user_pass;
+                UserDown.SetUserDown(user);
+                UserFav.SetUserFav(user);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+
+        }
+
+        public bool SetUserInform(LocalUserInform user)
+        {
+            try
+            {
+                SetUserInform(user.user_name, user.user_pass);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
         public bool SetUserInform(List<object> user)
         {
@@ -88,7 +119,7 @@ namespace LocalRadioManage.LocalService.UserInforms
             {
                 SetUserInform();
                 condition_express = Users.UserName[0] + "=" + (string)(user.ElementAt(Users.ColLocation[Users.UserName]))
-                 +" and "+Users.UserPass[0]+"="+(string)(user.ElementAt(Users.ColLocation[Users.UserPass]));
+                 + " and " + Users.UserPass[0] + "=" + (string)(user.ElementAt(Users.ColLocation[Users.UserPass]));
                 UserDown.SetUserDown((string)user[0]);
                 UserFav.SetUserFav((string)user[0]);
             }
@@ -114,6 +145,20 @@ namespace LocalRadioManage.LocalService.UserInforms
         /// 对用户表的访问控制
         /// </summary>
         /// <param name="user">"UserName","UserPass"</param>
+
+        public bool SaveUser(LocalUserInform user)
+        {
+            List<object> store = LocalUserTransform.ToLocalUserStorage(user);
+            try
+            {
+                SQLiteConnect.TableHandle.AddRecord(table_name, store);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
         public bool SaveUser(List<object> user)
         {
             try
@@ -128,7 +173,7 @@ namespace LocalRadioManage.LocalService.UserInforms
         }
         public bool SaveUser(string user_name)
         {
-            List<object> user = new List<object>() { user_name, "0" };
+            List<object> user = new List<object>() { user_name, "0", "" };
             try
             {
                 return SQLiteConnect.TableHandle.AddRecord(table_name, user);
@@ -151,11 +196,13 @@ namespace LocalRadioManage.LocalService.UserInforms
             }
 
         }
+
+
         public bool DeleteUsr(bool is_constraint)
         {
             try
             {
-                return SQLiteConnect.TableHandle.DeleteRecords(table_name, condition_express,is_constraint);
+                return SQLiteConnect.TableHandle.DeleteRecords(table_name, condition_express, is_constraint);
             }
             catch
             {
@@ -163,11 +210,11 @@ namespace LocalRadioManage.LocalService.UserInforms
             }
         }
 
-        public bool UpdateUsr(string user_name,string old_pass,string new_pass)
+        public bool UpdateUsr(string user_name, string old_pass, string new_pass)
         {
             SetUserInform(user_name, old_pass);
             List<object> new_record = new List<object>() { user_name, new_pass };
-            return SQLiteConnect.TableHandle.UpdateRecord(table_name,condition_express,new_record);
+            return SQLiteConnect.TableHandle.UpdateRecord(table_name, condition_express, new_record);
         }
 
         //自定义查询

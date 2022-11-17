@@ -2,6 +2,7 @@
 //////调用域名为LocalRadioManage.LocalService
 
 /////对外交互所用结构，暂时位于DataModels.TestDataModel
+LocalUserInform //记录用户信息
 RadioFullAlbum //记录专辑信息
 RadioFullContent //记录音频信息
 
@@ -14,6 +15,7 @@ RadioFullContent //记录音频信息
 //SaveUser 保存用户信息
 重载 1 参数: (string)username ->保存用户，默认密码为0 返回:bool 
 重载 2 参数: (string)username (string)userpass ->保存用户、用户密码 返回:bool
+重载 3 参数:（LocalUserInform）user->记录用户更多详细信息
 
 //RemoveUser_Asyc 删除用户信息
 参数: (string)user_name ->异步删除用户，包括其所有音频、专辑信息 返回:bool

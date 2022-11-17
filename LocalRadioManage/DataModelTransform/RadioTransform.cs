@@ -25,7 +25,7 @@ namespace LocalRadioManage.DataModelTransform
                 {
                     object[] local_store = new object[LocalRadio.ColLocation.Count];
 
-                    ulong radio_date = DateTransform.DateToInt(DateTransform.GetDateTime(radio.day), radio.start_time, radio.end_time);
+                    ulong radio_date = DateTransform.DateToInt(radio.date, radio.start_time, radio.end_time);
 
                     local_store[LocalRadio.ColLocation[LocalRadio.RadioId]] = radio.id;
                     local_store[LocalRadio.ColLocation[LocalRadio.RadioDate]] = radio_date;
@@ -66,7 +66,7 @@ namespace LocalRadioManage.DataModelTransform
 
                 try
                 {
-                    ulong radio_date = DateTransform.DateToInt(DateTransform.GetDateTime(radio.day), radio.start_time, radio.end_time);
+                    ulong radio_date = DateTransform.DateToInt(radio.date, radio.start_time, radio.end_time);
 
                     local_store[UserDownRadio.ColLocation[UserDownRadio.UserName]] = radio.user;
                     local_store[UserDownRadio.ColLocation[UserDownRadio.RadioId]] = radio.id;
@@ -115,6 +115,7 @@ namespace LocalRadioManage.DataModelTransform
                 string end_time = "";
                 DateTransform.IntToDate(radio_date, ref date, ref start_time, ref end_time);
                 radio.day = date.Day;
+                radio.date = date;
                 radio.start_time = start_time;
                 radio.end_time = end_time;
 
@@ -182,7 +183,7 @@ namespace LocalRadioManage.DataModelTransform
                 {
                     object[] reomte_fav = new object[UserFavRadio.ColLocation.Count];
 
-                    ulong radio_date = DateTransform.DateToInt(DateTransform.GetDateTime(radio.day), radio.start_time, radio.end_time);
+                    ulong radio_date = DateTransform.DateToInt(radio.date, radio.start_time, radio.end_time);
 
                     reomte_fav[UserFavRadio.ColLocation[UserFavRadio.UserName]] = radio.user;
                     reomte_fav[UserFavRadio.ColLocation[UserFavRadio.RadioId]] = radio.id;

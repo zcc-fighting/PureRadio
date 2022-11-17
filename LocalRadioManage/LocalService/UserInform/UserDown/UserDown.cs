@@ -138,7 +138,7 @@ namespace LocalRadioManage.LocalService.UserInforms
                 user_name = radio.user;
                 condition_express_radio = user_radio_name + "." + UserDownRadio.UserName[0] + "=" + radio.user;//找到用户
                 condition_express_radio += " and " + user_radio_name + "." + UserDownRadio.RadioId[0] + "=" + radio.id;
-                ulong date = DateTransform.DateToInt(DateTransform.GetDateTime(radio.day), radio.start_time, radio.end_time);
+                ulong date = DateTransform.DateToInt(radio.date, radio.start_time, radio.end_time);
                 condition_express_radio += " and " + user_radio_name + "." + UserDownRadio.RadioDate[0] + "=" + date;//匹配某一radio
                 return true;
             }

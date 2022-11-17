@@ -112,7 +112,7 @@ namespace LocalRadioManage.LocalService.UserInforms
         public void SetLocalDown(RadioFullContent radio)
         {
             user_name = radio.user;
-            ulong date = DateTransform.DateToInt(DateTransform.GetDateTime(radio.day), radio.start_time, radio.end_time);
+            ulong date = DateTransform.DateToInt(radio.date, radio.start_time, radio.end_time);
             SetLocalDown();
             condition_express_radio =local_radio_name+"."+ LocalRadio.RadioId[0] + "=" + radio.id
                 + " and " +local_radio_name+"."+ LocalRadio.RadioDate[0] + "=" + date;

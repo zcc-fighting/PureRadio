@@ -8,6 +8,7 @@ using LocalRadioManage.DBBuilder.TableObj;
 using System.Net;
 using System.Web;
 
+
 namespace LocalRadioManage.DataModelTransform
 {
    public partial class ChannalAlbumTransform

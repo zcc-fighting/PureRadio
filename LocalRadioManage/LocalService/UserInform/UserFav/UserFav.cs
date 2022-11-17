@@ -101,7 +101,7 @@ namespace LocalRadioManage.LocalService.UserInforms
             {
                 user_name = radio.user;
                 condition_express_radio = UserFavRadio.RadioId[0] + "=" + radio.id;
-                ulong date = DateTransform.DateToInt(DateTransform.GetDateTime(radio.day), radio.start_time, radio.end_time);
+                ulong date = DateTransform.DateToInt(radio.date, radio.start_time, radio.end_time);
                 condition_express_radio = " and " + UserFavRadio.RadioDate[0] + "=" + date;
                 return true;
             }
