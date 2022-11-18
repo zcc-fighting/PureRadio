@@ -176,7 +176,9 @@
                                     <TextBlock x:Uid="DetailPagePlayButton" Margin="12,0" Text="Play"/>
                                 </StackPanel>
                             </Button>
-                            <Button HorizontalAlignment="Stretch" Margin="0,8">
+                            <Button
+                                Click="{x:Bind ViewModel.AddFavRadio}"
+                                HorizontalAlignment="Stretch" Margin="0,8">
                                 <StackPanel Orientation="Horizontal">
                                     <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xF5B0;"/>
                                     <TextBlock Margin="12,0" Text="Fav"/>

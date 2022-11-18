@@ -1,6 +1,4 @@
-using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.Messaging;
-using Microsoft.Toolkit.Mvvm.Messaging.Messages;
+using CommunityToolkit.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +13,7 @@ using Windows.UI.Xaml;
 using DataModels;
 using PureRadio.Uwp.Models.Data.User;
 using LocalRadioManage.LocalService;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace PureRadio.ViewModels.LocalRadioManageViewModels
 {
