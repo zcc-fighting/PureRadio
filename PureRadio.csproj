@@ -135,6 +135,12 @@
     <Compile Include="DataModels\FavItem.cs" />
     <Compile Include="DataModels\FullDetailRadio.cs" />
     <Compile Include="DataModels\LeaderboardItem.cs" />
+    <Compile Include="DataModels\LocalMan\AccountInfo.cs" />
+    <Compile Include="DataModels\LocalMan\ContentInfoCard.cs" />
+    <Compile Include="DataModels\LocalMan\ContentInfoDetail.cs" />
+    <Compile Include="DataModels\LocalMan\RadioInfoCard.cs" />
+    <Compile Include="DataModels\LocalMan\RadioInfoDetail.cs" />
+    <Compile Include="DataModels\LocalMan\TestDateModel.cs" />
     <Compile Include="DataModels\Message\ProgramDemanMessage.cs" />
     <Compile Include="DataModels\Message\RadioDemandMessage.cs" />
     <Compile Include="DataModels\MyIncrementalLoading.cs" />
@@ -187,13 +193,13 @@
     <Compile Include="DataModels\Results\SearchSuggestResult.cs" />
     <Compile Include="DataModels\SearchProgramResultItem.cs" />
     <Compile Include="DataModels\SearchRadioResultItem.cs" />
-    <Compile Include="DataModels\TestDateModel.cs" />
     <Compile Include="DataModels\TimerStatus.cs" />
     <Compile Include="DataModels\UserProfile.cs" />
     <Compile Include="LocalRadioManage\Adapter\ContentInformCardAdapter.cs" />
+    <Compile Include="LocalRadioManage\Adapter\ContentInformDetailAdapter.cs" />
     <Compile Include="LocalRadioManage\Adapter\RadioInformCardAdapter.cs" />
     <Compile Include="LocalRadioManage\Adapter\RadioInformDetailAdapter.cs" />
-    <Compile Include="LocalRadioManage\Adapter\UserProfileAdapter.cs" />
+    <Compile Include="LocalRadioManage\Adapter\AccountInfoAdapter.cs" />
     <Compile Include="LocalRadioManage\DataModelTransform\ChannalAlbumTransform.cs" />
     <Compile Include="LocalRadioManage\DataModelTransform\DateTransform.cs" />
     <Compile Include="LocalRadioManage\DataModelTransform\LocalUserTransform.cs" />
@@ -240,6 +246,9 @@
     <Compile Include="ViewModels\UserViewModel.cs" />
     <Compile Include="Views\ContentPage.xaml.cs">
       <DependentUpon>ContentPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DownloadPage.xaml.cs">
+      <DependentUpon>DownloadPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\LibraryPage.xaml.cs">
       <DependentUpon>LibraryPage.xaml</DependentUpon>
@@ -395,6 +404,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="Views\ContentPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DownloadPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

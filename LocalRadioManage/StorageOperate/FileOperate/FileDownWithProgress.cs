@@ -24,6 +24,7 @@ namespace LocalRadioManage.StorageOperate
                 public string file_name = "";
                 public StorageFile store_file=null;
                 public bool is_end = false;
+                public bool is_no_need = false;
 
                public Progress()
                 {

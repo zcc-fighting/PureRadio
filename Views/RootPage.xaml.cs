@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -94,6 +94,7 @@ namespace PureRadio.Views
             ("content",typeof(ContentPage)),
             ("user",typeof(UserPage)),
             ("library",typeof(LibraryPage)),
+            ("download",typeof(DownloadPage)),
         };
 
         private void NavView_Loaded(object sender, RoutedEventArgs e)
@@ -231,6 +232,10 @@ namespace PureRadio.Views
             {
                 NavView.Header = ((muxc.NavigationViewItem)NavView.SelectedItem)?.Content?.ToString();
 
+            }
+            else if(ContentFrame.SourcePageType == typeof(DownloadPage))
+            {
+                NavView.Header = ((muxc.NavigationViewItem)NavView.SelectedItem)?.Content?.ToString();
             }
             else if (ContentFrame.SourcePageType != null)
             {

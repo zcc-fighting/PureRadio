@@ -27,7 +27,7 @@ namespace DataModels
         /// </summary>
         public int duration { get; set; }
         /// <summary>
-        /// 一周第几天(周日开始)
+        /// 一周第几天(周日开始)->基本弃用
         /// </summary>
         public int day { get; set; }
         /// <summary>
@@ -47,9 +47,22 @@ namespace DataModels
         /// </summary>
         public DateTime date { get; set; }
 
-
+        /// <summary>
+        /// 用户
+        /// </summary>
         public string user = "0";
+        /// <summary>
+        
+        /// 音频URL
+        /// </summary>
         public Uri radio_uri { get; set; }
+
+        /// <summary>
+        /// 播音员
+        /// </summary>
+        public string procasters { get; set; } = "";
+
+
     }
     //用于电台索引存储
     public class RadioFullAlbum
@@ -113,10 +126,10 @@ namespace DataModels
 
     public class DownProgressInform
     {
-        string file_name ="";
-        ulong file_size = 0;
-        ulong down_size = 0;
-        bool down_end = false;
+       public string file_name ="";
+       public ulong file_size = 0;
+       public ulong down_size = 0;
+       public bool down_end = false;
 
         public DownProgressInform()
         {

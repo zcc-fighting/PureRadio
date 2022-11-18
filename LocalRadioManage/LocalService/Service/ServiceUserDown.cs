@@ -17,8 +17,7 @@ namespace LocalRadioManage.LocalService
         UserInform user_inform = new UserInform();
         //用于多音频进度
         public  DownProgress Progress = new DownProgress();
-        //用于单音频进度
-        public MyFile.CreateFileProgress.Progress RadioProgress = new MyFile.CreateFileProgress.Progress();
+     
        
         //保存节目->节目表+文件(图片)
         public async Task<StorageFile> SaveDownProgram(RadioFullAlbum album)
@@ -90,8 +89,11 @@ namespace LocalRadioManage.LocalService
                 lock (create.progress)
                 {
                     create.progress.file_name = radio.title;
-                    RadioProgress = create.progress;
-                    Progress.FileDownProgress.Add(RadioProgress);
+                    lock (Progress.FileDownProgress)
+                    {
+                        Progress.FileDownProgress.Add(create.progress);
+                        Progress.FileDownProgressMap.Add(create.progress.file_name, create.progress);
+                    }
                 }
                 StorageFile radio_file = await create.CreateFile(album_folder, radio.radio_uri);
                 if (radio_file == null)
@@ -328,6 +330,7 @@ namespace LocalRadioManage.LocalService
           public  int down_progress = -1;
           public  List<bool> down_situation = new List<bool>();
           public List<MyFile.CreateFileProgress.Progress> FileDownProgress = new List<MyFile.CreateFileProgress.Progress>();
+          public Dictionary<string, MyFile.CreateFileProgress.Progress> FileDownProgressMap = new Dictionary<string, MyFile.CreateFileProgress.Progress>();
         }
     }
 }

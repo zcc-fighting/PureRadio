@@ -190,19 +190,21 @@ namespace LocalRadioManage.LocalService
                 return flag;
             }
             //同步下载
-            public bool Download(RadioFullAlbum album, List<RadioFullContent> radio)
+            public bool Download(RadioFullAlbum album, List<RadioFullContent> radios)
             {
-                Task<Task<bool>> task = new Task<Task<bool>>(() => Download_Asyc(album, radio));
+                Task<Task<bool>> task = new Task<Task<bool>>(() => Download_Asyc(album, radios));
                 task.Start();
-                task.Result.Wait();
-                return task.Result.Result;
+                //task.Result.Wait();
+                //return task.Result.Result;
+                return true;
             }
             public bool Download(RadioFullAlbum album, RadioFullContent radio)
             {
                 Task<Task<bool>> task = new Task<Task<bool>>(() => Download_Asyc(album, radio));
                 task.Start();
-                task.Result.Wait();
-                return task.Result.Result;
+                // task.Result.Wait();
+                //return task.Result.Result;
+                return true;
             }
 
             public List<RadioFullAlbum> Load()
@@ -431,33 +433,19 @@ namespace LocalRadioManage.LocalService
             }
 
 
-            //is_single_down，是否为下载单个音频
-            public List<DownProgressInform> GetDownProgressInform(bool is_single_down)
+            
+            public List<DownProgressInform> GetDownProgressInform()
             {
                 List<DownProgressInform> informs = new List<DownProgressInform>();
                 DownProgressInform inform;
-                if (is_single_down)
+
+                lock (UserDownService.Progress.FileDownProgress)
                 {
-                    lock (UserDownService.RadioProgress) {
-                        inform = new DownProgressInform(UserDownService.RadioProgress.file_name, UserDownService.RadioProgress.file_size,
-                            UserDownService.RadioProgress.progress_size, UserDownService.RadioProgress.is_end);
-                        informs.Add(inform);
-                    }
-                  
-                }
-                else
-                {
-                    lock (UserDownService.Progress)
+                    foreach (MyFile.CreateFileProgress.Progress temp in UserDownService.Progress.FileDownProgress)
                     {
-                        foreach(MyFile.CreateFileProgress.Progress temp in UserDownService.Progress.FileDownProgress)
-                        {
-                            lock (temp)
-                            {
-                                inform = new DownProgressInform(UserDownService.RadioProgress.file_name, UserDownService.RadioProgress.file_size,
-                           UserDownService.RadioProgress.progress_size, UserDownService.RadioProgress.is_end);
-                                informs.Add(inform);
-                            }
-                        }
+                        inform = new DownProgressInform(temp.file_name, temp.file_size,
+                   temp.progress_size, temp.is_end);
+                        informs.Add(inform);
                     }
                 }
 

@@ -30,6 +30,7 @@ namespace LocalRadioManage.test
             radio.title = "小说连播";
             radio.radio_uri = new Uri("https://lcache.qtfm.cn/cache/20221030/468/468_20221030_000000_010000_24_0.aac");
             radio.user = "0";
+            radio.procasters = "广东";
             int int_date_time = 20221030;
             radio.date =DateTime.ParseExact(int_date_time.ToString(), "yyyyMMdd", null);
 
@@ -56,9 +57,9 @@ namespace LocalRadioManage.test
             album.user = "0";
             Task<Task<bool>> task = new Task<Task<bool>>(() => down_service.Export_Aysc(album, radio,null));
             
-            task.Start();
-            task.Result.Wait();
-           LocalServ.LocalDown.ExportProgress progress=  down_service.GetExportProgress();
+           //task.Start();
+           //task.Result.Wait();
+           //LocalServ.LocalDown.ExportProgress progress=  down_service.GetExportProgress();
             
 
             albums = down_service.Load(album.user);

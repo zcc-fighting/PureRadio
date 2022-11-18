@@ -34,6 +34,7 @@ namespace LocalRadioManage.DataModelTransform
                     local_store[LocalRadio.ColLocation[LocalRadio.RadioDuration]] = radio.duration;
                     local_store[LocalRadio.ColLocation[LocalRadio.RadioCreateTime]] = DateTime.Now.ToString();
                     local_store[LocalRadio.ColLocation[LocalRadio.RadioLocalPath]] = radio.radio_uri.ToString();
+                    local_store[LocalRadio.ColLocation[LocalRadio.Procasters]] = radio.procasters;
 
                     return local_store.ToList();
                 }
@@ -72,6 +73,7 @@ namespace LocalRadioManage.DataModelTransform
                     local_store[UserDownRadio.ColLocation[UserDownRadio.RadioId]] = radio.id;
                     local_store[UserDownRadio.ColLocation[UserDownRadio.RadioDate]] = radio_date;
                     local_store[UserDownRadio.ColLocation[UserDownRadio.ChannalAlbumId]] = radio.channel_id;
+                    
 
                     return local_store.ToList();
                 }
@@ -107,6 +109,7 @@ namespace LocalRadioManage.DataModelTransform
                 radio.title = (string)store[LocalRadio.ColLocation[LocalRadio.RadioName]];
                 radio.duration = (int)(long)store[LocalRadio.ColLocation[LocalRadio.RadioDuration]];
                 radio.radio_uri = new Uri((string)store[LocalRadio.ColLocation[LocalRadio.RadioLocalPath]]);
+                radio.procasters = (string)store[LocalRadio.ColLocation[LocalRadio.Procasters]];
 
                 //一整个日期的填充
                 ulong radio_date = (ulong)(long)store[LocalRadio.ColLocation[LocalRadio.RadioDate]];
