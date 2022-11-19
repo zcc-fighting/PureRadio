@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Toolkit.Uwp.UI;
 using PureRadio.Uwp.Models.Args;
+using PureRadio.Uwp.Models.Data.Constants;
 using PureRadio.Uwp.Models.Enums;
 using PureRadio.Uwp.Models.Local;
 using PureRadio.Uwp.Providers;
@@ -25,6 +26,7 @@ namespace PureRadio.Uwp.ViewModels
 {
     public sealed partial class MainViewModel : ObservableRecipient
     {
+        private readonly ISettingsService settings;
         private readonly INavigateService navigate;// = Ioc.Default.GetRequiredService<INavigateService>();
         private readonly ISearchProvider searchProvider;
         private readonly IAccountProvider accountProvider;
@@ -105,6 +107,22 @@ namespace PureRadio.Uwp.ViewModels
                 < 1000 => NavigationType.Secondary,
                 _ => NavigationType.Player,
             };
+
+            //离线模式下搜索结果页不跳转，主要内容页面跳转到库
+            if(Ioc.Default.GetRequiredService<ISettingsService>().GetValue<bool>(AppConstants.SettingsKey.IsOffline))
+            {
+                if(pageId == PageIds.Search)
+                {
+                    pageId = PageIds.None;
+                }
+                else if(
+                    pageId == PageIds.Home ||
+                    pageId == PageIds.Radio||
+                    pageId == PageIds.Content)
+                {
+                    pageId = PageIds.Library;
+                }
+            }
 
             switch (type)
             {

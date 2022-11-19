@@ -309,6 +309,9 @@
   <data name="PageSettingsLangZHCN.Content" xml:space="preserve">
     <value>中文 (简体)</value>
   </data>
+  <data name="PageSettingsOfflineModeTitle.Text" xml:space="preserve">
+    <value>Offline Mode</value>
+  </data>
   <data name="PageSettingsReferencesTitle.Text" xml:space="preserve">
     <value>Open source project references</value>
   </data>

@@ -6,11 +6,141 @@
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:convert="using:PureRadio.Uwp.Resources.Converter" 
+    xmlns:modelRadio="using:PureRadio.Uwp.Models.Data.Radio" 
+    xmlns:modelContent="using:PureRadio.Uwp.Models.Data.Content"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Page.Resources>
-        
+        <convert:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <convert:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+        <DataTemplate
+            x:Key="SearchRadioInfoTemplate"
+            x:DataType="modelRadio:RadioInfoSearch">
+            <Grid
+                x:Name="CardCantainer"
+                Style="{StaticResource CardViewContainer}"
+                Height="132"
+                Canvas.ZIndex="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <controls:ImageEx
+                    BorderThickness="0"
+                    BackgroundSizing="InnerBorderEdge"
+                    Grid.Column="0"
+                    Margin="16,0,0,0"
+                    Height="100"
+                    Width="100"
+                    CornerRadius="4"
+                    Source="{x:Bind Cover}"/>
+                <Grid
+                    Grid.Column="1"
+                    Margin="16"
+                    Height="100">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock 
+                        Grid.Row="0"
+                        Text="{x:Bind Title}" 
+                        Style="{StaticResource BaseTextBlockStyle}"
+                        TextTrimming="CharacterEllipsis"
+                        MaxLines="1"/>
+                    <StackPanel
+                        Grid.Row="1" Orientation="Horizontal"
+                        Margin="0,4">
+                        <FontIcon VerticalAlignment="Center" FontSize="14" FontFamily="{StaticResource FluentIcons}" Glyph="&#xE7F6;" />
+                        <TextBlock       
+                            Text="{x:Bind AudienceCount}" 
+                            Margin="4,0"
+                            Style="{StaticResource BodyTextBlockStyle}"
+                            TextTrimming="CharacterEllipsis"
+                            MaxLines="1"/>
+                        <TextBlock
+                            x:Uid="LangAudienceCount"
+                            Text="listening"
+                            Style="{StaticResource BodyTextBlockStyle}"
+                            TextTrimming="CharacterEllipsis"
+                            MaxLines="1"/>
+                    </StackPanel>
+                    <TextBlock
+                        Grid.Row="2"
+                        Text="{x:Bind Description}"
+                        Style="{StaticResource CaptionTextBlockStyle}"
+                        Foreground="{ThemeResource CustomNavigationViewItemForeground}"
+                        TextTrimming="CharacterEllipsis"
+                        MaxLines="3" />
+                </Grid>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate
+            x:Key="SearchContentInfoTemplate"
+            x:DataType="modelContent:ContentInfoSearch">
+            <Grid
+                x:Name="CardCantainer"
+                Style="{StaticResource CardViewContainer}"
+                Height="132"
+                Canvas.ZIndex="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <controls:ImageEx
+                    BorderThickness="0"
+                    BackgroundSizing="InnerBorderEdge"
+                    Grid.Column="0"
+                    Margin="16,0,0,0"
+                    Height="100"
+                    Width="100"
+                    CornerRadius="4"
+                    Source="{x:Bind Cover}"/>
+                <Grid
+                    Grid.Column="1"
+                    Margin="16"
+                    Height="100">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock 
+                        Grid.Row="0"
+                        Text="{x:Bind Title}" 
+                        Style="{StaticResource BaseTextBlockStyle}"
+                        TextTrimming="CharacterEllipsis"
+                        MaxLines="1"/>
+                    <StackPanel
+                        Grid.Row="1" Orientation="Horizontal"
+                        Margin="0,4">
+                        <FontIcon VerticalAlignment="Center" FontSize="14" FontFamily="{StaticResource FluentIcons}" Glyph="&#xEF3B;" />
+                        <TextBlock       
+                            Text="{x:Bind PlayCount}" 
+                            Margin="4,0"
+                            Style="{StaticResource BodyTextBlockStyle}"
+                            TextTrimming="CharacterEllipsis"
+                            MaxLines="1"/>
+                        <TextBlock
+                            x:Uid="LangPlayCount"
+                            Text="listening"
+                            Style="{StaticResource BodyTextBlockStyle}"
+                            TextTrimming="CharacterEllipsis"
+                            MaxLines="1"/>
+                    </StackPanel>
+                    <TextBlock
+                        Grid.Row="2"
+                        Text="{x:Bind Description}"
+                        Style="{StaticResource CaptionTextBlockStyle}"
+                        Foreground="{ThemeResource CustomNavigationViewItemForeground}"
+                        TextTrimming="CharacterEllipsis"
+                        MaxLines="3" />
+                </Grid>
+            </Grid>
+        </DataTemplate>
     </Page.Resources>
     <Grid>
         

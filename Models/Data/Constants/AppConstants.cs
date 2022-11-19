@@ -16,6 +16,8 @@ namespace PureRadio.Uwp.Models.Data.Constants
             public const string AccountPhone = "AccountPhone";
             public const string AccountPassword = "AccountPassword";
             public const string SavedVolumeState = "SavedVolumeState";
+            public const string IsOffline = "IsOffline";
+            
         }
 
         public static class SettingsValue
