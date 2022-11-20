@@ -32,7 +32,7 @@ using PureRadio.Uwp.Providers;
 using PureRadio.Uwp.Adapters.Interfaces;
 using PureRadio.Uwp.Adapters;
 
-namespace PureRadio
+namespace PureRadio.Uwp
 {
     /// <summary>
     /// 提供特定于应用程序的行为，以补充默认的应用程序类。
@@ -147,6 +147,8 @@ namespace PureRadio
                             .AddSingleton<ISettingsService, SettingsService>()
                             .AddSingleton<INavigateService, NavigateService>()
                             .AddSingleton<IPlaybackService, PlaybackService>()
+                            .AddSingleton<ISqliteService, SqliteService>()
+                            .AddSingleton<ILibraryService, LibraryService>()
                             // Adapters
                             .AddSingleton<IAccountAdapter, AccountAdapter>()
                             .AddSingleton<IContentAdapter, ContentAdapter>()
@@ -161,11 +163,15 @@ namespace PureRadio
                             .AddSingleton<IContentProvider, ContentProvider>()
                             // Viewmodels
                             .AddTransient<MainViewModel>()
+                            .AddTransient<LibraryViewModel>()
                             .AddTransient<SettingsViewModel>()
                             .AddTransient<SearchViewModel>()
                             .AddTransient<RadioDetailViewModel>()
                             .AddTransient<ContentDetailViewModel>()
                             .AddTransient<NativePlayerViewModel>()
+                            .AddTransient<RadioCategoryViewModel>()
+                            .AddTransient<ContentCategoryViewModel>()
+                            .AddTransient<FullScreenPlayerViewModel>()
                             // Build
                             .BuildServiceProvider());
             }
@@ -177,6 +183,7 @@ namespace PureRadio
                 if (rootFrame.Content == null)
                 {
                     bool loadState = (e.PreviousExecutionState == ApplicationExecutionState.Terminated);
+                    ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(500, 500));
                     RootPage extendedSplash = new RootPage(e.SplashScreen, loadState);
                     Window.Current.Content = extendedSplash;
                     // 当导航堆栈尚未还原时，导航到第一页，

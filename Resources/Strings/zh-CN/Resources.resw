@@ -135,11 +135,17 @@
   <data name="LangAudienceCount.Text" xml:space="preserve">
     <value>听众</value>
   </data>
+  <data name="LangIsFavFalse" xml:space="preserve">
+    <value>收藏</value>
+  </data>
+  <data name="LangIsFavTrue" xml:space="preserve">
+    <value>已收藏</value>
+  </data>
   <data name="LangIsFreeFalse.Text" xml:space="preserve">
     <value>付费内容</value>
   </data>
   <data name="LangLiveNow" xml:space="preserve">
-    <value>正在直播</value>
+    <value>直播</value>
   </data>
   <data name="LangLiveProgramUnknown" xml:space="preserve">
     <value>无</value>
@@ -160,6 +166,48 @@
     <value>次播放</value>
   </data>
   <data name="LangPodcasterUnknown" xml:space="preserve">
+    <value>未知</value>
+  </data>
+  <data name="LangRadioCategory429" xml:space="preserve">
+    <value>交通台</value>
+  </data>
+  <data name="LangRadioCategory430" xml:space="preserve">
+    <value>体育台</value>
+  </data>
+  <data name="LangRadioCategory431" xml:space="preserve">
+    <value>双语台</value>
+  </data>
+  <data name="LangRadioCategory432" xml:space="preserve">
+    <value>文艺台</value>
+  </data>
+  <data name="LangRadioCategory433" xml:space="preserve">
+    <value>资讯台</value>
+  </data>
+  <data name="LangRadioCategory434" xml:space="preserve">
+    <value>方言台</value>
+  </data>
+  <data name="LangRadioCategory435" xml:space="preserve">
+    <value>旅游台</value>
+  </data>
+  <data name="LangRadioCategory436" xml:space="preserve">
+    <value>曲艺台</value>
+  </data>
+  <data name="LangRadioCategory438" xml:space="preserve">
+    <value>生活台</value>
+  </data>
+  <data name="LangRadioCategory439" xml:space="preserve">
+    <value>经济台</value>
+  </data>
+  <data name="LangRadioCategory440" xml:space="preserve">
+    <value>综合台</value>
+  </data>
+  <data name="LangRadioCategory441" xml:space="preserve">
+    <value>都市台</value>
+  </data>
+  <data name="LangRadioCategory442" xml:space="preserve">
+    <value>音乐台</value>
+  </data>
+  <data name="LangRadioCategoryUnknown" xml:space="preserve">
     <value>未知</value>
   </data>
   <data name="LangSearchNoResultTip" xml:space="preserve">
@@ -240,6 +288,12 @@
   <data name="navSettings.Content" xml:space="preserve">
     <value>设置</value>
   </data>
+  <data name="PageCategoryNoResult.Text" xml:space="preserve">
+    <value>没有找到您要的结果</value>
+  </data>
+  <data name="PageCategoryTitle.Text" xml:space="preserve">
+    <value>分类</value>
+  </data>
   <data name="PageContentDetailPodcaster.Text" xml:space="preserve">
     <value>主播:</value>
   </data>
@@ -254,6 +308,27 @@
   </data>
   <data name="PageDetailCantPlayTip.Title" xml:space="preserve">
     <value>暂时无法播放</value>
+  </data>
+  <data name="PageLibraryAddTime.Text" xml:space="preserve">
+    <value>添加时间: </value>
+  </data>
+  <data name="PageLibraryDelFavButton.Content" xml:space="preserve">
+    <value>移除</value>
+  </data>
+  <data name="PageLibrarySourceContent.Content" xml:space="preserve">
+    <value>内容</value>
+  </data>
+  <data name="PageLibrarySourceHistory.Content" xml:space="preserve">
+    <value>历史</value>
+  </data>
+  <data name="PageLibrarySourceRadio.Content" xml:space="preserve">
+    <value>电台</value>
+  </data>
+  <data name="PageLibraryTitle.Text" xml:space="preserve">
+    <value>库</value>
+  </data>
+  <data name="PageLibraryTitleButton.Content" xml:space="preserve">
+    <value>清除所有</value>
   </data>
   <data name="PageRadioDetailNavBYDAY.Content" xml:space="preserve">
     <value>前天</value>
@@ -308,9 +383,6 @@
   </data>
   <data name="PageSettingsLangZHCN.Content" xml:space="preserve">
     <value>中文 (简体)</value>
-  </data>
-  <data name="PageSettingsOfflineModeTitle.Text" xml:space="preserve">
-    <value>离线模式</value>
   </data>
   <data name="PageSettingsReferencesTitle.Text" xml:space="preserve">
     <value>开源项目引用</value>

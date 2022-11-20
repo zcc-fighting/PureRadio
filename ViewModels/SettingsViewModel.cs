@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Toolkit.Uwp.UI;
 using Newtonsoft.Json.Linq;
 using PureRadio.Uwp.Models.Data.Constants;
 using PureRadio.Uwp.Models.Enums;
@@ -93,7 +94,6 @@ namespace PureRadio.Uwp.ViewModels
         [ObservableProperty]
         private bool _clearingCache;
 
-
         private bool _isOffline;
 
         public bool IsOffline
@@ -101,8 +101,8 @@ namespace PureRadio.Uwp.ViewModels
             get => _isOffline;
             set
             {
-                SetProperty(ref _isOffline, value);
-                settings.SetValue<bool>(AppConstants.SettingsKey.IsOffline,_isOffline);
+                SetProperty(ref _isOffline,value);
+                settings.SetValue(AppConstants.SettingsKey.IsOffline, value);
             }
         }
 
@@ -119,6 +119,7 @@ namespace PureRadio.Uwp.ViewModels
             savedLanguage = _language = settings.GetValue<string>(AppConstants.SettingsKey.ConfigLanguage) ?? AppConstants.SettingsValue.Auto;
             _timerStatus = settings.TimerStatus;
             _closeTime = settings.ShutdownTimeString;
+            settings.SetValue(AppConstants.SettingsKey.IsOffline, false);
             _isOffline = settings.GetValue<bool>(AppConstants.SettingsKey.IsOffline);
             Delay = null;
         }
@@ -147,11 +148,11 @@ namespace PureRadio.Uwp.ViewModels
             Language = savedLanguage;
         }
 
-        public void ClearCache()
+        public async void ClearCache()
         {
             ClearingCache = true;
+            await ImageCache.Instance.ClearAsync();
+            ClearingCache = false;
         }
-
-        
     }
 }

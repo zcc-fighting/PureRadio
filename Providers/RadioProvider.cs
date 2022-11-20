@@ -3,6 +3,7 @@ using PureRadio.Uwp.Adapters.Interfaces;
 using PureRadio.Uwp.Models.Data.Constants;
 using PureRadio.Uwp.Models.Data.Radio;
 using PureRadio.Uwp.Models.Enums;
+using PureRadio.Uwp.Models.Local;
 using PureRadio.Uwp.Models.QingTing.Radio;
 using PureRadio.Uwp.Models.QingTing.Search;
 using PureRadio.Uwp.Providers.Interfaces;
@@ -151,6 +152,23 @@ namespace PureRadio.Uwp.Providers
                 };
                 return items;
             }
+        }
+
+        public async Task<ResultSet<RadioInfoCategory>> GetRadioCategoryResult(int categoryId, CancellationToken cancellationToken, int page = 1, int pageSize = 30)
+        {
+            Dictionary<string, string> parameters = new()
+            {
+                {ServiceConstants.Params.CategoryId, categoryId.ToString()},
+                {ServiceConstants.Params.Page, page.ToString() },
+                {ServiceConstants.Params.PageSize, pageSize.ToString() },
+            };
+            var request = await _httpProvider.GetRequestMessageAsync(ApiConstants.Radio.Category, HttpMethod.Get, parameters, RequestType.Default);
+            var response = await _httpProvider.SendAsync(request);
+            var result = await _httpProvider.ParseAsync<RadioCategoryResponse>(response);
+            var items = (cancellationToken.IsCancellationRequested || result.Data == null || result.Data?.Count == 0)
+                ? new List<RadioInfoCategory>()
+                : result.Data.Select(p => _radioAdapter.ConvertToRadioInfoCategory(p)).ToList();
+            return new ResultSet<RadioInfoCategory>(items, result.Data?.Count <= 0);
         }
     }
 }

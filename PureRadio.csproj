@@ -174,22 +174,32 @@
     <Compile Include="LocalRadioManage\test\LocalRadioTest.cs" />
     <Compile Include="Models\Args\AppNavigationEventArgs.cs" />
     <Compile Include="Models\Args\AuthorizeStateChangedEventArgs.cs" />
+    <Compile Include="Models\Args\ContentCategoryEventArgs.cs" />
+    <Compile Include="Models\Args\FavItemChangedEventArgs.cs" />
+    <Compile Include="Models\Args\HistoryItemChangedEventArgs.cs" />
     <Compile Include="Models\Args\PlayerItemChangedEventArgs.cs" />
     <Compile Include="Models\Args\PlayerStateChangedEventArgs.cs" />
+    <Compile Include="Models\Database\DbObject.cs" />
+    <Compile Include="Models\Database\FavContent.cs" />
+    <Compile Include="Models\Database\FavRadio.cs" />
+    <Compile Include="Models\Database\History.cs" />
     <Compile Include="Models\Data\Constants\ApiConstants.cs" />
     <Compile Include="Models\Data\Constants\AppConstants.cs" />
     <Compile Include="Models\Data\Constants\ServiceConstants.cs" />
     <Compile Include="Models\Data\Content\ContentInfoCard.cs" />
+    <Compile Include="Models\Data\Content\ContentInfoCategory.cs" />
     <Compile Include="Models\Data\Content\ContentInfoDetail.cs" />
     <Compile Include="Models\Data\Content\ContentInfoSearch.cs" />
     <Compile Include="Models\Data\Content\ContentPlaylistDetail.cs" />
     <Compile Include="Models\Data\Radio\RadioInfoCard.cs" />
+    <Compile Include="Models\Data\Radio\RadioInfoCategory.cs" />
     <Compile Include="Models\Data\Radio\RadioInfoDetail.cs" />
     <Compile Include="Models\Data\Radio\RadioInfoSearch.cs" />
     <Compile Include="Models\Data\Radio\RadioPlaylistDetail.cs" />
     <Compile Include="Models\Data\Search\SearchSet.cs" />
     <Compile Include="Models\Data\User\AccountInfo.cs" />
     <Compile Include="Models\Enums\AuthorizeState.cs" />
+    <Compile Include="Models\Enums\LibraryItemAction.cs" />
     <Compile Include="Models\Enums\MediaPlayType.cs" />
     <Compile Include="Models\Enums\NavigationType.cs" />
     <Compile Include="Models\Enums\PageIds.cs" />
@@ -199,6 +209,9 @@
     <Compile Include="Models\Local\IncrementalLoadingObservableCollection.cs" />
     <Compile Include="Models\Local\PlayItemSnapshot.cs" />
     <Compile Include="Models\Local\PlayStateSnapshot.cs" />
+    <Compile Include="Models\Local\ResultSet.cs" />
+    <Compile Include="Models\QingTing\Content\ContentCategoryItem.cs" />
+    <Compile Include="Models\QingTing\Content\ContentCategoryResponse.cs" />
     <Compile Include="Models\QingTing\Content\ContentDetailItem.cs" />
     <Compile Include="Models\QingTing\Content\ContentDetailResponse.cs" />
     <Compile Include="Models\QingTing\Content\ContentProgramListItem.cs" />
@@ -240,6 +253,10 @@
     <Compile Include="Resources\Converter\AccountStateToDisplayConverter.cs" />
     <Compile Include="Resources\Converter\BooleanToDisplayConverter.cs" />
     <Compile Include="Resources\Converter\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Resources\Converter\DateTimeToDisplayConverter.cs" />
+    <Compile Include="Resources\Converter\DurationToDisplayConverter.cs" />
+    <Compile Include="Resources\Converter\FavStateToDisplayConverter.cs" />
+    <Compile Include="Resources\Converter\FavStateToIconConverter.cs" />
     <Compile Include="Resources\Converter\InverseBooleanConverter.cs" />
     <Compile Include="Resources\Converter\InverseBooleanToVisibilityConverter.cs" />
     <Compile Include="Resources\Converter\LanguageToDisplayConverter.cs" />
@@ -250,36 +267,45 @@
     <Compile Include="Resources\Converter\PlayingStateToIconConverter.cs" />
     <Compile Include="Resources\Converter\ThemeToDisplayConverter.cs" />
     <Compile Include="Resources\Converter\ThemeToIndexConverter.cs" />
+    <Compile Include="Services\Interfaces\ILibraryService.cs" />
     <Compile Include="Services\Interfaces\INavigateService.cs" />
     <Compile Include="Services\Interfaces\IPlaybackService.cs" />
     <Compile Include="Services\Interfaces\ISettingsService.cs" />
+    <Compile Include="Services\Interfaces\ISqliteService.cs" />
+    <Compile Include="Services\LibraryService.cs" />
     <Compile Include="Services\NavigateService.cs" />
     <Compile Include="Services\PlaybackService.cs" />
     <Compile Include="Services\SettingsService.cs" />
-    <Compile Include="ViewModels\AppViewModel.cs" />
+    <Compile Include="Services\SqliteService.cs" />
+    <Compile Include="ViewModels\ContentCategoryViewModel.cs" />
     <Compile Include="ViewModels\ContentDetailViewModel.cs" />
+    <Compile Include="ViewModels\FullScreenPlayerViewModel.cs" />
+    <Compile Include="ViewModels\LibraryViewModel.cs" />
     <Compile Include="ViewModels\LocalRadioManageViewModel\LocalLibraryViewModel.cs" />
     <Compile Include="ViewModels\LocalRadioManageViewModel\LocalUserLogViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\NativePlayerViewModel.cs" />
+    <Compile Include="ViewModels\RadioCategoryViewModel.cs" />
     <Compile Include="ViewModels\RadioDetailViewModel.cs" />
-    <Compile Include="ViewModels\RadioViewModel.cs" />
     <Compile Include="ViewModels\SearchViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="Views\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Main\ContentPage.xaml.cs">
-      <DependentUpon>ContentPage.xaml</DependentUpon>
+    <Compile Include="Views\Main\LibraryPage.xaml.cs">
+      <DependentUpon>LibraryPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Main\SettingsPage.xaml.cs">
+      <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PlayerPage.xaml.cs">
       <DependentUpon>PlayerPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Main\LibraryPage.xaml.cs">
-      <DependentUpon>LibraryPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\Main\HomePage.xaml.cs">
       <DependentUpon>HomePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Secondary\ContentCategoryPage.xaml.cs">
+      <DependentUpon>ContentCategoryPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Secondary\ContentDetailPage.xaml.cs">
       <DependentUpon>ContentDetailPage.xaml</DependentUpon>
@@ -287,20 +313,11 @@
     <Compile Include="Views\Secondary\LocalDetailPage.xaml.cs">
       <DependentUpon>LocalDetailPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Secondary\MoreRadioPage.xaml.cs">
-      <DependentUpon>MoreRadioPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Secondary\NULLPage.xaml.cs">
-      <DependentUpon>NULLPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Main\RadioPage.xaml.cs">
-      <DependentUpon>RadioPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\RootPage.xaml.cs">
       <DependentUpon>RootPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Main\SettingsPage.xaml.cs">
-      <DependentUpon>SettingsPage.xaml</DependentUpon>
+    <Compile Include="Views\Secondary\RadioCategoryPage.xaml.cs">
+      <DependentUpon>RadioCategoryPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Secondary\RadioDetailPage.xaml.cs">
       <DependentUpon>RadioDetailPage.xaml</DependentUpon>
@@ -471,21 +488,25 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Main\ContentPage.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Views\Main\LibraryPage.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Main\SettingsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\PlayerPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Main\LibraryPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Main\HomePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Secondary\ContentCategoryPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Secondary\ContentDetailPage.xaml">
       <SubType>Designer</SubType>
@@ -495,23 +516,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Secondary\MoreRadioPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Secondary\NULLPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Main\RadioPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\RootPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Main\SettingsPage.xaml">
+    <Page Include="Views\Secondary\RadioCategoryPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -546,11 +555,17 @@
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls.Media">
       <Version>7.1.3</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Media">
+      <Version>7.1.3</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
       <Version>2.8.1</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="sqlite-net-pcl">
+      <Version>1.8.116</Version>
     </PackageReference>
     <PackageReference Include="System.Data.SQLite.Core">
       <Version>1.0.116</Version>

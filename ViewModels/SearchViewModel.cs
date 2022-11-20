@@ -15,6 +15,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Windows.UI.Xaml.Media.Animation;
 
 namespace PureRadio.Uwp.ViewModels
 {
@@ -22,6 +23,8 @@ namespace PureRadio.Uwp.ViewModels
     {
         private readonly INavigateService navigate;
         private readonly ISearchProvider searchProvider;
+        private bool _isRadioLoaded;
+        private bool _isContentLoaded;
 
         [ObservableProperty]
         private string _keyword;
@@ -37,9 +40,6 @@ namespace PureRadio.Uwp.ViewModels
 
         [ObservableProperty]
         private bool _isEmpty;
-
-        [ObservableProperty]
-        private bool _noResult;
 
         public ICommand RadioResultCommand { get; }
 
@@ -72,6 +72,7 @@ namespace PureRadio.Uwp.ViewModels
         {
             base.OnActivated();
             searchProvider.ClearStatus();
+            _isRadioLoaded = _isContentLoaded = false;
             RadioResult.OnStartLoading += StartLoading;
             RadioResult.OnEndLoading += EndLoading;
             ContentResult.OnStartLoading += StartLoading;
@@ -110,10 +111,12 @@ namespace PureRadio.Uwp.ViewModels
             if (IsRadioModuleShown)
             {
                 IsEmpty = RadioResult.Count == 0;
+                _isRadioLoaded = true;
             }
             else if (IsContentModuleShown)
             {
                 IsEmpty = ContentResult.Count == 0;
+                _isContentLoaded = true;
             }
             else
             {
@@ -128,6 +131,7 @@ namespace PureRadio.Uwp.ViewModels
                 IsContentModuleShown = false;
             }
             IsRadioModuleShown = true;
+            if (_isRadioLoaded) IsEmpty = RadioResult.Count == 0;
         }
 
         private void SetContentResult()
@@ -137,13 +141,14 @@ namespace PureRadio.Uwp.ViewModels
                 IsRadioModuleShown= false;
             }
             IsContentModuleShown = true;
+            if (_isContentLoaded) IsEmpty = ContentResult.Count == 0;
         }
 
         public void Navigate(PageIds pageId, object parameter = null)
         {
             if (pageId == PageIds.RadioDetail || pageId == PageIds.ContentDetail)
             {
-                navigate.NavigateToSecondaryView(pageId, parameter);
+                navigate.NavigateToSecondaryView(pageId, new EntranceNavigationTransitionInfo(), parameter);
             }
         }
     }
