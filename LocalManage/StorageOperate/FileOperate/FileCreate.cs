@@ -104,8 +104,8 @@ namespace LocalRadioManage.StorageOperate
                 {
                     return store_file;
                 }
-                store_file=await MyFile.CreateFile(root_folder, file_name);
                 temp_file = await StorageFile.CreateStreamedFileFromUriAsync(file_name, uri, null);
+                store_file = await MyFile.CreateFile(root_folder, file_name);
                 await temp_file.CopyAndReplaceAsync(store_file);
 
                 return store_file;

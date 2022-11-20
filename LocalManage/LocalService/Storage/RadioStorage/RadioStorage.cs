@@ -34,12 +34,13 @@ namespace PureRadio.LocalManage.LocalService.Storage
         public async Task<StorageFile> DownRadio(string RadioFolderName, Uri first_uri, Uri second_uri)
         {
             StorageFolder root_folder = await MyFolder.CreateFolder(RadioFolderName);
-            StorageFile file = await MyFile.CreateFile(root_folder, first_uri);
+            MyFile.CreateFileProgress create = new MyFile.CreateFileProgress();
+            StorageFile file = await create.CreateFile(root_folder, first_uri);
             if (file != null)
             {
                 return file;
             }
-            file = await MyFile.CreateFile(root_folder, second_uri);
+            file = await create.CreateFile(root_folder, second_uri);
             return file;
         }
 

@@ -40,11 +40,6 @@ namespace LocalRadioManage.StorageOperate
             }
            public Progress progress = new Progress();
 
-           public CreateFileProgress()
-            {
-
-            }
-
             public  async Task<StorageFile> CreateFile(StorageFolder root_folder, Uri uri)
             {
                 StorageFile temp_file = null;
@@ -126,9 +121,6 @@ namespace LocalRadioManage.StorageOperate
                     }
                     await temp.store_file.DeleteAsync();
                     return true;
-                   
-                   
-                    
                 }
                 catch
                 {
