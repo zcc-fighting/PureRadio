@@ -131,47 +131,71 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="LocalRadioManage\Adapter\ContentInformCardAdapter.cs" />
-    <Compile Include="LocalRadioManage\Adapter\RadioInformCardAdapter.cs" />
-    <Compile Include="LocalRadioManage\Adapter\RadioInformDetailAdapter.cs" />
-    <Compile Include="LocalRadioManage\Adapter\UserProfileAdapter.cs" />
-    <Compile Include="LocalRadioManage\DataModelTransform\ChannalAlbumTransform.cs" />
-    <Compile Include="LocalRadioManage\DataModelTransform\DateTransform.cs" />
-    <Compile Include="LocalRadioManage\DataModelTransform\LocalUserTransform.cs" />
-    <Compile Include="LocalRadioManage\DataModelTransform\RadioTransform.cs" />
-    <Compile Include="LocalRadioManage\DBBuilder\SQLiteConnect.cs" />
-    <Compile Include="LocalRadioManage\DBBuilder\TableObj\TableEntity\LocalChannalAlbum.cs" />
-    <Compile Include="LocalRadioManage\DBBuilder\TableObj\TableEntity\LocalRadio.cs" />
-    <Compile Include="LocalRadioManage\DBBuilder\TableObj\TableEntity\UserDownChannalAlbum.cs" />
-    <Compile Include="LocalRadioManage\DBBuilder\TableObj\TableEntity\UserDownRadio.cs" />
-    <Compile Include="LocalRadioManage\DBBuilder\TableObj\TableEntity\UserFavChannalAlbum.cs" />
-    <Compile Include="LocalRadioManage\DBBuilder\TableObj\TableEntity\UserFavRadio.cs" />
-    <Compile Include="LocalRadioManage\DBBuilder\TableObj\TableEntity\Users.cs" />
-    <Compile Include="LocalRadioManage\DBBuilder\TableObj\TableInform.cs" />
-    <Compile Include="LocalRadioManage\DBBuilder\TableObj\VTable.cs" />
-    <Compile Include="LocalRadioManage\DBBuilder\TableOperate\Delete.cs" />
-    <Compile Include="LocalRadioManage\DBBuilder\TableOperate\Insert.cs" />
-    <Compile Include="LocalRadioManage\DBBuilder\TableOperate\Select.cs" />
-    <Compile Include="LocalRadioManage\DBBuilder\TableOperate\TableChange.cs" />
-    <Compile Include="LocalRadioManage\DBBuilder\TableOperate\Update.cs" />
-    <Compile Include="LocalRadioManage\LocalService\Service.cs" />
-    <Compile Include="LocalRadioManage\LocalService\Service\Default.cs" />
-    <Compile Include="LocalRadioManage\LocalService\Service\ServiceUser.cs" />
-    <Compile Include="LocalRadioManage\LocalService\Service\ServiceUserDown.cs" />
-    <Compile Include="LocalRadioManage\LocalService\Service\ServiceUserFav.cs" />
-    <Compile Include="LocalRadioManage\LocalService\UserInform\UserDown\LocalDown.cs" />
-    <Compile Include="LocalRadioManage\LocalService\UserInform\UserDown\UserDown.cs" />
-    <Compile Include="LocalRadioManage\LocalService\UserInform\UserFav\UserFav.cs" />
-    <Compile Include="LocalRadioManage\LocalService\UserInform\UserInform.cs" />
-    <Compile Include="LocalRadioManage\StorageOperate\FileOperate\FileCreate.cs" />
-    <Compile Include="LocalRadioManage\StorageOperate\FileOperate\FileDelete.cs" />
-    <Compile Include="LocalRadioManage\StorageOperate\FileOperate\FileDownWithProgress.cs" />
-    <Compile Include="LocalRadioManage\StorageOperate\FileOperate\FileGet.cs" />
-    <Compile Include="LocalRadioManage\StorageOperate\FileOperate\RadioFile.cs" />
-    <Compile Include="LocalRadioManage\StorageOperate\FolderOperate\FolderCreate.cs" />
-    <Compile Include="LocalRadioManage\StorageOperate\FolderOperate\FolderDelere.cs" />
-    <Compile Include="LocalRadioManage\StorageOperate\FolderOperate\FolderGet.cs" />
-    <Compile Include="LocalRadioManage\test\LocalRadioTest.cs" />
+    <Compile Include="LocalManage\Adapters\Album\AlbumCardInfoAdapter.cs" />
+    <Compile Include="LocalManage\Adapters\Album\AlbumRadioInfoAdapters.cs" />
+    <Compile Include="LocalManage\Adapters\Channal\ChannalCardInfoAdapters.cs" />
+    <Compile Include="LocalManage\Adapters\Channal\ChannalRadioInfoAdapters.cs" />
+    <Compile Include="LocalManage\Adapters\UserInfoAdapter.cs" />
+    <Compile Include="LocalManage\DataModelsL\Album\AlbumCardInfo.cs" />
+    <Compile Include="LocalManage\DataModelsL\Album\AlbumRadioInfo.cs" />
+    <Compile Include="LocalManage\DataModelsL\Channal\ChannalCardInfo.cs" />
+    <Compile Include="LocalManage\DataModelsL\Channal\ChannalRadioInfo.cs" />
+    <Compile Include="LocalManage\DataModelsL\User\Album\UserAlbumCardInfo.cs" />
+    <Compile Include="LocalManage\DataModelsL\User\Album\UserAlbumRadioInfo.cs" />
+    <Compile Include="LocalManage\DataModelsL\User\Channal\UserChannalCardInfo.cs" />
+    <Compile Include="LocalManage\DataModelsL\User\Channal\UserChannalRadioInfo.cs" />
+    <Compile Include="LocalManage\DataModelsL\User\UserInfo.cs" />
+    <Compile Include="LocalManage\DataModelTransform\Album\AlbumCardTransform.cs" />
+    <Compile Include="LocalManage\DataModelTransform\Album\AlbumRadioTransform.cs" />
+    <Compile Include="LocalManage\DataModelTransform\Channal\ChannalCardTransform.cs" />
+    <Compile Include="LocalManage\DataModelTransform\Channal\ChannalRadioTransform.cs" />
+    <Compile Include="LocalManage\DataModelTransform\User\UserTransform.cs" />
+    <Compile Include="LocalManage\DBBuilder\SQLiteConnect.cs" />
+    <Compile Include="LocalManage\DBBuilder\TableObj\TableEntity\Album\AlbumCard.cs" />
+    <Compile Include="LocalManage\DBBuilder\TableObj\TableEntity\Album\AlbumRadio.cs" />
+    <Compile Include="LocalManage\DBBuilder\TableObj\TableEntity\Channal\ChannalCard.cs" />
+    <Compile Include="LocalManage\DBBuilder\TableObj\TableEntity\Channal\ChannalRadio.cs" />
+    <Compile Include="LocalManage\DBBuilder\TableObj\TableEntity\User\Album\UserAlbumCard.cs" />
+    <Compile Include="LocalManage\DBBuilder\TableObj\TableEntity\User\Album\UserAlbumRadio.cs" />
+    <Compile Include="LocalManage\DBBuilder\TableObj\TableEntity\User\Channal\UserChannalCard.cs" />
+    <Compile Include="LocalManage\DBBuilder\TableObj\TableEntity\User\Channal\UserChannalRadio.cs" />
+    <Compile Include="LocalManage\DBBuilder\TableObj\TableEntity\User\UserInform.cs" />
+    <Compile Include="LocalManage\DBBuilder\TableObj\TableInform.cs" />
+    <Compile Include="LocalManage\DBBuilder\TableObj\VTable.cs" />
+    <Compile Include="LocalManage\DBBuilder\TableOperate\Delete.cs" />
+    <Compile Include="LocalManage\DBBuilder\TableOperate\Insert.cs" />
+    <Compile Include="LocalManage\DBBuilder\TableOperate\Select.cs" />
+    <Compile Include="LocalManage\DBBuilder\TableOperate\TableChange.cs" />
+    <Compile Include="LocalManage\DBBuilder\TableOperate\Update.cs" />
+    <Compile Include="LocalManage\Iterfaces\IAlbumOpreate.cs" />
+    <Compile Include="LocalManage\Iterfaces\IChannalOperate.cs" />
+    <Compile Include="LocalManage\Iterfaces\IUserAlbumOperate.cs" />
+    <Compile Include="LocalManage\Iterfaces\IUserChannalOperate.cs" />
+    <Compile Include="LocalManage\Iterfaces\IUserInformOperate.cs" />
+    <Compile Include="LocalManage\LocalService\OperateT\Local\Album\AlbumCardOperate.cs" />
+    <Compile Include="LocalManage\LocalService\OperateT\Local\Album\AlbumRadioOperate.cs" />
+    <Compile Include="LocalManage\LocalService\OperateT\Local\Channal\ChannalCardOperate.cs" />
+    <Compile Include="LocalManage\LocalService\OperateT\Local\Channal\ChannalRadioOperate.cs" />
+    <Compile Include="LocalManage\LocalService\OperateT\User\Album\UserAlbumCardOperate.cs" />
+    <Compile Include="LocalManage\LocalService\OperateT\User\Album\UserAlbumRadioOperate.cs" />
+    <Compile Include="LocalManage\LocalService\OperateT\User\Channal\UserChannalCardOperate.cs" />
+    <Compile Include="LocalManage\LocalService\OperateT\User\Channal\UserChannalRadioOperate.cs" />
+    <Compile Include="LocalManage\LocalService\OperateT\User\UserInformsOperate.cs" />
+    <Compile Include="LocalManage\LocalService\Service\Local\AlbumOperate.cs" />
+    <Compile Include="LocalManage\LocalService\Service\Local\ChannalOperate.cs" />
+    <Compile Include="LocalManage\LocalService\Service\User\UserAlbumOperate.cs" />
+    <Compile Include="LocalManage\LocalService\Service\User\UserChannalOperate.cs" />
+    <Compile Include="LocalManage\LocalService\Storage\ImgStorage\ImgStorage.cs" />
+    <Compile Include="LocalManage\LocalService\Storage\RadioStorage\RadioStorage.cs" />
+    <Compile Include="LocalManage\StorageOperate\FileOperate\FileCreate.cs" />
+    <Compile Include="LocalManage\StorageOperate\FileOperate\FileDelete.cs" />
+    <Compile Include="LocalManage\StorageOperate\FileOperate\FileDownWithProgress.cs" />
+    <Compile Include="LocalManage\StorageOperate\FileOperate\FileGet.cs" />
+    <Compile Include="LocalManage\StorageOperate\FileOperate\RadioFile.cs" />
+    <Compile Include="LocalManage\StorageOperate\FolderOperate\FolderCreate.cs" />
+    <Compile Include="LocalManage\StorageOperate\FolderOperate\FolderDelere.cs" />
+    <Compile Include="LocalManage\StorageOperate\FolderOperate\FolderGet.cs" />
+    <Compile Include="LocalManage\Test\TestLocalManage.cs" />
     <Compile Include="Models\Args\AppNavigationEventArgs.cs" />
     <Compile Include="Models\Args\AuthorizeStateChangedEventArgs.cs" />
     <Compile Include="Models\Args\ContentCategoryEventArgs.cs" />
@@ -281,6 +305,8 @@
     <Compile Include="ViewModels\ContentDetailViewModel.cs" />
     <Compile Include="ViewModels\FullScreenPlayerViewModel.cs" />
     <Compile Include="ViewModels\LibraryViewModel.cs" />
+    <Compile Include="ViewModels\AppViewModel.cs" />
+    <Compile Include="ViewModels\DownloadViewModel.cs" />
     <Compile Include="ViewModels\LocalRadioManageViewModel\LocalLibraryViewModel.cs" />
     <Compile Include="ViewModels\LocalRadioManageViewModel\LocalUserLogViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
@@ -447,12 +473,11 @@
     <Content Include="Assets\SplashScreen\SplashScreen.scale-150.png" />
     <Content Include="Assets\SplashScreen\SplashScreen.scale-200.png" />
     <Content Include="Assets\SplashScreen\SplashScreen.scale-400.png" />
-    <Content Include="LocalRadioManage\DBBuilder\sqlite\sqldiff.exe" />
-    <Content Include="LocalRadioManage\DBBuilder\sqlite\sqlite3.def" />
-    <Content Include="LocalRadioManage\DBBuilder\sqlite\sqlite3.dll" />
-    <Content Include="LocalRadioManage\DBBuilder\sqlite\sqlite3.exe" />
-    <Content Include="LocalRadioManage\DBBuilder\sqlite\sqlite3_analyzer.exe" />
-    <Content Include="LocalRadioManage\Document\ServiceDescript.txt" />
+    <Content Include="LocalManage\DBBuilder\sqlite\sqldiff.exe" />
+    <Content Include="LocalManage\DBBuilder\sqlite\sqlite3.def" />
+    <Content Include="LocalManage\DBBuilder\sqlite\sqlite3.dll" />
+    <Content Include="LocalManage\DBBuilder\sqlite\sqlite3.exe" />
+    <Content Include="LocalManage\DBBuilder\sqlite\sqlite3_analyzer.exe" />
     <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -583,9 +608,7 @@
   <ItemGroup>
     <PRIResource Include="Resources\Strings\en-US\Resources.resw" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="Assets\Font\SegoeFluentIcons.ttf" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
