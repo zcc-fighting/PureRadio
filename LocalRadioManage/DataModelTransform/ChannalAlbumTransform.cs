@@ -28,8 +28,8 @@ namespace LocalRadioManage.DataModelTransform
                     local_store[LocalChannalAlbum.ColLocation[LocalChannalAlbum.ChannalAlbumType]] = radio_album.type;
                     local_store[LocalChannalAlbum.ColLocation[LocalChannalAlbum.ChannalAlbumName]] = radio_album.title;
                     local_store[LocalChannalAlbum.ColLocation[LocalChannalAlbum.ChannalAlbumDesc]] = radio_album.description;
-                    local_store[LocalChannalAlbum.ColLocation[LocalChannalAlbum.ChannalAlbumCover]] = radio_album.cover.ToString();
-
+                    local_store[LocalChannalAlbum.ColLocation[LocalChannalAlbum.ChannalAlbumCover]] = radio_album.local_cover.ToString();
+                    local_store[LocalChannalAlbum.ColLocation[LocalChannalAlbum.ChannalAlumCoverRemote]]= radio_album.remote_cover.ToString();
                     return local_store.ToList();
                 }
                 catch
@@ -98,7 +98,8 @@ namespace LocalRadioManage.DataModelTransform
                     album.id = (int)(long)store[LocalChannalAlbum.ColLocation[LocalChannalAlbum.ChannalAlbumId]];
                     album.title = (string)store[LocalChannalAlbum.ColLocation[LocalChannalAlbum.ChannalAlbumName]];
                     album.description = (string)store[LocalChannalAlbum.ColLocation[LocalChannalAlbum.ChannalAlbumDesc]];
-                    album.cover =new Uri((string)store[LocalChannalAlbum.ColLocation[LocalChannalAlbum.ChannalAlbumCover]]);
+                    album.local_cover =new Uri((string)store[LocalChannalAlbum.ColLocation[LocalChannalAlbum.ChannalAlbumCover]]);
+                    album.remote_cover = new Uri((string)store[LocalChannalAlbum.ColLocation[LocalChannalAlbum.ChannalAlumCoverRemote]]);
                     album.user = "0";
                     return album;
                 }
@@ -169,7 +170,7 @@ namespace LocalRadioManage.DataModelTransform
                     local_store[UserFavChannalAlbum.ColLocation[UserFavChannalAlbum.ChannalAlbumType]] = radio_album.type;
                     local_store[UserFavChannalAlbum.ColLocation[UserFavChannalAlbum.ChannalAlbumName]] = radio_album.title;
                     local_store[UserFavChannalAlbum.ColLocation[UserFavChannalAlbum.ChannalAlbumDesc]] = radio_album.description;
-                    local_store[UserFavChannalAlbum.ColLocation[UserFavChannalAlbum.ChannalAlbumCover]] = radio_album.cover;
+                    local_store[UserFavChannalAlbum.ColLocation[UserFavChannalAlbum.ChannalAlbumCover]] = radio_album.local_cover;
 
                     return local_store.ToList();
                 }
@@ -204,7 +205,7 @@ namespace LocalRadioManage.DataModelTransform
                     album.id = (int)(long)store[UserFavChannalAlbum.ColLocation[UserFavChannalAlbum.ChannalAlbumId]];
                     album.title = (string)store[UserFavChannalAlbum.ColLocation[UserFavChannalAlbum.ChannalAlbumName]];
                     album.description = (string)store[UserFavChannalAlbum.ColLocation[UserFavChannalAlbum.ChannalAlbumDesc]];
-                    album.cover =new Uri((string)store[UserFavChannalAlbum.ColLocation[UserFavChannalAlbum.ChannalAlbumCover]]);
+                    album.local_cover =new Uri((string)store[UserFavChannalAlbum.ColLocation[UserFavChannalAlbum.ChannalAlbumCover]]);
                 
                     return album;
                 }

@@ -247,6 +247,32 @@ namespace LocalRadioManage.LocalService.UserInforms
 
         }
 
+        public bool UpdateDownProgram(RadioFullAlbum album)
+        {
+            try
+            {
+                SetLocalDown(album);
+                return SQLiteConnect.TableHandle.UpdateRecord(local_program_name,condition_express_program, ChannalAlbumTransform.Local.ToLocalChannalAlbumStorage(album));
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public bool UpdateDownRadio(RadioFullContent radio)
+        {
+            try
+            {
+                SetLocalDown(radio);
+                return SQLiteConnect.TableHandle.UpdateRecord(local_program_name, condition_express_radio, RadioTransform.Local.ToLocalRadioStorage(radio));
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         //删除没有用户依赖的本地节目
          public bool DeleteLocalDownProgram_Check(bool is_constrant)
         {

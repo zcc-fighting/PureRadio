@@ -141,5 +141,18 @@ namespace LocalRadioManage.LocalService
                 return false;
             }
         }
+
+        public bool UpdateProgram(RadioFullAlbum album)
+        {
+            return user_inform.UserFav.UpdateFavProgram(album);
+        }
+
+        public bool UpdateRadio(RadioFullContent radio)
+        {
+            return user_inform.UserFav.UpdateFavRadio(radio);
+        }
+
+       
+
     }
 }

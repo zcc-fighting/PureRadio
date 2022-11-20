@@ -28,7 +28,8 @@ namespace LocalRadioManage.test
             radio.duration = 3600;
             radio.day = 1;
             radio.title = "小说连播";
-            radio.radio_uri = new Uri("https://lcache.qtfm.cn/cache/20221030/468/468_20221030_000000_010000_24_0.aac");
+            radio.local_radio_uri = new Uri("https://lcache.qtfm.cn/cache/20221030/468/468_20221030_000000_010000_24_0.aac");
+            radio.remote_radio_uri= new Uri("https://lcache.qtfm.cn/cache/20221030/468/468_20221030_000000_010000_24_0.aac");
             radio.user = "0";
             int int_date_time = 20221030;
             radio.date =DateTime.ParseExact(int_date_time.ToString(), "yyyyMMdd", null);
@@ -37,7 +38,8 @@ namespace LocalRadioManage.test
             album.user = "0";
             album.id = 468;
             album.title = "广东南方生活直播";
-            album.cover=new Uri("http://pic.qtfm.cn/2021/0519/20210519030711.jpeg");
+            album.remote_cover=new Uri("http://pic.qtfm.cn/2021/0519/20210519030711.jpeg");
+            album.remote_cover= new Uri("http://pic.qtfm.cn/2021/0519/20210519030711.jpeg");
             album.description = "阿巴阿巴阿巴";
 
       
@@ -88,7 +90,7 @@ namespace LocalRadioManage.test
             album.id = 15926;
             album.title = "谢谢你";
             album.description = "因为有你";
-            album.cover =new Uri(Default.DefalutStorage.image_folder.Path+"\\温暖四季.jpg");
+            album.remote_cover =new Uri(Default.DefalutStorage.image_folder.Path+"\\温暖四季.jpg");
 
           radio_store=  RadioTransform.Local.ToLocalRadioStorage(radio);
           album_store=  ChannalAlbumTransform.Local.ToLocalChannalAlbumStorage(album);

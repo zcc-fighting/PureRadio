@@ -47,9 +47,24 @@ namespace DataModels
         /// </summary>
         public DateTime date { get; set; }
 
-
+        /// <summary>
+        /// 用户
+        /// </summary>
         public string user = "0";
-        public Uri radio_uri { get; set; }
+       
+        /// <summary>
+        /// 音频URL
+        /// </summary>
+        public Uri local_radio_uri { get; set; }
+
+        public Uri remote_radio_uri { get; set; }
+
+        /// <summary>
+        /// 播音员
+        /// </summary>
+        public string procasters { get; set; } = "";
+
+
     }
     //用于电台索引存储
     public class RadioFullAlbum
@@ -65,7 +80,9 @@ namespace DataModels
         /// <summary>
         /// 封面
         /// </summary>
-        public Uri cover { get; set; }
+        public Uri local_cover { get; set; }
+
+        public Uri remote_cover { get; set; }
         /// <summary>
         /// 介绍
         /// </summary>

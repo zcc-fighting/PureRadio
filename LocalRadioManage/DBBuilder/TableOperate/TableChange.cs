@@ -30,8 +30,13 @@ namespace LocalRadioManage.DBBuilder.TableOperate
         }
         public static bool CreateTable(string query_str)
         {
-            SQLiteConnect.Connect();
-            SQLiteCommand cmd = new SQLiteCommand(SQLiteConnect.db_connect);
+            SQLiteConnection get_db_connect = SQLiteConnect.Connect();
+            if (get_db_connect == null)
+            {
+                SQLiteConnect.Disconnect();
+                return false;
+            }
+            SQLiteCommand cmd = new SQLiteCommand(get_db_connect);
             cmd.CommandText = query_str;
             cmd.Prepare();
            

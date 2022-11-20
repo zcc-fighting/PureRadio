@@ -213,6 +213,32 @@ namespace LocalRadioManage.LocalService.UserInforms
 
         }
 
+        public bool UpdateFavProgram(RadioFullAlbum album)
+        {
+            try
+            {
+                SetUserFav(album);
+                return SQLiteConnect.TableHandle.UpdateRecord(user_program_name, condition_express_program, ChannalAlbumTransform.Local.ToLocalChannalAlbumStorage(album));
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public bool UpdateFavRadio(RadioFullContent radio)
+        {
+            try
+            {
+                SetUserFav(radio);
+                return SQLiteConnect.TableHandle.UpdateRecord(user_radio_name, condition_express_radio, RadioTransform.Local.ToLocalRadioStorage(radio));
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public void SetConditionExpress_Program(string express)
         {
             condition_express_program = express;

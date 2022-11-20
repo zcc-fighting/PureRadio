@@ -37,8 +37,8 @@ namespace LocalRadioManage.LocalService
                 user_inform.UserDown.SetUserDown(album.user);
                 //修改图片本地名称
                 StorageFolder album_folder = await MyFolder.CreateFolder(Default.DefalutStorage.radio_folder, album.id.ToString());
-                StorageFile img_flie = await MyFile.CreateFile(album_folder, album.cover);
-                album.cover = new Uri(img_flie.Path);
+                StorageFile img_flie = await MyFile.CreateFile(album_folder, album.remote_cover);
+                album.local_cover = new Uri(img_flie.Path);
            
                 user_inform.UserDown.SaveUserDownProgram(album);
 
@@ -89,16 +89,36 @@ namespace LocalRadioManage.LocalService
                 MyFile.CreateFileProgress create = new MyFile.CreateFileProgress();
                 lock (create.progress)
                 {
-                    create.progress.file_name = radio.title;
-                    RadioProgress = create.progress;
-                    Progress.FileDownProgress.Add(RadioProgress);
+                    if (radio.remote_radio_uri == null)
+                    {
+                        return false;
+                    }
+                    create.progress.file_name = System.Web.HttpUtility.UrlDecode(radio.remote_radio_uri.Segments.Last());
+                    lock (Progress.FileDownProgress)
+                    {
+                        Progress.FileDownProgress.Add(create.progress);
+                       
+                    }
+                    lock (Progress.FileDownProgressMap)
+                    {
+                        Progress.FileDownProgressMap.Add(create.progress.file_name, create.progress);
+                    }
                 }
-                StorageFile radio_file = await create.CreateFile(album_folder, radio.radio_uri);
+                lock (Progress)
+                {
+                    Progress.down_counts = (Progress.down_counts+1)%Int16.MaxValue;
+                }
+                StorageFile radio_file = await create.CreateFile(album_folder, radio.remote_radio_uri);
+                lock (Progress)
+                {
+                    Progress.down_progress = (Progress.down_progress+1)% Int16.MaxValue;
+                }
                 if (radio_file == null)
                 {
                     return false;
                 }
-                radio.radio_uri = new Uri(radio_file.Path);
+               
+                radio.local_radio_uri = new Uri(radio_file.Path);
                 return user_inform.UserDown.SaveUserDownRadio(radio);
             }
             catch
@@ -110,27 +130,15 @@ namespace LocalRadioManage.LocalService
         public async Task<bool> DownRadio(List<RadioFullContent> radios)
         {
         
-            lock(Progress)
-            {
-                Progress.down_counts = radios.Count;
-                Progress.down_progress = -1;
-                Progress.down_situation.Clear();
-                Progress.FileDownProgress.Clear();
-            }
+          
 
             try
             {
-                int id = 0;
+             
                 foreach (RadioFullContent radio in radios)
                 {
                     bool flag= await DownRadio(radio);
-                    lock (Progress)
-                    {
-                        Progress.down_progress += 1;
-                        Progress.down_situation.Add(flag);
-                    }
-                    id++;
-
+               
                 }
                 return true;
             }
@@ -213,7 +221,7 @@ namespace LocalRadioManage.LocalService
                 {
                     foreach (RadioFullContent radio in lonely_radios)
                     {
-                        if (!await MyFile.DeleteFile(radio.radio_uri))
+                        if (!await MyFile.DeleteFile(radio.local_radio_uri))
                         {
                             fail_delete_radios.Add(radio);
                         }
@@ -296,7 +304,7 @@ namespace LocalRadioManage.LocalService
 
                     foreach (RadioFullContent radio in lonely_radios)
                     {
-                        if(! await MyFile.DeleteFile(radio.radio_uri))
+                        if(! await MyFile.DeleteFile(radio.local_radio_uri))
                         {
                             fail_delete_radios.Add(radio);
                         }
@@ -325,8 +333,7 @@ namespace LocalRadioManage.LocalService
         public class DownProgress
         {
           public  int down_counts = 0;
-          public  int down_progress = -1;
-          public  List<bool> down_situation = new List<bool>();
+          public  int down_progress =0;
           public List<MyFile.CreateFileProgress.Progress> FileDownProgress = new List<MyFile.CreateFileProgress.Progress>();
         }
     }

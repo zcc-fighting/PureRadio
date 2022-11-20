@@ -21,12 +21,13 @@ namespace LocalRadioManage.DBBuilder
         private const string default_db_name = "LocalRadioManage.db";
         private static StorageFolder local_folder=null;
         private static StorageFile db_file = null;
-        public static SQLiteConnection  db_connect = null;
+        private static SQLiteConnection  db_connect = new SQLiteConnection();
+        private static bool db_connect_used = false;
       
         /// <summary>
         /// 连接数据库
         /// </summary>
-        public static bool Connect()
+        public static SQLiteConnection Connect()
         {
             string connect_str;
             SQLiteCommand cmd;
@@ -41,19 +42,21 @@ namespace LocalRadioManage.DBBuilder
 
                if (db_file == null)
                {
-                    return false;
+                    return null;
                }
             }
 
            //连接数据库并允许外键
             connect_str = "data source= " + db_file.Path;
-            db_connect = new SQLiteConnection(connect_str);
-            db_connect.Open();
-            cmd = new SQLiteCommand("PRAGMA foreign_keys = ON",db_connect);
+
+            SQLiteConnection get_db_connect= GetDbConnect();
+            get_db_connect = new SQLiteConnection(connect_str);
+            get_db_connect.Open();
+            cmd = new SQLiteCommand("PRAGMA foreign_keys = ON", get_db_connect);
             cmd.ExecuteNonQuery();
-            cmd = new SQLiteCommand("PRAGMA recursive_triggers = true;", db_connect);
+            cmd = new SQLiteCommand("PRAGMA recursive_triggers = true;", get_db_connect);
             cmd.ExecuteNonQuery();
-            return true;
+            return get_db_connect;
         }
 
         /// <summary>
@@ -61,13 +64,16 @@ namespace LocalRadioManage.DBBuilder
         /// </summary>
         public static bool Disconnect()
         {
-            if (db_connect != null)
-            {
-                db_connect.Close();
-                db_connect = null;
-                return true;
-            }
-            return false;
+           try
+             {
+                CloseDbConnect();
+                 return true;
+              }
+          catch
+               {
+                CloseDbConnect();
+                return false;
+                }
         }
 
         /// <summary>
@@ -88,6 +94,33 @@ namespace LocalRadioManage.DBBuilder
             }
         }
        
+        //对dbconnect访问加锁
+        private static SQLiteConnection GetDbConnect()
+        {
+            uint counts = 1000000;
+            while (db_connect_used)
+            {
+                counts--;
+                if (counts == 1)
+                {
+                    throw new Exception("may somewhere dont disconnect");
+                }
+            } ;
+            lock (db_connect)
+            {
+                db_connect_used = true;
+                return db_connect;
+            }
+        }
+        private static void CloseDbConnect()
+        {
+            lock (db_connect)
+            {
+                db_connect.Close();
+                db_connect_used = false;
+            }
+        }
+
 
     }
 
@@ -99,8 +132,9 @@ namespace LocalRadioManage.DBBuilder
        
         public static bool CreateLocalRadioManage()
         {
-            if (SQLiteConnect.Connect()&&only_one_create)
+            if ((SQLiteConnect.Connect()!=null)&&only_one_create)
             {
+                SQLiteConnect.Disconnect();
                 only_one_create = false;
 
                 LocalChannalAlbum local_channel_album = new LocalChannalAlbum();
@@ -127,9 +161,9 @@ namespace LocalRadioManage.DBBuilder
                 TableHandle.CreateTable(UserDownRadio.TableName);
                 TableHandle.CreateTable(UserFavChannalAlbum.TableName);
                 TableHandle.CreateTable(UserFavRadio.TableName);
-                SQLiteConnect.Disconnect();
                 return true;
             }
+            SQLiteConnect.Disconnect();
             return false;
         }
     }

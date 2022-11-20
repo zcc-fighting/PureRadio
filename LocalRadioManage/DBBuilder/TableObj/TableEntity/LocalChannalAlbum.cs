@@ -23,6 +23,7 @@ namespace LocalRadioManage.DBBuilder.TableObj
         public readonly static string[] ChannalAlbumName = { "ChannalAlbumName", "TEXT NOT NULL" };
         public readonly static string[] ChannalAlbumDesc = { "ChannalAlbumDesc", "TEXT NOT NULL" };
         public readonly static string[] ChannalAlbumCover = { "ChannalAlbumCover", "TEXT NOT NULL" };
+        public readonly static string[] ChannalAlumCoverRemote = { "ChannalAlumCoverRemote","TEXT NOT NULL" };
         //public readonly static string[] ChannalAlbunLocalPath = { "ChannalAlbunLocalPath", "TEXT NOT NULL"};
         public readonly static string[] PrimaryKey = {ChannalAlbumId[0]};
         public readonly static List<string[]> ForeignKey_List = new List<string[]>();
@@ -34,7 +35,7 @@ namespace LocalRadioManage.DBBuilder.TableObj
             { ChannalAlbumName,2},
             { ChannalAlbumDesc,3 },
             { ChannalAlbumCover,4},
-            //{ ChannalAlbunLocalPath,5 }
+            { ChannalAlumCoverRemote,5 }
         };
      
       

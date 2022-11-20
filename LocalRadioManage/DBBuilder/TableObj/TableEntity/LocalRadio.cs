@@ -24,6 +24,9 @@ namespace LocalRadioManage.DBBuilder.TableObj
         public readonly static string[] RadioDuration = { "RadioDuration", "INTEGER" };
         public readonly static string[] RadioCreateTime = { "RadioCreateTime", "TEXT NOT NULL" };
         public readonly static string[] RadioLocalPath = { "RadioLocalPath", "TEXT NOT NULL" };
+        public readonly static string[] Procasters = { "Procasters", "TEXT NOT NULL" };
+        public readonly static string[] RadioRemotePath = { "RadioRemotePath", "TEXT NOT NULL" };
+
         public readonly static string[] PrimaryKey = { RadioId[0], RadioDate[0] };
         public readonly static string[] ForeignKey = { ChannalAlbumId[0], LocalChannalAlbum.TableName, LocalChannalAlbum.ChannalAlbumId[0],TableInform.FOREIGN_CASCADE };
         public readonly static List<string[]> ForeignKey_List = new List<string[]> { ForeignKey };
@@ -39,7 +42,11 @@ namespace LocalRadioManage.DBBuilder.TableObj
             { RadioName,3 },
             { RadioDuration,4},
             { RadioCreateTime,5 },
-            {RadioLocalPath,6 }
+            { RadioLocalPath,6 },
+            { Procasters,7 },
+            { RadioRemotePath,8 },
+
+            
         };
 
         public TableInform GetTableInform()

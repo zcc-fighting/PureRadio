@@ -33,7 +33,9 @@ namespace LocalRadioManage.DataModelTransform
                     local_store[LocalRadio.ColLocation[LocalRadio.RadioName]] = radio.title;
                     local_store[LocalRadio.ColLocation[LocalRadio.RadioDuration]] = radio.duration;
                     local_store[LocalRadio.ColLocation[LocalRadio.RadioCreateTime]] = DateTime.Now.ToString();
-                    local_store[LocalRadio.ColLocation[LocalRadio.RadioLocalPath]] = radio.radio_uri.ToString();
+                    local_store[LocalRadio.ColLocation[LocalRadio.RadioLocalPath]] = radio.local_radio_uri.ToString();
+                    local_store[LocalRadio.ColLocation[LocalRadio.Procasters]] = radio.procasters;
+                    local_store[LocalRadio.ColLocation[LocalRadio.RadioRemotePath]]= radio.remote_radio_uri.ToString();
 
                     return local_store.ToList();
                 }
@@ -106,7 +108,9 @@ namespace LocalRadioManage.DataModelTransform
                 radio.channel_id = (int)(long)store[LocalRadio.ColLocation[LocalRadio.ChannalAlbumId]];
                 radio.title = (string)store[LocalRadio.ColLocation[LocalRadio.RadioName]];
                 radio.duration = (int)(long)store[LocalRadio.ColLocation[LocalRadio.RadioDuration]];
-                radio.radio_uri = new Uri((string)store[LocalRadio.ColLocation[LocalRadio.RadioLocalPath]]);
+                radio.local_radio_uri = new Uri((string)store[LocalRadio.ColLocation[LocalRadio.RadioLocalPath]]);
+                radio.remote_radio_uri= new Uri((string)store[LocalRadio.ColLocation[LocalRadio.RadioRemotePath]]);
+                radio.procasters = (string)store[LocalRadio.ColLocation[LocalRadio.Procasters]];
 
                 //一整个日期的填充
                 ulong radio_date = (ulong)(long)store[LocalRadio.ColLocation[LocalRadio.RadioDate]];
@@ -192,7 +196,7 @@ namespace LocalRadioManage.DataModelTransform
                     reomte_fav[UserFavRadio.ColLocation[UserFavRadio.RadioName]] = radio.title;
                     reomte_fav[UserFavRadio.ColLocation[UserFavRadio.RadioDuration]] = radio.duration;
                     reomte_fav[UserFavRadio.ColLocation[UserFavRadio.RadioCreateTime]] = DateTime.Now.ToString();
-                    reomte_fav[UserFavRadio.ColLocation[UserFavRadio.RadioRemotePath]] = radio.radio_uri.ToString();
+                    reomte_fav[UserFavRadio.ColLocation[UserFavRadio.RadioRemotePath]] = radio.local_radio_uri.ToString();
 
                     return reomte_fav.ToList();
                 }
@@ -227,7 +231,7 @@ namespace LocalRadioManage.DataModelTransform
                 radio.channel_id = (int)store[UserFavRadio.ColLocation[UserFavRadio.ChannalAlbumId]];
                 radio.title = (string)store[UserFavRadio.ColLocation[UserFavRadio.RadioName]];
                 radio.duration = (int)store[UserFavRadio.ColLocation[UserFavRadio.RadioDuration]];
-                radio.radio_uri = new Uri((string)store[UserFavRadio.ColLocation[UserFavRadio.RadioRemotePath]]);
+                radio.local_radio_uri = new Uri((string)store[UserFavRadio.ColLocation[UserFavRadio.RadioRemotePath]]);
                
 
                //一整个日期的填充

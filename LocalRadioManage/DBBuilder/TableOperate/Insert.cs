@@ -29,8 +29,13 @@ namespace LocalRadioManage.DBBuilder.TableOperate
         }
         public static bool InsertData(string sql, SQLiteParameter[] parameters)
         {
-            SQLiteConnect.Connect();
-            SQLiteCommand cmd = new SQLiteCommand(SQLiteConnect.db_connect);
+            SQLiteConnection get_db_connect = SQLiteConnect.Connect();
+            if (get_db_connect == null)
+            {
+                SQLiteConnect.Disconnect();
+                return false;
+            }
+            SQLiteCommand cmd = new SQLiteCommand(get_db_connect);
             cmd.CommandText = sql;
             cmd.Prepare();
             if (parameters != null)
@@ -42,12 +47,14 @@ namespace LocalRadioManage.DBBuilder.TableOperate
             try
             {
                 result = cmd.ExecuteNonQuery();
+                SQLiteConnect.Disconnect();
             }
             catch
             {
+                SQLiteConnect.Disconnect();
                 return false;
             }
-            SQLiteConnect.Disconnect();
+          
             if (result > 0)
             {
                 return true;

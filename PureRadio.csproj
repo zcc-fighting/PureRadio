@@ -209,14 +209,33 @@
     <Compile Include="LocalRadioManage\Adapter\ContentInformCardAdapter.cs" />
     <Compile Include="LocalRadioManage\Adapter\RadioInformCardAdapter.cs" />
     <Compile Include="LocalRadioManage\Adapter\RadioInformDetailAdapter.cs" />
-    <Compile Include="LocalRadioManage\Adapter\UserProfileAdapter.cs" />
+    <Compile Include="LocalRadioManage\Adapter\AccountInfoAdapter.cs" />
+    <Compile Include="LocalRadioManage\DataModelsL\AlbumCardInfo.cs" />
+    <Compile Include="LocalRadioManage\DataModelsL\AlbumRadioInfo.cs" />
+    <Compile Include="LocalRadioManage\DataModelsL\ChannalCardInfo.cs" />
+    <Compile Include="LocalRadioManage\DataModelsL\ChannalRadioInfo.cs" />
+    <Compile Include="LocalRadioManage\DataModelsL\UserInfo.cs" />
     <Compile Include="LocalRadioManage\DataModelTransform\ChannalAlbumTransform.cs" />
     <Compile Include="LocalRadioManage\DataModelTransform\DateTransform.cs" />
     <Compile Include="LocalRadioManage\DataModelTransform\LocalUserTransform.cs" />
     <Compile Include="LocalRadioManage\DataModelTransform\RadioTransform.cs" />
+    <Compile Include="LocalRadioManage\DataModelTransform\Rewrite\AlbumCardTransform.cs" />
+    <Compile Include="LocalRadioManage\DataModelTransform\Rewrite\AlbumRadioTransform.cs" />
+    <Compile Include="LocalRadioManage\DataModelTransform\Rewrite\ChannalCardTransform.cs" />
+    <Compile Include="LocalRadioManage\DataModelTransform\Rewrite\ChannalRadioTransform.cs" />
+    <Compile Include="LocalRadioManage\DataModelTransform\Rewrite\UserTransform.cs" />
     <Compile Include="LocalRadioManage\DBBuilder\SQLiteConnect.cs" />
+    <Compile Include="LocalRadioManage\DBBuilder\TableObj\TableEntity\Rewrite\Album\AlbumCard.cs" />
+    <Compile Include="LocalRadioManage\DBBuilder\TableObj\TableEntity\Rewrite\Album\AlbumRadio.cs" />
+    <Compile Include="LocalRadioManage\DBBuilder\TableObj\TableEntity\Rewrite\Channal\ChannalCard.cs" />
+    <Compile Include="LocalRadioManage\DBBuilder\TableObj\TableEntity\Rewrite\Channal\ChannalRadio.cs" />
     <Compile Include="LocalRadioManage\DBBuilder\TableObj\TableEntity\LocalChannalAlbum.cs" />
     <Compile Include="LocalRadioManage\DBBuilder\TableObj\TableEntity\LocalRadio.cs" />
+    <Compile Include="LocalRadioManage\DBBuilder\TableObj\TableEntity\Rewrite\User\UserAlbumCard.cs" />
+    <Compile Include="LocalRadioManage\DBBuilder\TableObj\TableEntity\Rewrite\User\UserAlbumRadio.cs" />
+    <Compile Include="LocalRadioManage\DBBuilder\TableObj\TableEntity\Rewrite\User\UserChannalCard.cs" />
+    <Compile Include="LocalRadioManage\DBBuilder\TableObj\TableEntity\Rewrite\User\UserChannalRadio.cs" />
+    <Compile Include="LocalRadioManage\DBBuilder\TableObj\TableEntity\Rewrite\User\UserInform.cs" />
     <Compile Include="LocalRadioManage\DBBuilder\TableObj\TableEntity\UserDownChannalAlbum.cs" />
     <Compile Include="LocalRadioManage\DBBuilder\TableObj\TableEntity\UserDownRadio.cs" />
     <Compile Include="LocalRadioManage\DBBuilder\TableObj\TableEntity\UserFavChannalAlbum.cs" />
@@ -229,6 +248,12 @@
     <Compile Include="LocalRadioManage\DBBuilder\TableOperate\Select.cs" />
     <Compile Include="LocalRadioManage\DBBuilder\TableOperate\TableChange.cs" />
     <Compile Include="LocalRadioManage\DBBuilder\TableOperate\Update.cs" />
+    <Compile Include="LocalRadioManage\LocalService\Rewrite\Local\ChannalRadioOperate.cs" />
+    <Compile Include="LocalRadioManage\LocalService\Rewrite\Local\AlbumCardOperate.cs" />
+    <Compile Include="LocalRadioManage\LocalService\Rewrite\Local\AlbumRadioOperate.cs" />
+    <Compile Include="LocalRadioManage\LocalService\Rewrite\Local\ChannalCardOperate.cs" />
+    <Compile Include="LocalRadioManage\LocalService\Rewrite\Storage\ImgStorage\ImgStorage.cs" />
+    <Compile Include="LocalRadioManage\LocalService\Rewrite\Storage\RadioStorage\RadioStorage.cs" />
     <Compile Include="LocalRadioManage\LocalService\Service.cs" />
     <Compile Include="LocalRadioManage\LocalService\Service\Default.cs" />
     <Compile Include="LocalRadioManage\LocalService\Service\ServiceUser.cs" />
@@ -331,7 +356,7 @@
     <Compile Include="Services\PlaybackService.cs" />
     <Compile Include="Services\SettingsService.cs" />
     <Compile Include="ViewModels\AppViewModel.cs" />
-    <Compile Include="ViewModels\ContentDetailViewModel.cs" />
+    <Compile Include="ViewModels\DownloadViewModel.cs" />
     <Compile Include="ViewModels\LocalRadioManageViewModel\LocalLibraryViewModel.cs" />
     <Compile Include="ViewModels\LocalRadioManageViewModel\LocalUserLogViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
@@ -636,7 +661,9 @@
     <PRIResource Include="Resources\Strings\en-US\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\Font\SegoeFluentIcons.ttf" />
+    <Folder Include="LocalRadioManage\LocalService\Rewrite\User\" />
+    <Folder Include="RemoteRadioManage\" />
+    <Folder Include="Services\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

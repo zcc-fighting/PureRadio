@@ -99,10 +99,15 @@ namespace LocalRadioManage.DBBuilder.TableOperate
             data = new List<List<object>>();
             if (sql == null||sql=="")
             {
+                SQLiteConnect.Disconnect();
                 return false;
             }
-            SQLiteConnect.Connect();
-            SQLiteCommand cmd = new SQLiteCommand(sql,SQLiteConnect.db_connect);
+            SQLiteConnection get_db_connect = SQLiteConnect.Connect();
+            if (get_db_connect == null)
+            {
+                return false;
+            }
+            SQLiteCommand cmd = new SQLiteCommand(sql, get_db_connect);
             
             cmd.CommandText = sql;
             cmd.Prepare();

@@ -201,8 +201,9 @@ namespace LocalRadioManage.LocalService
             {
                 Task<Task<bool>> task = new Task<Task<bool>>(() => Download_Asyc(album, radio));
                 task.Start();
-                task.Result.Wait();
-                return task.Result.Result;
+                //task.Result.Wait();
+                //return task.Result.Result;
+                return true;
             }
 
             public List<RadioFullAlbum> Load()
@@ -210,7 +211,6 @@ namespace LocalRadioManage.LocalService
                 LocalDownload.SetLocalDown();
                 return LocalDownload.LoadLocalDownProgram();
             }
-
             public List<RadioFullAlbum> Load(string user_name)
             {
                 return UserDownService.LoadProgram(user_name);
@@ -243,14 +243,14 @@ namespace LocalRadioManage.LocalService
                 radio = LoadRadioContent(radio);
                 StorageFolder root_folder = await MyFolder.GetFolder(Default.DefalutStorage.radio_folder, radio.channel_id.ToString());
                 //实际音频已不存在，用户依赖删除
-                if (!await MyFile.FileExists(root_folder, radio.radio_uri))
+                if (!await MyFile.FileExists(root_folder, radio.local_radio_uri))
                 {
                     LocalDownload.SetLocalDown(radio);
                     LocalDownload.DeleteLocalDownRadios(true);
                     await RemoveRadio_Asyc(radio, true);
                 }
 
-                StorageFile get_file = await MyFile.GetFile(root_folder, radio.radio_uri);
+                StorageFile get_file = await MyFile.GetFile(root_folder, radio.local_radio_uri);
 
                 return get_file;
             }
@@ -278,7 +278,7 @@ namespace LocalRadioManage.LocalService
                 {
                     album = albums[0];
                 }
-                return await MyFile.GetFile(album.cover);
+                return await MyFile.GetFile(album.local_cover);
             }
 
             //异步删除
@@ -332,6 +332,16 @@ namespace LocalRadioManage.LocalService
                 task.Start();
                 task.Result.Wait();
                 return task.Result.Result;
+            }
+
+            //更新信息
+            public bool Update(RadioFullAlbum album)
+            {
+              return  LocalDownload.UpdateDownProgram(album);
+            } 
+            public bool Update(RadioFullContent radio)
+            {
+                return LocalDownload.UpdateDownRadio(radio);
             }
 
             //导出到本地音频库
@@ -391,7 +401,6 @@ namespace LocalRadioManage.LocalService
                 return false;
 
             }
-
             public async Task<bool> Export_Aysc(RadioFullAlbum album, bool is_user, StorageFolder root_folder)
             {
                 try
@@ -429,39 +438,67 @@ namespace LocalRadioManage.LocalService
                 }
 
             }
-
-
-            //is_single_down，是否为下载单个音频
-            public List<DownProgressInform> GetDownProgressInform(bool is_single_down)
+            
+            public List<DownProgressInform> GetDownProgressInform()
             {
                 List<DownProgressInform> informs = new List<DownProgressInform>();
                 DownProgressInform inform;
-                if (is_single_down)
+
+                lock (UserDownService.Progress.FileDownProgress)
                 {
-                    lock (UserDownService.RadioProgress) {
-                        inform = new DownProgressInform(UserDownService.RadioProgress.file_name, UserDownService.RadioProgress.file_size,
-                            UserDownService.RadioProgress.progress_size, UserDownService.RadioProgress.is_end);
-                        informs.Add(inform);
-                    }
-                  
-                }
-                else
-                {
-                    lock (UserDownService.Progress)
+                  for(int i=0;i< UserDownService.Progress.FileDownProgress.Count; i++)
                     {
-                        foreach(MyFile.CreateFileProgress.Progress temp in UserDownService.Progress.FileDownProgress)
+                        MyFile.CreateFileProgress.Progress temp = UserDownService.Progress.FileDownProgress[i];
+                        if (temp.is_no_need == false)
                         {
-                            lock (temp)
+                            inform = new DownProgressInform(temp.file_name, temp.file_size,
+                         temp.progress_size, temp.is_end);
+                            if (temp.is_end == true)
                             {
-                                inform = new DownProgressInform(UserDownService.RadioProgress.file_name, UserDownService.RadioProgress.file_size,
-                           UserDownService.RadioProgress.progress_size, UserDownService.RadioProgress.is_end);
-                                informs.Add(inform);
+                                temp.is_no_need = true;
                             }
+                            informs.Add(inform);
+                        }
+                        else
+                        {
+                            UserDownService.Progress.FileDownProgress.RemoveAt(i);
+                            i--;
                         }
                     }
                 }
 
                 return informs;
+            }
+
+            public DownProgressInform GetDownProgressInform(string file_name)
+            {
+                DownProgressInform inform=null;
+                MyFile.CreateFileProgress.Progress temp = null;
+                lock (UserDownService.Progress.FileDownProgressMap)
+                {
+                    try
+                    {
+                        if (UserDownService.Progress.FileDownProgressMap != null)
+                        {
+
+                            if (UserDownService.Progress.FileDownProgressMap.TryGetValue(file_name, out temp))
+                            {
+                                inform = new DownProgressInform(temp.file_name, temp.file_size,
+                                    temp.progress_size, temp.is_end);
+                                return inform;
+                            }
+                            else
+                            {
+                                return null;
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        return null;
+                    }
+                }
+                return null;
             }
 
             public ExportProgress GetExportProgress()
@@ -556,6 +593,18 @@ namespace LocalRadioManage.LocalService
             {
                 return UserFavService.DeleteRadio(radio, is_constrant);
             }
+
+
+            public bool Update(RadioFullAlbum album)
+            {
+                return UserFavService.UpdateProgram(album);
+            }
+            public bool Update(RadioFullContent radio)
+            {
+              return  UserFavService.UpdateRadio(radio);
+            }
+
+            
         }
     }
 }
