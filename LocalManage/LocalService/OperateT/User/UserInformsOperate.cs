@@ -7,7 +7,9 @@ using PureRadio.LocalManage.DataModelsL;
 using PureRadio.LocalManage.DataModelTransform;
 using PureRadio.LocalManage.DBBuilder.TableObj;
 using PureRadio.LocalManage.Iterfaces;
+using PureRadio.LocalManage.LocalService.Storage;
 using LocalRadioManage.DBBuilder;
+using Windows.Storage;
 
 namespace PureRadio.LocalManage.LocalService.Service
 {
@@ -15,7 +17,7 @@ namespace PureRadio.LocalManage.LocalService.Service
     {
         public readonly string TableName = UserInforms.TableName;
         private List<string> SelectedCol = new List<string>();
-
+        ImgStorage ImageS = new ImgStorage();
         public UserInformsOperate()
         {
             SQLiteConnect.CreateLocalRadioManage();
@@ -24,7 +26,14 @@ namespace PureRadio.LocalManage.LocalService.Service
 
         public bool SaveUserInfo(UserInfo user)
         {
+            
+            Task<Task<StorageFile>> task=new Task<Task<StorageFile>>(()=> ImageS.DownImage(user.Avatar, user.Avatar));
+            task.Start();
+            task.Result.Wait();
+            StorageFile img = task.Result.Result;
+            user.LocalAvatar = new Uri(img.Path);
             List<object> store = UserTransform.InfoToStore(user);
+            UpdateUserInfo(user);
             return SQLiteConnect.TableHandle.AddRecord(TableName, store);
         }
 
@@ -32,6 +41,11 @@ namespace PureRadio.LocalManage.LocalService.Service
         {
             string ConditionExpress =UserInforms.UserNumber[0]
                 + "=" + "'" + user.PhoneNumber + "'";
+            if (user.LocalAvatar != null)
+            {
+                Task<Task<bool>> task = new Task<Task<bool>>(() => ImageS.RemoveImage(user.LocalAvatar));
+                task.Start();
+            }
             return SQLiteConnect.TableHandle.DeleteRecords(TableName, ConditionExpress, true);
         }
 

@@ -12,8 +12,17 @@ namespace PureRadio.LocalManage.Adapters
     {
       public static  AccountInfo ToAccountInfo(UserInfo user )
         {
+            Uri Avatar = null;
+            if (user.LocalAvatar != null)
+            {
+                Avatar = user.LocalAvatar;
+            }
+            else
+            {
+                Avatar = user.Avatar;
+            }
             AccountInfo account = new AccountInfo();
-            account.Avatar = user.Avatar;
+            account.Avatar = user.LocalAvatar;
             account.Birthday = user.Birthday;
             account.CreateTime = user.CreateTime;
             account.Gender = user.Gender;
@@ -28,12 +37,12 @@ namespace PureRadio.LocalManage.Adapters
         public static UserInfo ToUserInfo(AccountInfo account)
         {
             UserInfo user = new UserInfo();
-             user.Avatar=account.Avatar ;
+            user.Avatar=account.Avatar ;
             user.Birthday= account.Birthday ;
             user.CreateTime= account.CreateTime ;
             user.Gender= account.Gender;
-           user.Location=  account.Location ;
-             user.NickName= account.NickName;
+            user.Location=  account.Location ;
+            user.NickName= account.NickName;
             user.PhoneNumber=  account.PhoneNumber;
             user.Signature = account.Signature;
             user.UserName= account.UserName ;
