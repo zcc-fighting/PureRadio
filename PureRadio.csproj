@@ -131,6 +131,11 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="LocalManage\Adapters\Album\AlbumCardInfoAdapter.cs" />
+    <Compile Include="LocalManage\Adapters\Album\AlbumRadioInfoAdapters.cs" />
+    <Compile Include="LocalManage\Adapters\Channal\ChannalCardInfoAdapters.cs" />
+    <Compile Include="LocalManage\Adapters\Channal\ChannalRadioInfoAdapters.cs" />
+    <Compile Include="LocalManage\Adapters\UserInfoAdapter.cs" />
     <Compile Include="LocalManage\DataModelsL\Album\AlbumCardInfo.cs" />
     <Compile Include="LocalManage\DataModelsL\Album\AlbumRadioInfo.cs" />
     <Compile Include="LocalManage\DataModelsL\Channal\ChannalCardInfo.cs" />

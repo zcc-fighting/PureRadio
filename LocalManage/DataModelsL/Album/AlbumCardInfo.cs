@@ -51,5 +51,7 @@ namespace PureRadio.LocalRadioManage.DataModelsL
 
         public Uri LocalCover { get; set; }
 
+       
+
     }
 }
