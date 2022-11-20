@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PureRadio.LocalRadioManage.LocalService.User;
-using PureRadio.LocalRadioManage.LocalService.Service;
-using PureRadio.LocalRadioManage.DataModelsL;
+using PureRadio.LocalManage.LocalService.User;
+using PureRadio.LocalManage.LocalService.Service;
+using PureRadio.LocalManage.DataModelsL;
+using PureRadio.LocalManage.Iterfaces;
+using LocalRadioManage.DBBuilder;
 
-namespace PureRadio.LocalRadioManage.LocalService.Service
+namespace PureRadio.LocalManage.LocalService.Service
 {
-    class UserChannalOperate 
+    class UserChannalOperate :IUserChannalOperate
     {
         UserChannalCardOperate userChannalCardOperate = new UserChannalCardOperate();
         UserChannalRadioOperate userChannalRadioOperate = new UserChannalRadioOperate();
@@ -20,12 +22,14 @@ namespace PureRadio.LocalRadioManage.LocalService.Service
 
         public UserChannalOperate(UserInfo user)
         {
+            SQLiteConnect.CreateLocalRadioManage();
             userInformsOperate.SaveUserInfo(user);
             userInformsOperate.UpdateUserInfo(user);
             current_user = user;
         }
         public UserChannalOperate(string userPhoneNumber)
         {
+            SQLiteConnect.CreateLocalRadioManage();
             UserInfo user = new UserInfo();
             user.PhoneNumber = userPhoneNumber;
             userInformsOperate.SaveUserInfo(user);

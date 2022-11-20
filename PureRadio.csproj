@@ -167,6 +167,11 @@
     <Compile Include="LocalManage\DBBuilder\TableOperate\Select.cs" />
     <Compile Include="LocalManage\DBBuilder\TableOperate\TableChange.cs" />
     <Compile Include="LocalManage\DBBuilder\TableOperate\Update.cs" />
+    <Compile Include="LocalManage\Iterfaces\IAlbumOpreate.cs" />
+    <Compile Include="LocalManage\Iterfaces\IChannalOperate.cs" />
+    <Compile Include="LocalManage\Iterfaces\IUserAlbumOperate.cs" />
+    <Compile Include="LocalManage\Iterfaces\IUserChannalOperate.cs" />
+    <Compile Include="LocalManage\Iterfaces\IUserInformOperate.cs" />
     <Compile Include="LocalManage\LocalService\OperateT\Local\Album\AlbumCardOperate.cs" />
     <Compile Include="LocalManage\LocalService\OperateT\Local\Album\AlbumRadioOperate.cs" />
     <Compile Include="LocalManage\LocalService\OperateT\Local\Channal\ChannalCardOperate.cs" />

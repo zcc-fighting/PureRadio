@@ -7,7 +7,7 @@ using System.Data.SQLite;
 using System.IO;
 using Windows.Storage;
 using Windows.UI.Xaml.Data;
-using PureRadio.LocalRadioManage.DBBuilder.TableObj;
+using PureRadio.LocalManage.DBBuilder.TableObj;
 using LocalRadioManage.DBBuilder.TableObj;
 using LocalRadioManage.StorageOperate;
 

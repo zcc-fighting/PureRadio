@@ -3,20 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PureRadio.LocalRadioManage.DataModelsL;
-using PureRadio.LocalRadioManage.DataModelTransform;
-using PureRadio.LocalRadioManage.DBBuilder.TableObj;
+using PureRadio.LocalManage.DataModelsL;
+using PureRadio.LocalManage.DataModelTransform;
+using PureRadio.LocalManage.DBBuilder.TableObj;
+using PureRadio.LocalManage.Iterfaces;
 using LocalRadioManage.DBBuilder;
 
-namespace PureRadio.LocalRadioManage.LocalService.Service
+namespace PureRadio.LocalManage.LocalService.Service
 {
-    class UserInformsOperate
+  public class UserInformsOperate:IUserInformOperate
     {
         public readonly string TableName = UserInforms.TableName;
         private List<string> SelectedCol = new List<string>();
 
         public UserInformsOperate()
         {
+            SQLiteConnect.CreateLocalRadioManage();
             SelectedCol = SQLiteConnect.TableHandle.GetColNames(TableName).ToList();
         }
 

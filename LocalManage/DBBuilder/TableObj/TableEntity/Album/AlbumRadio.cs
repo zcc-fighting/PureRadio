@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using LocalRadioManage.DBBuilder.TableOperate;
 using LocalRadioManage.DBBuilder.TableObj;
 
-namespace PureRadio.LocalRadioManage.DBBuilder.TableObj
+namespace PureRadio.LocalManage.DBBuilder.TableObj
 {
     class AlbumRadio
     {

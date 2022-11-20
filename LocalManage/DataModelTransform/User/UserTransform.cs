@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PureRadio.LocalRadioManage.DataModelsL;
-using PureRadio.LocalRadioManage.DBBuilder.TableObj;
+using PureRadio.LocalManage.DataModelsL;
+using PureRadio.LocalManage.DBBuilder.TableObj;
 
-namespace PureRadio.LocalRadioManage.DataModelTransform
+namespace PureRadio.LocalManage.DataModelTransform
 {
     class UserTransform
     {

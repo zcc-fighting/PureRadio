@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PureRadio.LocalRadioManage.DataModelsL
+namespace PureRadio.LocalManage.DataModelsL
 {
   public  class AlbumCardInfo
     {

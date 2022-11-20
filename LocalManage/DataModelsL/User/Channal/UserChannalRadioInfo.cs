@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PureRadio.LocalRadioManage.DBBuilder.TableObj;
+using PureRadio.LocalManage.DBBuilder.TableObj;
 
-namespace PureRadio.LocalRadioManage.DataModelsL
+namespace PureRadio.LocalManage.DataModelsL
 {
     class UserChannalRadioInfo
     {

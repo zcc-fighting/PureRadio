@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 //using PureRadio.LocalRadioManage.LocalService.Local;
-using PureRadio.LocalRadioManage.LocalService.Service;
-using PureRadio.LocalRadioManage.DataModelsL;
+using PureRadio.LocalManage.LocalService.Service;
+using PureRadio.LocalManage.DataModelsL;
 using LocalRadioManage.DBBuilder;
 
 namespace PureRadioR.LocalManage.Test

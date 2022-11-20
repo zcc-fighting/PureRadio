@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PureRadio.LocalRadioManage.DataModelsL;
-using PureRadio.LocalRadioManage.LocalService.Local;
-using PureRadio.LocalRadioManage.DBBuilder.TableObj;
+using PureRadio.LocalManage.DataModelsL;
+using PureRadio.LocalManage.LocalService.Local;
+using PureRadio.LocalManage.DBBuilder.TableObj;
 using LocalRadioManage.DBBuilder;
 
-namespace PureRadio.LocalRadioManage.LocalService.User
+namespace PureRadio.LocalManage.LocalService.User
 {
     class UserChannalRadioOperate
     {

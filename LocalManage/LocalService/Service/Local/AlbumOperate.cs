@@ -3,20 +3,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PureRadio.LocalRadioManage.LocalService.Local;
-using PureRadio.LocalRadioManage.DataModelsL;
-using PureRadio.LocalRadioManage.LocalService.Storage;
+using PureRadio.LocalManage.LocalService.Local;
+using PureRadio.LocalManage.DataModelsL;
+using PureRadio.LocalManage.LocalService.Storage;
 using LocalRadioManage.StorageOperate;
 using Windows.Storage;
+using PureRadio.LocalManage.Iterfaces;
+using LocalRadioManage.DBBuilder;
 
-namespace PureRadio.LocalRadioManage.LocalService.Service
+namespace PureRadio.LocalManage.LocalService.Service
 {
-    class AlbumOperate
+    class AlbumOperate : IAlbumOpreate
     {
-       public AlbumCardOperate CardOperate = new AlbumCardOperate();
-       public AlbumRadioOperate RadioOperate = new AlbumRadioOperate();
+        public AlbumCardOperate CardOperate = new AlbumCardOperate();
+        public AlbumRadioOperate RadioOperate = new AlbumRadioOperate();
         ImgStorage ImageS = new ImgStorage();
         RadioStorage RadioS = new RadioStorage();
+
+        public AlbumOperate()
+         {
+            SQLiteConnect.CreateLocalRadioManage();
+        }
 
         public async Task<bool> Download(AlbumCardInfo album)
         {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PureRadio.Uwp.Models.Data.User;
-using PureRadio.LocalRadioManage.DataModelsL;
+using PureRadio.LocalManage.DataModelsL;
 
 namespace PureRadio.LocalManage.Adapters
 {

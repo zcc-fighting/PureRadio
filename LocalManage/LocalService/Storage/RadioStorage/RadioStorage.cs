@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using LocalRadioManage.StorageOperate;
 
-namespace PureRadio.LocalRadioManage.LocalService.Storage
+namespace PureRadio.LocalManage.LocalService.Storage
 {
     class RadioStorage
     {

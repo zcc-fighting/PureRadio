@@ -3,22 +3,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PureRadio.LocalRadioManage.LocalService.Local;
-using PureRadio.LocalRadioManage.DataModelsL;
-using PureRadio.LocalRadioManage.LocalService.Storage;
+using PureRadio.LocalManage.LocalService.Local;
+using PureRadio.LocalManage.DataModelsL;
+using PureRadio.LocalManage.LocalService.Storage;
 using LocalRadioManage.StorageOperate;
 using Windows.Storage;
+using PureRadio.LocalManage.Iterfaces;
+using LocalRadioManage.DBBuilder;
 
-
-namespace PureRadio.LocalRadioManage.LocalService.Service
+namespace PureRadio.LocalManage.LocalService.Service
 {
-    class ChannalOperate
+    class ChannalOperate:IChannalOperate
     {
         public ChannalCardOperate CardOperate = new ChannalCardOperate();
         public ChannalRadioOperate RadioOperate = new ChannalRadioOperate();
         ImgStorage ImageS = new ImgStorage();
         RadioStorage RadioS = new RadioStorage();
 
+        public ChannalOperate()
+        {
+            SQLiteConnect.CreateLocalRadioManage();
+        }
         public async Task<bool> Download(ChannalCardInfo album)
         {
             StorageFile image = await ImageS.DownImage(album.RadioId.ToString(), album.Cover, album.Cover);

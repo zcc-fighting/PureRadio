@@ -31,6 +31,8 @@ using PureRadio.Uwp.Providers.Interfaces;
 using PureRadio.Uwp.Providers;
 using PureRadio.Uwp.Adapters.Interfaces;
 using PureRadio.Uwp.Adapters;
+using PureRadio.LocalManage.Iterfaces;
+using PureRadio.LocalManage.LocalService.Service;
 
 namespace PureRadio
 {
@@ -164,8 +166,14 @@ namespace PureRadio
                             .AddTransient<SettingsViewModel>()
                             .AddTransient<SearchViewModel>()
                             .AddTransient<RadioDetailViewModel>()
-                           // .AddTransient<ContentDetailViewModel>()
+                            .AddTransient<ContentDetailViewModel>()
                             .AddTransient<NativePlayerViewModel>()
+                            //LocalService
+                            .AddSingleton<IChannalOperate, ChannalOperate>()
+                            .AddSingleton<IAlbumOpreate, AlbumOperate>()
+                            .AddSingleton<IUserInformOperate,UserInformsOperate>()
+                            .AddSingleton<IUserAlbumOperate,UserAlbumOperate>()
+                            .AddSingleton<IUserChannalOperate,UserChannalOperate>()
                             // Build
                             .BuildServiceProvider());
             }
