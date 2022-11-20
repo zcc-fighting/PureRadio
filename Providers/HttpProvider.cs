@@ -1,7 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using CommunityToolkit.Mvvm.DependencyInjection;
+using Newtonsoft.Json;
 using PureRadio.Uwp.Models.Data.Constants;
 using PureRadio.Uwp.Models.Enums;
 using PureRadio.Uwp.Providers.Interfaces;
+using PureRadio.Uwp.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,10 +23,17 @@ namespace PureRadio.Uwp.Providers
         private HttpClient _httpClient;
         private bool _disposedValue;
         private CookieContainer _cookieContainer;
+        private readonly ISettingsService _settingsService;
 
-        public HttpProvider(IAccountProvider accountProvider)
+
+
+        public HttpProvider(
+            IAccountProvider accountProvider,
+            ISettingsService settingsService
+            )
         {
             _accountProvider = accountProvider;
+            _settingsService = settingsService;
             InitHttpClient();
         }
 
@@ -170,6 +179,10 @@ namespace PureRadio.Uwp.Providers
 
         public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
+            if (_settingsService.GetValue<bool>(AppConstants.SettingsKey.IsOffline))
+            {
+                return null;
+            }
             HttpResponseMessage response = null;
             try
             {
@@ -185,6 +198,10 @@ namespace PureRadio.Uwp.Providers
         /// <inheritdoc/>
         public async Task<T> ParseAsync<T>(HttpResponseMessage response)
         {
+            if(response is null)
+            {
+                return System.Activator.CreateInstance<T>();
+            }
             var responseString = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<T>(responseString);
         }

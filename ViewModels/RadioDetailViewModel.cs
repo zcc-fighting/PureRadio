@@ -22,11 +22,14 @@ using Windows.Media.Editing;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Imaging;
+using LocalRadioManage.LocalService;
+using static LocalRadioManage.LocalService.LocalServ;
 
 namespace PureRadio.Uwp.ViewModels
 {
     public sealed partial class RadioDetailViewModel : ObservableRecipient
     {
+        private readonly LocalDown localDown;
         private readonly INavigateService navigate;
         private readonly IPlaybackService playbackService;
         private readonly IRadioProvider radioProvider;
@@ -185,13 +188,18 @@ namespace PureRadio.Uwp.ViewModels
             _refreshTimer.Stop();
             UpdateRadioLiveInfo();
         }
-
+        //添加到播放
         public void PlayRadioLive()
         {
             if(itemSnapshot.Duration != 0)
             {
                 playbackService.PlayRadioLive(RadioId, itemSnapshot);
             }
+        }
+        //添加到库
+        public void AddFavRadio()
+        {
+            //localDown
         }
 
         public void PlayRadioDemand(int index)

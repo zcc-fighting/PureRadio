@@ -93,6 +93,19 @@ namespace PureRadio.Uwp.ViewModels
         [ObservableProperty]
         private bool _clearingCache;
 
+
+        private bool _isOffline;
+
+        public bool IsOffline
+        {
+            get => _isOffline;
+            set
+            {
+                SetProperty(ref _isOffline, value);
+                settings.SetValue<bool>(AppConstants.SettingsKey.IsOffline,_isOffline);
+            }
+        }
+
         public SettingsViewModel(ISettingsService settings)
         {
             this.settings = settings;
@@ -106,6 +119,7 @@ namespace PureRadio.Uwp.ViewModels
             savedLanguage = _language = settings.GetValue<string>(AppConstants.SettingsKey.ConfigLanguage) ?? AppConstants.SettingsValue.Auto;
             _timerStatus = settings.TimerStatus;
             _closeTime = settings.ShutdownTimeString;
+            _isOffline = settings.GetValue<bool>(AppConstants.SettingsKey.IsOffline);
             Delay = null;
         }
 
@@ -137,5 +151,7 @@ namespace PureRadio.Uwp.ViewModels
         {
             ClearingCache = true;
         }
+
+        
     }
 }

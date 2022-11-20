@@ -8,18 +8,23 @@ using System.Threading.Tasks;
 namespace PureRadio.Uwp.Models.Data.Radio
 {
     /// <summary>
-    /// 电台搜索结果视图项
+    /// 电台结果视图项
     /// </summary>
     public class RadioInfoCard
     {
-        public RadioInfoCard(int radioId, string title, string cover, string description, string audienceCount,string nowplaying)
+        public RadioInfoCard(int radioId, int programId,string title, string programTitle,
+            string cover,string description, string audienceCount, string nowplaying,
+            TimeSpan updateTime)
         {
             RadioId = radioId;
+            ProgramId = programId;
             Title = title;
+            ProgramTitle = programTitle;
             Cover = new Uri(cover);
             Description = description;
             AudienceCount = audienceCount;
             Nowplaying = nowplaying;
+            UpdateTime = updateTime;
         }
 
         /// <summary>
@@ -27,9 +32,17 @@ namespace PureRadio.Uwp.Models.Data.Radio
         /// </summary>
         public int RadioId { get; set; }
         /// <summary>
+        /// 节目ID
+        /// </summary>
+        public int ProgramId { get; set; }
+        /// <summary>
         /// 电台标题
         /// </summary>
         public string Title { get; set; }
+        /// <summary>
+        /// 电台标题
+        /// </summary>
+        public string ProgramTitle { get; set; }
         /// <summary>
         /// 电台封面图片(URL)
         /// </summary>
@@ -46,5 +59,9 @@ namespace PureRadio.Uwp.Models.Data.Radio
         /// 正在播放的节目
         /// </summary>
         public string Nowplaying { get; set; }
+        /// <summary>
+        /// 需更新时间
+        /// </summary>
+        public TimeSpan UpdateTime { get; set; }
     }
 }

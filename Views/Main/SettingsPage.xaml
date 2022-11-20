@@ -233,6 +233,42 @@
                         </Grid>
                     </muxc:Expander.Content>
                 </muxc:Expander>
+                <!-- Offline -->
+                <Grid
+                    Margin="0,4,0,0"
+                    CornerRadius="4"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    Height="68">
+                    <animations:Implicit.Animations>
+                        <animations:OffsetAnimation Duration="0:0:0.2"/>
+                    </animations:Implicit.Animations>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <FontIcon 
+                        Margin="16,0,0,0"                                
+                        Grid.Column="0"                                
+                        Width="24"                                
+                        Height="24"                                
+                        FontFamily="{StaticResource FluentIcons}"                                
+                        Glyph="&#xE701;"/>
+                    <TextBlock                                 
+                        x:Uid="PageSettingsOfflineModeTitle"                                
+                        Grid.Column="1"                                
+                        VerticalAlignment="Center"                                
+                        Margin="16,0,0,0"                                
+                        Text="Offline Mode"/>
+                    <ToggleSwitch 
+                        Margin="16,0,16,0"
+                        MinWidth="100"
+                        Grid.Column="2"
+                        IsOn="{x:Bind ViewModel.IsOffline,Mode=TwoWay}" />
+                </Grid>
                 <!-- Cache -->
                 <Grid
                     Margin="0,4,0,0"
