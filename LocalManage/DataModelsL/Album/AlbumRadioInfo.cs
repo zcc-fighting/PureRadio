@@ -36,7 +36,5 @@ namespace PureRadio.LocalRadioManage.DataModelsL
         public Uri LocalUri { get; set; }
 
         public Uri RemoteUri { get; set; }
-
-
     }
 }
