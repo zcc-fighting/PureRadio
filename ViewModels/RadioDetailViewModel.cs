@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Uwp.UI;
 using PureRadio.Uwp.Adapters;
 using PureRadio.Uwp.Adapters.Interfaces;
@@ -22,14 +22,12 @@ using Windows.Media.Editing;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Imaging;
-using LocalRadioManage.LocalService;
-using static LocalRadioManage.LocalService.LocalServ;
+
 
 namespace PureRadio.Uwp.ViewModels
 {
     public sealed partial class RadioDetailViewModel : ObservableRecipient
     {
-        private readonly LocalDown localDown;
         private readonly INavigateService navigate;
         private readonly IPlaybackService playbackService;
         private readonly IRadioProvider radioProvider;

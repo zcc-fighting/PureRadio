@@ -164,7 +164,7 @@ namespace PureRadio
                             .AddTransient<SettingsViewModel>()
                             .AddTransient<SearchViewModel>()
                             .AddTransient<RadioDetailViewModel>()
-                            .AddTransient<ContentDetailViewModel>()
+                           // .AddTransient<ContentDetailViewModel>()
                             .AddTransient<NativePlayerViewModel>()
                             // Build
                             .BuildServiceProvider());
