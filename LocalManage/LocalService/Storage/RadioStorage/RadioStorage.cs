@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using LocalRadioManage.StorageOperate;
 
-namespace PureRadio.LocalManage.LocalService.Storage
+namespace PureRadio.LocalManage.LocalService.StorageL
 {
     class RadioStorage
     {
@@ -35,12 +35,12 @@ namespace PureRadio.LocalManage.LocalService.Storage
         {
             StorageFolder root_folder = await MyFolder.CreateFolder(RadioFolderName);
             MyFile.CreateFileProgress create = new MyFile.CreateFileProgress();
-            StorageFile file = await create.CreateFile(root_folder, first_uri);
+            StorageFile file = await create.CreateFile(root_folder, first_uri, false, true);
             if (file != null)
             {
                 return file;
             }
-            file = await create.CreateFile(root_folder, second_uri);
+            file = await create.CreateFile(root_folder, second_uri, false, true);
             return file;
         }
 

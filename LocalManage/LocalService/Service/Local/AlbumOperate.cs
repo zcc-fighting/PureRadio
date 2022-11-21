@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 using System.Threading.Tasks;
 using PureRadio.LocalManage.LocalService.Local;
 using PureRadio.LocalManage.DataModelsL;
-using PureRadio.LocalManage.LocalService.Storage;
+using PureRadio.LocalManage.LocalService.StorageL;
 using LocalRadioManage.StorageOperate;
 using Windows.Storage;
 using PureRadio.LocalManage.Iterfaces;
@@ -33,6 +34,7 @@ namespace PureRadio.LocalManage.LocalService.Service
                 return false;
             }
             album.LocalCover =new Uri(image.Path);
+            
             return Fav(album);
         }
         public async Task<bool> Download(AlbumCardInfo album,AlbumRadioInfo radio)

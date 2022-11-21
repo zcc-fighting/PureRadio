@@ -40,7 +40,7 @@ namespace LocalRadioManage.StorageOperate
             }
            public Progress progress = new Progress();
 
-            public  async Task<StorageFile> CreateFile(StorageFolder root_folder, Uri uri)
+            public  async Task<StorageFile> CreateFile(StorageFolder root_folder, Uri uri,bool is_img,bool is_radio)
             {
                 StorageFile temp_file = null;
                 StorageFile store_file = null;
@@ -49,6 +49,33 @@ namespace LocalRadioManage.StorageOperate
                 try
                 {
                     file_name = HttpUtility.UrlDecode(uri.Segments.Last());
+                    string extension=Path.GetExtension(file_name);
+                    if (is_img)
+                    {
+                        if (extension == "")
+                        {
+                            file_name += ".jpg";
+                        }
+                        else if (extension != ".jpg" && extension != ".JPG" && extension != ".jpeg" && extension != ".JPEG" && extension != ".PNG" && extension != ".png")
+                        {
+                            file_name.Replace(extension, ".jpg");
+                        }
+                    }
+                    if (is_radio)
+                    {
+                        if (extension != ".aac" && extension != ".AAC" && extension != ".mp3" && extension != ".MP3")
+                        {
+                            if (extension == "")
+                            {
+                                file_name += ".aac";
+                            }
+                            else
+                            {
+                                file_name.Replace(extension, ".aac");
+                            }
+                        }
+                    }
+                    
                     store_file = await MyFile.GetFile(root_folder, file_name);
                     if (store_file != null)
                     {
