@@ -229,7 +229,6 @@
     <Compile Include="Models\Enums\PageIds.cs" />
     <Compile Include="Models\Enums\PlaylistDay.cs" />
     <Compile Include="Models\Enums\RequestType.cs" />
-    <Compile Include="Models\LocalMan\TestDateModel.cs" />
     <Compile Include="Models\Local\IncrementalLoadingObservableCollection.cs" />
     <Compile Include="Models\Local\PlayItemSnapshot.cs" />
     <Compile Include="Models\Local\PlayStateSnapshot.cs" />
@@ -305,10 +304,7 @@
     <Compile Include="ViewModels\ContentDetailViewModel.cs" />
     <Compile Include="ViewModels\FullScreenPlayerViewModel.cs" />
     <Compile Include="ViewModels\LibraryViewModel.cs" />
-    <Compile Include="ViewModels\AppViewModel.cs" />
     <Compile Include="ViewModels\DownloadViewModel.cs" />
-    <Compile Include="ViewModels\LocalRadioManageViewModel\LocalLibraryViewModel.cs" />
-    <Compile Include="ViewModels\LocalRadioManageViewModel\LocalUserLogViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\NativePlayerViewModel.cs" />
     <Compile Include="ViewModels\RadioCategoryViewModel.cs" />
