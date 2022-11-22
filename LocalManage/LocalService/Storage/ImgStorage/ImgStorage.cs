@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using LocalRadioManage.StorageOperate;
 
-namespace PureRadio.LocalManage.LocalService.Storage
+namespace PureRadio.LocalManage.LocalService.StorageL
 {
     class ImgStorage
     {
@@ -36,12 +37,13 @@ namespace PureRadio.LocalManage.LocalService.Storage
         public async Task<StorageFile> DownImage(string ImageFolderNmae,Uri first_uri,Uri second_uri)
         {
             StorageFolder root_folder =await MyFolder.CreateFolder(ImageFolderNmae);
-            StorageFile file = await MyFile.CreateFile(root_folder, first_uri);
+            MyFile.CreateFileProgress create = new MyFile.CreateFileProgress();
+            StorageFile file =await create.CreateFile(root_folder, first_uri,true,false);
             if (file != null)
             {
                 return file;
             }
-            file = await MyFile.CreateFile(root_folder, second_uri);
+            file = await create.CreateFile(root_folder, first_uri, true, false);
             return file;
         }
 

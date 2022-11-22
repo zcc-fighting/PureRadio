@@ -18,6 +18,7 @@ namespace PureRadio.LocalManage.LocalService.User
 
         public UserChannalCardOperate()
         {
+            SQLiteConnect.CreateLocalRadioManage();
             SelectedCol = SQLiteConnect.TableHandle.GetColNames(TableName).ToList();
 
         }

@@ -8,6 +8,8 @@ using PureRadio.LocalManage.DataModelsL;
 using PureRadio.Uwp.Models.Data.Constants;
 using PureRadio.Uwp.Providers.Interfaces;
 using PureRadio.Uwp.Providers;
+using PureRadio.Uwp.Services.Interfaces;
+using PureRadio.Uwp.Adapters.Interfaces;
 using PureRadio.Uwp.Models.Enums;
 using PureRadio.Uwp.Services.Interfaces;
 using PureRadio.Uwp.Adapters.Interfaces;
@@ -18,9 +20,7 @@ namespace PureRadio.LocalManage.Adapters
     {
         private static readonly ISettingsService settingsService;
         private static readonly IAccountAdapter accountAdapter;
-        private static readonly IAccountProvider accountProvider=new AccountProvider(settingsService,
-            accountAdapter);
-
+        private static readonly IAccountProvider _accountProvider=new  AccountProvider(settingsService,accountAdapter);
         public static  ContentPlaylistDetail  ToContentPlaylistDetail(AlbumRadioInfo radio)
         {
             ContentPlaylistDetail detail = new ContentPlaylistDetail
