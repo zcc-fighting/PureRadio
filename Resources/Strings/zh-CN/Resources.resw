@@ -273,6 +273,9 @@
   <data name="LogoutDialogSuccessTip.Title" xml:space="preserve">
     <value>退出成功</value>
   </data>
+  <data name="MFDownloadDetailListItem.Text" xml:space="preserve">
+    <value>下载</value>
+  </data>
   <data name="navContent.Content" xml:space="preserve">
     <value>节目</value>
   </data>

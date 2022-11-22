@@ -119,7 +119,6 @@ namespace PureRadio.Uwp.ViewModels
             savedLanguage = _language = settings.GetValue<string>(AppConstants.SettingsKey.ConfigLanguage) ?? AppConstants.SettingsValue.Auto;
             _timerStatus = settings.TimerStatus;
             _closeTime = settings.ShutdownTimeString;
-            settings.SetValue(AppConstants.SettingsKey.IsOffline, false);
             _isOffline = settings.GetValue<bool>(AppConstants.SettingsKey.IsOffline);
             Delay = null;
         }

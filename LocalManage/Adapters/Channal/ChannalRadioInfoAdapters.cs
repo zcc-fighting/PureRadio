@@ -11,6 +11,7 @@ namespace PureRadio.LocalManage.Adapters
 {
     class ChannalRadioInfoAdapters
     {
+       
 
         public static RadioPlaylistDetail ToRadioPlaylistDetail(ChannalRadioInfo info)
         {

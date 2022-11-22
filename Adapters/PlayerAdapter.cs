@@ -1,9 +1,13 @@
-﻿using PureRadio.Uwp.Adapters.Interfaces;
+﻿using CommunityToolkit.Mvvm.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
+using PureRadio.LocalManage.DataModelsL;
+using PureRadio.Uwp.Adapters.Interfaces;
 using PureRadio.Uwp.Models.Data.Constants;
 using PureRadio.Uwp.Models.Data.Content;
 using PureRadio.Uwp.Models.Data.Radio;
 using PureRadio.Uwp.Models.Enums;
 using PureRadio.Uwp.Models.Local;
+using PureRadio.Uwp.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,9 +62,29 @@ namespace PureRadio.Uwp.Adapters
             return new PlayItemSnapshot(
                 MediaPlayType.RadioDemand, sourceUri, cover, item.Title, radioTitle, item.RadioId, item.ProgramId, item.Duration, item.StartTime, item.EndTime, dayOfWeek);
         }
+        private PlayItemSnapshot ConvertToLocalPlayItemSnapshot(ChannalRadioInfo item, Uri cover, string radioTitle)
+        {
+            int duration = 0;
+            if (TimeSpan.TryParse(item.StartTime, out TimeSpan startSpan) && TimeSpan.TryParse(item.EndTime, out TimeSpan endSpan))
+            {
+                duration = (int)(endSpan - startSpan).TotalSeconds;
+                if (item.EndTime == "23:59:00") duration += 60;
+            }
+            string targetDay = item.Date.ToString("yyyyMMdd");
+            Uri sourceUri = new(String.Format(ApiConstants.Radio.OnLocalDemand, item.RadioId, item.RadioId, targetDay, item.StartTime.Replace(":", string.Empty), item.EndTime.Replace(":", string.Empty)));
+            return new PlayItemSnapshot(
+                MediaPlayType.RadioDemand, sourceUri, cover, item.Title, radioTitle, item.RadioId, item.ProgramId, duration, item.StartTime, item.EndTime, DayOfWeek.Sunday);
+        }
         public List<PlayItemSnapshot> ConvertToPlayItemSnapshotList(RadioInfoDetail detail, List<RadioPlaylistDetail> playlist)
         {
             return playlist.Select(p => ConvertToPlayItemSnapshot(p, detail.Cover, detail.Title)).ToList();
+        }
+        public List<PlayItemSnapshot> ConvertToLocalPlayItemSnapshotList(RadioInfoDetail detail, List<ChannalRadioInfo> playlist)
+        {
+
+
+
+            return playlist.Select(p => ConvertToLocalPlayItemSnapshot(p, detail.Cover, detail.Title)).ToList();
         }
 
         private PlayItemSnapshot ConvertToPlayItemSnapshot(ContentPlaylistDetail item, int contentId, string contentTitle)

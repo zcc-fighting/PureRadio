@@ -253,7 +253,7 @@ namespace PureRadio.Uwp.ViewModels
                     }
                     else
                     {
-                        var cover = (await ImageCache.Instance.GetFromCacheAsync(playItem.Cover)) ?? new BitmapImage(new Uri("ms-appx:///Assets/Image/DefaultCover.png"));
+                        var cover = new BitmapImage(playItem.Cover ?? new Uri("ms-appx:///Assets/Image/DefaultCover.png"));
                         cover.DecodePixelHeight = Cover.DecodePixelWidth = 400;
                         cover.DecodePixelType = DecodePixelType.Logical;
                         Cover = cover;

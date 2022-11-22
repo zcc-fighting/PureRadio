@@ -18,10 +18,7 @@ namespace PureRadio.Views
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
 
-
-
-
-        public sealed partial class DownloadPage : Page
+    public sealed partial class DownloadPage : Page
     {
         DownloadViewModel DownloadView = new DownloadViewModel();
 

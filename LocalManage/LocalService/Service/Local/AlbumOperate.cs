@@ -13,7 +13,7 @@ using LocalRadioManage.DBBuilder;
 
 namespace PureRadio.LocalManage.LocalService.Service
 {
-    class AlbumOperate : IAlbumOpreate
+    public class AlbumOperate : IAlbumOpreate
     {
         public AlbumCardOperate CardOperate = new AlbumCardOperate();
         public AlbumRadioOperate RadioOperate = new AlbumRadioOperate();

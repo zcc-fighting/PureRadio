@@ -7,6 +7,7 @@ using PureRadio.Uwp.Models.Enums;
 using PureRadio.Uwp.Models.Local;
 using PureRadio.Uwp.Providers.Interfaces;
 using PureRadio.Uwp.Services.Interfaces;
+using PureRadio.Uwp.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -234,15 +235,18 @@ namespace PureRadio.Uwp.Services
 
         }
 
-        public async void PlayRadioLive(int radioId)
+        public async void PlayRadioLive(int radioId, RadioInfoDetail radioInfoDetail)
         {
             var detail = await _radioProvider.GetRadioDetailInfo(radioId, CancellationToken.None);
-            PlayRadioLive(radioId, _playerAdapter.ConvertToPlayItemSnapshot(detail));
+            PlayRadioLive(radioId, _playerAdapter.ConvertToPlayItemSnapshot(detail),radioInfoDetail);
         }
 
-        public async void PlayRadioLive(int radioId, PlayItemSnapshot playItem)
+        public async void PlayRadioLive(int radioId, PlayItemSnapshot playItem, RadioInfoDetail radioInfoDetail)
         {
-            var detail = await _radioProvider.GetRadioDetailInfo(radioId, CancellationToken.None);
+            RadioInfoDetail detail;
+            if (_settingsService.GetValue<bool>(AppConstants.SettingsKey.IsOffline))
+                 detail = radioInfoDetail;
+            else detail = await _radioProvider.GetRadioDetailInfo(radioId, CancellationToken.None);
             AdaptiveMediaSourceCreationResult result = await AdaptiveMediaSource.CreateFromUriAsync(playItem.SourceUri, _liveStream);
             if (result.Status == AdaptiveMediaSourceCreationStatus.Success)
             {
@@ -542,7 +546,7 @@ namespace PureRadio.Uwp.Services
             switch (_currentType)
             {
                 case MediaPlayType.RadioLive:
-                    PlayRadioLive(_playItem.MainId);
+                    PlayRadioLive(_playItem.MainId, RadioDetailViewModel.GetRadioInfoDetail()) ;
                     break;
                 case MediaPlayType.RadioDemand:
                     SetPosition(0);

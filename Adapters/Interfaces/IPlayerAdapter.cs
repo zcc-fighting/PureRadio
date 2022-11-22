@@ -1,4 +1,5 @@
-﻿using PureRadio.Uwp.Models.Data.Content;
+﻿using PureRadio.LocalManage.DataModelsL;
+using PureRadio.Uwp.Models.Data.Content;
 using PureRadio.Uwp.Models.Data.Radio;
 using PureRadio.Uwp.Models.Enums;
 using PureRadio.Uwp.Models.Local;
@@ -40,6 +41,12 @@ namespace PureRadio.Uwp.Adapters.Interfaces
         /// <param name="item">播放项快照</param>
         /// <returns> <see cref="PlayItemSnapshot"/></returns>
         List<PlayItemSnapshot> ConvertToPlayItemSnapshotList(RadioInfoDetail detail, List<RadioPlaylistDetail> playlist);
+        /// <summary>
+        /// 将本地电台详细信息 <see cref="RadioPlaylistDetail"/> 和节目列表 <see cref="ChannalRadioInfo"/> 转换为播放项快照 <see cref="PlayItemSnapshot"/>.
+        /// </summary>
+        /// <param name="item">播放项快照</param>
+        /// <returns> <see cref="PlayItemSnapshot"/></returns>
+        List<PlayItemSnapshot> ConvertToLocalPlayItemSnapshotList(RadioInfoDetail detail, List<ChannalRadioInfo> playlist);
         /// <summary>
         /// 将内容详细信息 <see cref="ContentInfoDetail"/> 和播放列表 <see cref="ContentPlaylistDetail"/> 转换为播放项快照 <see cref="PlayItemSnapshot"/>.
         /// </summary>

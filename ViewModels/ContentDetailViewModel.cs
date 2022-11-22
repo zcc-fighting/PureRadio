@@ -1,8 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Toolkit.Uwp.UI;
+using PureRadio.LocalManage.Adapters;
+using PureRadio.LocalManage.DataModelsL;
+using PureRadio.LocalManage.Iterfaces;
 using PureRadio.Uwp.Adapters.Interfaces;
 using PureRadio.Uwp.Models.Args;
+using PureRadio.Uwp.Models.Data.Constants;
 using PureRadio.Uwp.Models.Data.Content;
 using PureRadio.Uwp.Models.Enums;
 using PureRadio.Uwp.Models.Local;
@@ -23,6 +27,8 @@ namespace PureRadio.Uwp.ViewModels
 {
     public sealed partial class ContentDetailViewModel : ObservableRecipient
     {
+        private readonly ISettingsService settings;
+        private readonly IAlbumOpreate contentServ;
         private readonly IPlaybackService playbackService;
         private readonly INavigateService navigate;
         private readonly ILibraryService library;
@@ -43,10 +49,16 @@ namespace PureRadio.Uwp.ViewModels
                 GetContentDetail();
             }
         }
+        static ContentInfoDetail currentDetail;
+        private AlbumCardInfo _albumCardInfo;
         public IAsyncRelayCommand ToggleFavCommand { get; }
 
         [ObservableProperty]
         private bool _isFav;
+        [ObservableProperty]
+        private bool _isOffline;
+        [ObservableProperty]
+        private bool _isNotOffline;
         [ObservableProperty]
         private BitmapImage _cover;
         [ObservableProperty]
@@ -65,6 +77,7 @@ namespace PureRadio.Uwp.ViewModels
         [ObservableProperty]
         private List<ContentPlaylistDetail> _contentPlaylists;
 
+        public List<ContentPlaylistDetail> localContentList=new List<ContentPlaylistDetail>();
         [ObservableProperty]
         private bool _isInfoLoading;
 
@@ -72,17 +85,23 @@ namespace PureRadio.Uwp.ViewModels
         private bool _isPlaylistLoading;
 
         public ContentDetailViewModel(
+            ISettingsService settings,
+            IAlbumOpreate contentServ,
             IPlaybackService playbackService,
             INavigateService navigate,
             ILibraryService library, 
             IContentProvider contentProvider,
             IPlayerAdapter playerAdapter)
         {
+            this.contentServ = contentServ;
             this.playbackService = playbackService;
             this.navigate = navigate;
             this.library = library;
             this.contentProvider = contentProvider;
             this.playerAdapter = playerAdapter;
+            this.settings = settings;
+            IsOffline = settings.GetValue<bool>(AppConstants.SettingsKey.IsOffline);
+            IsNotOffline = !IsOffline;
             Cover = new BitmapImage(new Uri("ms-appx:///Assets/Image/DefaultCover.png"));
             ToggleFavCommand = new AsyncRelayCommand(ToggleFavState);
             IsActive = true;
@@ -167,7 +186,11 @@ namespace PureRadio.Uwp.ViewModels
 
         public void PlayContent(int programId = 0)
         {
-            if (ContentId != 0)
+            if(IsOffline)
+            {
+
+            }
+            else if (ContentId != 0)
             {
                 if (programId == 0) programId = ContentPlaylists[0].ProgramId;
                 //var playlist = playerAdapter.ConvertToPlayItemSnapshotList(_contentDetail, ContentPlaylists);
@@ -198,6 +221,46 @@ namespace PureRadio.Uwp.ViewModels
                 navigate.NavigateToSecondaryView(PageIds.ContentCategory, new EntranceNavigationTransitionInfo(), new ContentCategoryEventArgs(
                     attributes.CategoryId, attributes.AttrId, attributes.Name));
             }
+        }
+
+        public async void DownloadContentDetailListItem(ContentPlaylistDetail contentPlaylistDetail)
+        {
+            await contentServ.Download(AlbumCardInfoAdapter.ToAlbumCardInfo(_contentDetail),
+               await AlbumRadioInfoAdapters.ToAlbumRadioInfo(_contentDetail.ContentId,contentPlaylistDetail));
+        }
+
+        public void GetLocalContentDetail(AlbumCardInfo albumCardInfo)
+        {
+            IsInfoLoading = true;
+            _albumCardInfo = albumCardInfo;
+            var result = AlbumCardInfoAdapter.ToContentInfoDetail(albumCardInfo);
+            currentDetail = result;
+            Cover = new BitmapImage(result.Cover);
+            Title = result.Title;
+            Podcasters = result.Podcasters;
+            PlayCount = result.PlayCount;
+            Rating = result.Rating;
+            Description = result.Description;
+            Attributes = result.Attributes;
+            _version = result.Version;
+            _contentDetail = result;
+            itemSnapshot = playerAdapter.ConvertToPlayItemSnapshot(result);
+            IsInfoLoading = false;
+        }
+        public void GetLocalContentDetailList(AlbumCardInfo albumCardInfo)
+        {
+            IsPlaylistLoading = true;
+            _albumCardInfo = albumCardInfo;
+
+            foreach (var item in contentServ.Load(albumCardInfo))
+            {
+                localContentList.Add(AlbumRadioInfoAdapters.ToContentPlaylistDetail(item));
+            }
+            IsPlaylistLoading = false;
+        }
+        public static ContentInfoDetail GetRadioInfoDetail()
+        {
+            return currentDetail;
         }
     }
 }

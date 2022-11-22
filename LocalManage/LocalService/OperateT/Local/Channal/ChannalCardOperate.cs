@@ -10,13 +10,14 @@ using LocalRadioManage.DBBuilder;
 
 namespace PureRadio.LocalManage.LocalService.Local
 {
-    class ChannalCardOperate
+    public class ChannalCardOperate
     {
         public readonly string TableName = ChannalCard.TableName;
         private List<string> SelectedCol = new List<string>();
 
         public ChannalCardOperate()
         {
+            SQLiteConnect.CreateLocalRadioManage();
             SelectedCol = SQLiteConnect.TableHandle.GetColNames(TableName).ToList();
         }
 

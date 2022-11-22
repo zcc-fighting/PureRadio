@@ -305,7 +305,6 @@
     <Compile Include="ViewModels\ContentDetailViewModel.cs" />
     <Compile Include="ViewModels\FullScreenPlayerViewModel.cs" />
     <Compile Include="ViewModels\LibraryViewModel.cs" />
-    <Compile Include="ViewModels\AppViewModel.cs" />
     <Compile Include="ViewModels\DownloadViewModel.cs" />
     <Compile Include="ViewModels\LocalRadioManageViewModel\LocalLibraryViewModel.cs" />
     <Compile Include="ViewModels\LocalRadioManageViewModel\LocalUserLogViewModel.cs" />
@@ -320,6 +319,9 @@
     </Compile>
     <Compile Include="Views\Main\LibraryPage.xaml.cs">
       <DependentUpon>LibraryPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Main\LocalLibraryPage.xaml.cs">
+      <DependentUpon>LocalLibraryPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Main\SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
@@ -516,6 +518,10 @@
     <Page Include="Views\Main\LibraryPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Main\LocalLibraryPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Main\SettingsPage.xaml">
       <Generator>MSBuild:Compile</Generator>

@@ -33,6 +33,7 @@ using PureRadio.Uwp.Adapters.Interfaces;
 using PureRadio.Uwp.Adapters;
 using PureRadio.LocalManage.Iterfaces;
 using PureRadio.LocalManage.LocalService.Service;
+using PureRadio.ViewModels.LocalRadioManageViewModels;
 
 namespace PureRadio.Uwp
 {
@@ -166,6 +167,7 @@ namespace PureRadio.Uwp
                             // Viewmodels
                             .AddTransient<MainViewModel>()
                             .AddTransient<LibraryViewModel>()
+                            .AddTransient<LocalLibraryViewModel>()
                             .AddTransient<SettingsViewModel>()
                             .AddTransient<SearchViewModel>()
                             .AddTransient<RadioDetailViewModel>()

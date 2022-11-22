@@ -1,6 +1,8 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Toolkit.Uwp.UI;
+using PureRadio.LocalManage.DataModelsL;
+using PureRadio.LocalManage.Iterfaces;
 using PureRadio.Uwp.Adapters;
 using PureRadio.Uwp.Adapters.Interfaces;
 using PureRadio.Uwp.Models.Args;
@@ -24,12 +26,17 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Media.Imaging;
-
+using PureRadio.LocalManage.Adapters;
+using PureRadio.Uwp.Models.Data.Constants;
+using LocalRadioManage.StorageOperate;
+using Windows.Storage;
 
 namespace PureRadio.Uwp.ViewModels
 {
     public sealed partial class RadioDetailViewModel : ObservableRecipient
     {
+        private readonly ISettingsService settings;
+        private readonly IChannalOperate radioServ;
         private readonly INavigateService navigate;
         private readonly IPlaybackService playbackService;
         private readonly ILibraryService library;
@@ -53,11 +60,18 @@ namespace PureRadio.Uwp.ViewModels
                 GetRadioPlaylist();
             }
         }
-
+        static RadioInfoDetail currentDetail;
+        private ChannalCardInfo _channalCardInfo;
         public IAsyncRelayCommand ToggleFavCommand { get; }
 
         [ObservableProperty]
         private bool _isFav;
+        [ObservableProperty]
+        private bool _isOffline;
+        [ObservableProperty]
+        private bool _isNotOffline;
+        [ObservableProperty]
+        private bool _isItemDownload;
         [ObservableProperty]
         private string _title;
         [ObservableProperty]
@@ -83,23 +97,32 @@ namespace PureRadio.Uwp.ViewModels
         [ObservableProperty]
         private List<RadioPlaylistDetail> _radioPlaylist;
 
+        [ObservableProperty]
+        private List<ChannalRadioInfo> _localRadioList = new List<ChannalRadioInfo>();
+
         private List<RadioPlaylistDetail> PlaylistsBYDay;
         private List<RadioPlaylistDetail> PlaylistsYDay;
         private List<RadioPlaylistDetail> PlaylistsToday;
         private List<RadioPlaylistDetail> PlaylistsTMR;
 
         public RadioDetailViewModel(
+            ISettingsService settings,
+            IChannalOperate radioServ,
             INavigateService navigate, 
             IRadioProvider radioProvider,
             IPlaybackService playbackService,
             ILibraryService library,
             IPlayerAdapter playerAdapter)
         {
+            this.settings = settings;
+            this.radioServ = radioServ;
             this.navigate = navigate;
             this.playbackService = playbackService;
             this.library = library;
             this.radioProvider = radioProvider;
             this.playerAdapter = playerAdapter;
+            IsOffline = settings.GetValue<bool>(AppConstants.SettingsKey.IsOffline);
+            IsNotOffline = !IsOffline;
             _refreshTimer = new DispatcherTimer
             {
                 Interval = TimeSpan.MaxValue,
@@ -147,7 +170,6 @@ namespace PureRadio.Uwp.ViewModels
                 IsFav = await library.IsFavItem(MediaPlayType.RadioLive, RadioId);
             }
         }
-
         private async void GetRadioDetail()
         {
             if(RadioId != 0)
@@ -227,15 +249,22 @@ namespace PureRadio.Uwp.ViewModels
 
         public void PlayRadioLive()
         {
-            if(itemSnapshot.Duration != 0)
+            if (IsOffline)
+                playbackService.PlayRadioLive(_channalCardInfo.RadioId, itemSnapshot, currentDetail);
+            else if (itemSnapshot.Duration != 0)
             {
-                playbackService.PlayRadioLive(RadioId, itemSnapshot);
+                playbackService.PlayRadioLive(RadioId, itemSnapshot,currentDetail);
             }
         }
 
         public void PlayRadioDemand(int index)
         {
-            if (RadioId != 0 && index >= 0 && index < RadioPlaylist.Count())
+            if (IsOffline&& _channalCardInfo.RadioId != 0 && index >= 0 && index < LocalRadioList.Count())
+            {
+                var playList = playerAdapter.ConvertToLocalPlayItemSnapshotList(radioDetail, LocalRadioList);
+                playbackService.PlayRadioDemand(_channalCardInfo.RadioId, index, playList);
+            }
+            else if (RadioId != 0 && index >= 0 && index < RadioPlaylist.Count())
                 switch (currentSource)
                 {
                     case PlaylistDay.Tomorrow:
@@ -244,7 +273,7 @@ namespace PureRadio.Uwp.ViewModels
                     case PlaylistDay.Today:
                         if (DateTime.TryParse(RadioPlaylist[index].EndTime, out DateTime _endDateTime))
                         {
-                            if(DateTime.Now > _endDateTime)
+                            if (DateTime.Now > _endDateTime)
                             {
                                 var playList = playerAdapter.ConvertToPlayItemSnapshotList(radioDetail, RadioPlaylist);
                                 playbackService.PlayRadioDemand(RadioId, index, playList);
@@ -260,6 +289,7 @@ namespace PureRadio.Uwp.ViewModels
                         playbackService.PlayRadioDemand(RadioId, index, snapshotList);
                         break;
                 }
+
         }
 
         public void NavigateToCategory()
@@ -287,7 +317,10 @@ namespace PureRadio.Uwp.ViewModels
 
         private async void UpdateRadioLiveInfo()
         {
-            var detail = await radioProvider.GetRadioDetailInfo(RadioId, CancellationToken.None);
+            RadioInfoDetail detail;
+            if (IsOffline)
+                 detail = ChannalCardInfoAdapters.ToRadioInfoDetail(_channalCardInfo);
+            else detail = await radioProvider.GetRadioDetailInfo(RadioId, CancellationToken.None);
             int count = 0;
             while (detail.RadioId == RadioId && detail.EndTime == radioDetail.EndTime && detail.UpdateTime != TimeSpan.Zero)
             {
@@ -304,9 +337,7 @@ namespace PureRadio.Uwp.ViewModels
             }
             IsInfoLoading = true;
             Title = detail.Title;
-            Cover = await ImageCache.Instance.GetFromCacheAsync(detail.Cover);
-            Cover.DecodePixelHeight = Cover.DecodePixelWidth = 200;
-            Cover.DecodePixelType = DecodePixelType.Logical;
+            Cover = new BitmapImage(detail.Cover);
             Description = detail.Description;
             AudienceCount = detail.AudienceCount;
             Nowplaying = detail.Nowplaying;
@@ -328,7 +359,46 @@ namespace PureRadio.Uwp.ViewModels
             itemSnapshot = playerAdapter.ConvertToPlayItemSnapshot(detail);
             radioDetail = detail;
             IsInfoLoading = false;
-            if (DateTime.Now.Hour == 0 && DateTime.Now.Minute < 2) GetRadioPlaylist();
+            if (DateTime.Now.Hour == 0 && DateTime.Now.Minute < 2)
+                if (IsNotOffline)
+                    GetRadioPlaylist();
+                else
+                    GetLocalRadioDetailList(_channalCardInfo);
+        }
+
+        public async void DownloadRadioDetailListItem(RadioPlaylistDetail radioPlaylistDetail)
+        {
+            await radioServ.Download(ChannalCardInfoAdapters.ToChanalCardInfo(radioDetail),ChannalRadioInfoAdapters.ToChannalRadioInfo(radioPlaylistDetail));
+        }
+
+        public void GetLocalRadioDetail(ChannalCardInfo channalCardInfo)
+        {
+            IsInfoLoading = true;
+            _channalCardInfo = channalCardInfo;
+            var result = ChannalCardInfoAdapters.ToRadioInfoDetail(channalCardInfo);
+            currentDetail = result;
+            Title = result.Title;
+            Cover = new BitmapImage(result.Cover);
+            Description = result.Description;
+            AudienceCount = result.AudienceCount;
+            Nowplaying = result.Nowplaying;
+            TopCategoryTitle = result.TopCategoryTitle;
+            _topCategoryId = result.TopCategoryId;
+            radioDetail = result;
+            itemSnapshot = playerAdapter.ConvertToPlayItemSnapshot(result);
+            IsInfoLoading = false;
+        }
+        public void GetLocalRadioDetailList(ChannalCardInfo channalCardInfo)
+        {
+            IsPlaylistLoading = true;
+            _channalCardInfo = channalCardInfo;
+
+            LocalRadioList = radioServ.Load(channalCardInfo);
+            IsPlaylistLoading = false;
+        }
+        public static RadioInfoDetail GetRadioInfoDetail()
+        {
+            return currentDetail;
         }
     }
 }

@@ -31,7 +31,7 @@ namespace PureRadio.Uwp.Services
         {
             _playbackService = playbackService;
             _sqliteService = sqliteService;
-            _playbackService.PlayerItemChanged += AddItemToHistory;
+            //_playbackService.PlayerItemChanged += AddItemToHistory;
         }
 
         private async void AddItemToHistory(object sender, PlayerItemChangedEventArgs e)

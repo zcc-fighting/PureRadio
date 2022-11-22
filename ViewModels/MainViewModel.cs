@@ -21,11 +21,14 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Media.Imaging;
+using PureRadio.Uwp.Models.Data.Constants;
+
 
 namespace PureRadio.Uwp.ViewModels
 {
     public sealed partial class MainViewModel : ObservableRecipient
     {
+        private readonly ISettingsService settings;
         private readonly INavigateService navigate;// = Ioc.Default.GetRequiredService<INavigateService>();
         private readonly ISearchProvider searchProvider;
         private readonly IAccountProvider accountProvider;
@@ -66,10 +69,12 @@ namespace PureRadio.Uwp.ViewModels
 
 
         public MainViewModel(
+            ISettingsService settings,
             INavigateService navigate, 
             ISearchProvider searchProvider,
             IAccountProvider accountProvider)
         {
+            this.settings = settings;
             this.navigate = navigate;
             this.searchProvider = searchProvider;
             this.accountProvider = accountProvider;
@@ -224,6 +229,11 @@ namespace PureRadio.Uwp.ViewModels
             UserName = accountProvider.AccountInfo.NickName;
             UserPhone = accountProvider.AccountInfo.PhoneNumber;
             UserDescription = accountProvider.AccountInfo.Signature;
+        }
+
+        public bool GetIsOffline()
+        {
+            return settings.GetValue<bool>(AppConstants.SettingsKey.IsOffline);
         }
     }
 }

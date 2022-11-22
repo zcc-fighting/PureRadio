@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.DependencyInjection;
+using PureRadio.LocalManage.DataModelsL;
 using PureRadio.Uwp.Models.Data.Content;
 using PureRadio.Uwp.Models.Data.Radio;
 using PureRadio.Uwp.Models.QingTing.Content;
@@ -41,7 +42,15 @@ namespace PureRadio.Uwp.Views.Secondary
         {
             base.OnNavigatedTo(e);
 
-            ViewModel.ContentId = (int)e.Parameter;
+            if (ViewModel.IsOffline)
+            {
+                ViewModel.GetLocalContentDetail((AlbumCardInfo)e.Parameter);
+                ViewModel.GetLocalContentDetailList((AlbumCardInfo)e.Parameter);
+            }
+            else
+            {
+                ViewModel.ContentId = (int)e.Parameter;
+            }
 
             ConnectedAnimation animation =
                 ConnectedAnimationService.GetForCurrentView().GetAnimation("ContentToDetailAni");
@@ -67,6 +76,17 @@ namespace PureRadio.Uwp.Views.Secondary
             var item = e.ClickedItem as AttributesItem;
             if (item != null)
                 ViewModel.NavigateToCategory(item);
+        }
+
+        private void PlayListView_ItemRightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
+        }
+
+        private void DownloadDetailListItem(object sender, RoutedEventArgs e)
+        {
+            ContentPlaylistDetail contentPlaylistDetail = ((MenuFlyoutItem)sender).DataContext as ContentPlaylistDetail;
+            ViewModel.DownloadContentDetailListItem(contentPlaylistDetail);
         }
     }
 }

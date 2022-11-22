@@ -10,7 +10,7 @@ namespace PureRadio.LocalManage.Iterfaces
     /// <summary>
     /// 结构与IAlbumOperate一致
     /// </summary>
-    interface IChannalOperate
+    public interface IChannalOperate
     {
 
         Task<bool> Download(ChannalCardInfo album);

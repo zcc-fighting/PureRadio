@@ -10,7 +10,7 @@ using LocalRadioManage.DBBuilder;
 
 namespace PureRadio.LocalManage.LocalService.Local
 {
-    class AlbumRadioOperate
+    public class AlbumRadioOperate
     {
         public readonly string TableName = AlbumRadio.TableName;
         private List<string> SelectedCol = new List<string>();

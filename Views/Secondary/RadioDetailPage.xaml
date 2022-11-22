@@ -10,7 +10,7 @@
     xmlns:animatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
     xmlns:convert="using:PureRadio.Uwp.Resources.Converter"
-    xmlns:datamodel="using:PureRadio.Uwp.Models.Data.Radio"
+    xmlns:datamodel="using:PureRadio.Uwp.Models.Data.Radio" xmlns:localmodel="using:PureRadio.LocalManage.DataModelsL"
     mc:Ignorable="d"
     Background="Transparent">
 
@@ -134,6 +134,7 @@
                                 MaxLines="1"
                                 Text="{x:Bind ViewModel.Title, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}"/>
                             <StackPanel 
+                                Visibility="{x:Bind ViewModel.IsNotOffline , Mode=OneWay}"
                                 x:Name="RadioNowPlaying" 
                                 HorizontalAlignment="Stretch"
                                 Orientation="Horizontal"
@@ -142,6 +143,7 @@
                                 <TextBlock Margin="2,0" Text="{x:Bind ViewModel.Nowplaying, Mode=OneWay}" MaxLines="1" TextTrimming="CharacterEllipsis" Style="{StaticResource SubtitleTextBlockStyle}"/>
                             </StackPanel>
                             <StackPanel
+                                Visibility="{x:Bind ViewModel.IsNotOffline , Mode=OneWay}"
                                 x:Name="RadioAudience"
                                 HorizontalAlignment="Left"
                                 Orientation="Horizontal">
@@ -181,8 +183,10 @@
                                     <TextBlock x:Uid="DetailPagePlayButton" Margin="12,0" Text="Play"/>
                                 </StackPanel>
                             </Button>
-                            <Button HorizontalAlignment="Stretch" Margin="0,8"
-                                    Command="{x:Bind ViewModel.ToggleFavCommand}">
+                            <Button 
+                                Visibility="{x:Bind ViewModel.IsNotOffline ,Mode=OneWay}"
+                                HorizontalAlignment="Stretch" Margin="0,8"
+                                Command="{x:Bind ViewModel.ToggleFavCommand}">
                                 <StackPanel Orientation="Horizontal">
                                     <FontIcon FontFamily="{StaticResource FluentIcons}" Glyph="{x:Bind ViewModel.IsFav,Mode=OneWay,Converter={StaticResource FavStateToIconConverter}}"/>
                                     <TextBlock Margin="12,0" Text="{x:Bind ViewModel.IsFav, Mode=OneWay, Converter={StaticResource FavStateToDisplayConverter}}"/>
@@ -205,6 +209,7 @@
                     BorderThickness="1"
                     Background="{ThemeResource LayerFillColorDefaultBrush}">
                     <muxc:NavigationView 
+                        Visibility="{x:Bind ViewModel.IsNotOffline ,Mode=OneWay}"
                         x:Name="NavList" PaneDisplayMode="Top"
                         IsBackEnabled="False" IsBackButtonVisible="Collapsed"
                         IsSettingsVisible="False"
@@ -237,7 +242,14 @@
                                     </ListView.Transitions>
                                     <ListView.ItemTemplate>
                                         <DataTemplate x:Name="RadioPlaylistTemplate" x:DataType="datamodel:RadioPlaylistDetail">
-                                            <Grid VerticalAlignment="Center" Height="60" Margin="8,0">
+                                            <Grid VerticalAlignment="Center" Height="60" Margin="8,0" Background="Transparent"
+                                                  RightTapped="PlayListView_ItemRightTapped" IsRightTapEnabled="True">
+                                                <FlyoutBase.AttachedFlyout>
+                                                    <MenuFlyout>
+                                                        <MenuFlyoutItem x:Uid="MFDownloadDetailListItem" Text="Download"
+                                                                         Click="DownloadDetailListItem"/>
+                                                    </MenuFlyout>
+                                                </FlyoutBase.AttachedFlyout>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition />
                                                     <ColumnDefinition Width="auto"/>
@@ -266,6 +278,53 @@
                             </Grid>
                         </muxc:NavigationView.Content>
                     </muxc:NavigationView>
+                    <Grid
+                        Visibility="{x:Bind ViewModel.IsOffline ,Mode=OneWay}">
+                        <Border
+                                    HorizontalAlignment="Stretch"
+                                    MinHeight="300"
+                                    Visibility="{x:Bind ViewModel.IsPlaylistLoading,Mode=OneWay,Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <muxc:ProgressRing/>
+                        </Border>
+                        <ListView 
+                                    x:Name="LocalPlayListView" 
+                                    ItemsSource="{x:Bind ViewModel.LocalRadioList, Mode=TwoWay}"
+                                    IsItemClickEnabled="True"
+                                    ItemClick="LocalPlayListView_ItemClick">
+                            <ListView.Transitions>
+                                <TransitionCollection>
+                                    <EntranceThemeTransition/>
+                                </TransitionCollection>
+                            </ListView.Transitions>
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:Name="LocalRadioPlaylistTemplate" x:DataType="localmodel:ChannalRadioInfo">
+                                    <Grid VerticalAlignment="Center" Height="60" Margin="8,0" Background="Transparent">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition />
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition Width="auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0"  VerticalAlignment="Center">
+                                            <TextBlock Grid.Column="0" TextTrimming="CharacterEllipsis" MaxLines="1" Text="{x:Bind Title}" Style="{StaticResource BodyTextBlockStyle}"/>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock x:Uid="PageRadioDetailPodcaster" Text="Podcasters: " TextTrimming="CharacterEllipsis" MaxLines="1"
+                                                               Foreground="{ThemeResource CustomNavigationViewItemForeground}"
+                                                               Style="{StaticResource CaptionTextBlockStyle}" />
+                                                <TextBlock Margin="2,0" Text="{x:Bind Broadcasters}" 
+                                                               Foreground="{ThemeResource CustomNavigationViewItemForeground}"
+                                                               Style="{StaticResource CaptionTextBlockStyle}"/>
+                                            </StackPanel>
+                                        </StackPanel>
+
+                                        <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="{x:Bind StartTime}" Style="{StaticResource BodyTextBlockStyle}"/>
+                                        <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="-" Style="{StaticResource BodyTextBlockStyle}"/>
+                                        <TextBlock Grid.Column="3" VerticalAlignment="Center" Text="{x:Bind EndTime}" Style="{StaticResource BodyTextBlockStyle}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Grid>
                 </Grid>
             </StackPanel>
         </ScrollViewer>

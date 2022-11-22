@@ -10,7 +10,7 @@ using LocalRadioManage.DBBuilder;
 
 namespace PureRadio.LocalManage.LocalService.Local
 {
-    class ChannalRadioOperate
+    public class ChannalRadioOperate
     {
         public readonly string TableName = ChannalRadio.TableName;
        

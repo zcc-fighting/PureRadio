@@ -44,9 +44,9 @@ namespace PureRadio.Uwp.Services.Interfaces
         /// </summary>
         event EventHandler<PlayerItemChangedEventArgs> PlayerItemChanged;
 
-        void PlayRadioLive(int radioId);
+        void PlayRadioLive(int radioId, RadioInfoDetail radioInfoDetail);
 
-        void PlayRadioLive(int radioId, PlayItemSnapshot playItem);
+        void PlayRadioLive(int radioId, PlayItemSnapshot playItem,RadioInfoDetail radioInfoDetail);
 
         void PlayRadioDemand(int radioId, int index, PlaylistDay day);
 

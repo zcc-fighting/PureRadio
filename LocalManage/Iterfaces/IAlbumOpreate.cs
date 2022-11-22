@@ -8,7 +8,7 @@ using PureRadio.LocalManage.DataModelsL;
 
 namespace PureRadio.LocalManage.Iterfaces
 {
-    interface IAlbumOpreate
+    public interface IAlbumOpreate
     {
 
         /// <summary>

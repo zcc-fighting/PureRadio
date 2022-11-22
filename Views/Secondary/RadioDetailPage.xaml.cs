@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.DependencyInjection;
+using PureRadio.LocalManage.DataModelsL;
 using PureRadio.Uwp.Models.Data.Radio;
 using PureRadio.Uwp.Models.Enums;
 using PureRadio.Uwp.ViewModels;
@@ -28,7 +29,6 @@ namespace PureRadio.Uwp.Views.Secondary
     public sealed partial class RadioDetailPage : Page
     {
         public RadioDetailViewModel ViewModel => (RadioDetailViewModel)DataContext;
-
         public RadioDetailPage()
         {
             this.InitializeComponent();
@@ -40,7 +40,15 @@ namespace PureRadio.Uwp.Views.Secondary
         {
             base.OnNavigatedTo(e);
 
-            ViewModel.RadioId = (int)e.Parameter;
+            if(ViewModel.IsOffline)
+            {
+                ViewModel.GetLocalRadioDetail((ChannalCardInfo)e.Parameter);
+                ViewModel.GetLocalRadioDetailList((ChannalCardInfo)e.Parameter);
+            }
+            else
+            {
+                ViewModel.RadioId = (int)e.Parameter;
+            }
 
             ConnectedAnimation animation =
                 ConnectedAnimationService.GetForCurrentView().GetAnimation("RadioToDetailAni");
@@ -89,6 +97,25 @@ namespace PureRadio.Uwp.Views.Secondary
                 var navItemTag = args.InvokedItemContainer.Tag.ToString();
                 NavView_Navigate(navItemTag);
             }
+        }
+
+        private void PlayListView_ItemRightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender );
+        }
+
+        private void DownloadDetailListItem(object sender, RoutedEventArgs e)
+        {
+            RadioPlaylistDetail radioPlaylistDetail = ((MenuFlyoutItem)sender).DataContext as RadioPlaylistDetail;
+            ViewModel.DownloadRadioDetailListItem(radioPlaylistDetail);
+        }
+
+        private void LocalPlayListView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var item = e.ClickedItem as ChannalRadioInfo;
+            var list = sender as ListView;
+            int index = list.Items.IndexOf(item);
+            ViewModel.PlayRadioDemand(index);
         }
     }
 }

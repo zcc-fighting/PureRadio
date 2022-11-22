@@ -40,6 +40,7 @@ namespace PureRadio.Uwp.Services
             var args = new AppNavigationEventArgs(NavigationType.Secondary, pageId, parameter, transitionInfo);
             Navigating?.Invoke(this, args);
         }
+        
 
         public void NavigateToPlayView(NavigationTransitionInfo transitionInfo, bool back = false)
         {

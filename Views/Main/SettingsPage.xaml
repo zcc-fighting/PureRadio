@@ -285,7 +285,7 @@
                          Margin="16,0,16,0"
                         x:Name="NetworkToggle" 
                         MinWidth="100"
-                        IsOn="{x:Bind ViewModel.IsOffline, Mode=OneWay,Converter={StaticResource BooleanToDisplayConverter}}" />
+                        IsOn="{x:Bind ViewModel.IsOffline, Mode=TwoWay}" />
                 </Grid>
                 <!-- Cache -->
                 <Grid

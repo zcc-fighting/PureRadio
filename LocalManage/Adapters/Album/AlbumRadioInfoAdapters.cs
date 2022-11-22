@@ -9,16 +9,20 @@ using PureRadio.Uwp.Models.Data.Constants;
 using PureRadio.Uwp.Providers.Interfaces;
 using PureRadio.Uwp.Providers;
 using PureRadio.Uwp.Models.Enums;
+using PureRadio.Uwp.Services.Interfaces;
+using PureRadio.Uwp.Adapters.Interfaces;
 
 namespace PureRadio.LocalManage.Adapters
 {
     class AlbumRadioInfoAdapters
     {
-        private static readonly IAccountProvider _accountProvider;
+        private static readonly ISettingsService settingsService;
+        private static readonly IAccountAdapter accountAdapter;
+        private static readonly IAccountProvider accountProvider=new AccountProvider(settingsService,
+            accountAdapter);
+
         public static  ContentPlaylistDetail  ToContentPlaylistDetail(AlbumRadioInfo radio)
         {
-
-          
             ContentPlaylistDetail detail = new ContentPlaylistDetail
                 (
                 radio.Version,
@@ -44,7 +48,7 @@ namespace PureRadio.LocalManage.Adapters
             info.AlbumId = ContentId;
           
             string url = string.Format(ApiConstants.Content.Play, ContentId, detail.ProgramId);
-            var query = await _accountProvider.GenerateAuthorizedQueryStringAsync(url, null, RequestType.PlayContent, true);
+            var query = await accountProvider.GenerateAuthorizedQueryStringAsync(url, null, RequestType.PlayContent, true);
             url += $"?{query}";
             info.RemoteUri = new Uri(url);
             return info;

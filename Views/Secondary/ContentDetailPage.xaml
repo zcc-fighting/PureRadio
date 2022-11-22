@@ -231,7 +231,14 @@
                         </ListView.Transitions>
                         <ListView.ItemTemplate>
                             <DataTemplate x:Name="RadioPlaylistTemplate" x:DataType="datamodel:ContentPlaylistDetail">
-                                <Grid VerticalAlignment="Center" Height="60" Margin="8,0">
+                                <Grid VerticalAlignment="Center" Height="60" Margin="8,0" 
+                                      Background="Transparent" RightTapped="PlayListView_ItemRightTapped" IsRightTapEnabled="True">
+                                    <FlyoutBase.AttachedFlyout>
+                                        <MenuFlyout>
+                                            <MenuFlyoutItem x:Uid="MFDownloadDetailListItem" Text="Download"
+                                                                         Click="DownloadDetailListItem"/>
+                                        </MenuFlyout>
+                                    </FlyoutBase.AttachedFlyout>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition />
                                         <ColumnDefinition Width="auto"/>

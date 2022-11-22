@@ -10,6 +10,20 @@ namespace PureRadio.LocalManage.Adapters
 {
     class ChannalCardInfoAdapters
     {
+        public static ChannalCardInfo ToChanalCardInfo(RadioInfoDetail detail)
+        {
+            ChannalCardInfo info = new ChannalCardInfo();
+            info.Cover = detail.Cover;
+            info.CityId = detail.CityId;
+            info.Description = detail.Description;
+            info.RadioId = detail.RadioId;
+            info.RegionId = detail.RegionId;
+            info.Title = detail.Title;
+            info.TopCategoryId = detail.TopCategoryId;
+            info.TopCategoryTitle = detail.TopCategoryTitle;
+            info.UpdateTime = detail.UpdateTime.ToString();
+            return info;
+        }
         public static RadioInfoCard ToRadioInfoCard(ChannalCardInfo channal )
         {
             string Cover = "";
@@ -66,5 +80,7 @@ namespace PureRadio.LocalManage.Adapters
                 );
             return detail;
         }
+
+
     }
 }

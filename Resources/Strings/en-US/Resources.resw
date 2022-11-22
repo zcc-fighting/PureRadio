@@ -273,6 +273,9 @@
   <data name="LogoutDialogSuccessTip.Title" xml:space="preserve">
     <value>Sign out successful</value>
   </data>
+  <data name="MFDownloadDetailListItem.Text" xml:space="preserve">
+    <value>Download</value>
+  </data>
   <data name="navContent.Content" xml:space="preserve">
     <value>Content</value>
   </data>

@@ -13,7 +13,7 @@ using LocalRadioManage.DBBuilder;
 
 namespace PureRadio.LocalManage.LocalService.Service
 {
-    class ChannalOperate:IChannalOperate
+    public class ChannalOperate:IChannalOperate
     {
         public ChannalCardOperate CardOperate = new ChannalCardOperate();
         public ChannalRadioOperate RadioOperate = new ChannalRadioOperate();
