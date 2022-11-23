@@ -64,5 +64,40 @@ namespace PureRadio.Uwp.Adapters
                 item.RadioId, new Uri(item.Cover), item.Title, 
                 nowPlaying, item.Description, item.AudienceCount.ToString());
         }
+        public RadioInfoSummary ConvertToRadioInfoSummary(RadioCategoryItem item)
+        {
+            var resourceLoader = new ResourceLoader();
+            string nowPlaying = item.Nowplaying?.Title ?? resourceLoader.GetString("LangLiveProgramUnknown");
+            return new RadioInfoSummary(
+                item.RadioId, new Uri(item.Cover), item.Title,
+                nowPlaying, item.Description, item.AudienceCount.ToString());
+        }
+
+        public RadioInfoRecommend ConvertToRadioInfoRecommend(RadioRecommendItem item)
+        {
+            return new RadioInfoRecommend("https:" + item.Cover, item.Title, item.StartTime, item.EndTime + ":00", item.Nowplaying, item.RadioId);
+        }
+
+        public RadioInfoDetail ConvertToRadioInfoDetail(RecommendRadioLiveItem item)
+        {
+            var resourceLoader = new ResourceLoader();
+            string nowPlaying = item.Nowplaying?.Title ?? resourceLoader.GetString("LangLiveProgramUnknown");
+            if (!int.TryParse(item.RelativeAddr.Replace("/radios/", string.Empty), out int radioId))
+                radioId = 0;
+            return new RadioInfoDetail(
+                radioId, item.Title, "https:" + item.Cover, string.Empty,
+                item.AudienceCount.ToString(), nowPlaying,
+                0, item.Category, 0, 0, TimeSpan.Zero,
+                item.Nowplaying?.StartTime ?? string.Empty, item.Nowplaying?.EndTime ?? string.Empty);
+        }
+
+        public RadioReplayInfo ConvertToRadioReplayInfo(RecommendRadioReplayItem item)
+        {
+            var resourceLoader = new ResourceLoader();
+            if (!int.TryParse(item.RelativeAddr.Replace("/channels/", string.Empty), out int contentId))
+                contentId = 0;
+            string category = string.IsNullOrEmpty(item.Category) ? resourceLoader.GetString("LangRadioCategoryUnknown") : item.Category;
+            return new RadioReplayInfo("https:" + item.Cover, item.Title, item.Playcount, contentId, item.RadioTitle, category);
+        }
     }
 }

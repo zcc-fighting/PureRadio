@@ -246,7 +246,7 @@
                                                   RightTapped="PlayListView_ItemRightTapped" IsRightTapEnabled="True">
                                                 <FlyoutBase.AttachedFlyout>
                                                     <MenuFlyout>
-                                                        <MenuFlyoutItem x:Uid="MFDownloadDetailListItem" Text="Download"
+                                                        <MenuFlyoutItem x:Uid="MFDownloadDetailListItem" Text="Download" HorizontalAlignment="Center"
                                                                          Click="DownloadDetailListItem"/>
                                                     </MenuFlyout>
                                                 </FlyoutBase.AttachedFlyout>

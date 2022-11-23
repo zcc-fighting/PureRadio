@@ -52,7 +52,7 @@ namespace PureRadio.Uwp.Services.Interfaces
 
         void PlayRadioDemand(int radioId, int index, List<PlayItemSnapshot> radioPlaylist);
 
-        void PlayContent(int contentId, int programId, string version);
+        void PlayContent(int contentId, int programId, string version,bool isofline);
 
         void PlayContent(int contentId, int programId, List<PlayItemSnapshot> contentPlaylist);
 

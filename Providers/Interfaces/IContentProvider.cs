@@ -41,5 +41,12 @@ namespace PureRadio.Uwp.Providers.Interfaces
         /// <param name="page">页数.</param>
         /// <returns></returns>
         Task<ResultSet<ContentInfoCategory>> GetContentCategoryResult(int categoryId, CancellationToken cancellationToken, int attrId = 0, int page = 1);
+
+        /// <summary>
+        /// 获取专辑分类推荐结果.
+        /// </summary>
+        /// <param name="cancellationToken">异步中止令牌.</param>
+        /// <returns></returns>
+        Task<List<ContentRecommendSet>> GetContentRecommendResult(CancellationToken cancellationToken);
     }
 }

@@ -10,7 +10,7 @@
     xmlns:animatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
     xmlns:convert="using:PureRadio.Uwp.Resources.Converter" 
-    xmlns:viewmodels="using:PureRadio.Uwp.ViewModels" xmlns:datamodel="using:PureRadio.Uwp.Models.Data.Content" xmlns:qingting="using:PureRadio.Uwp.Models.QingTing.Content"
+    xmlns:viewmodels="using:PureRadio.Uwp.ViewModels" xmlns:datamodel="using:PureRadio.Uwp.Models.Data.Content" xmlns:qingting="using:PureRadio.Uwp.Models.QingTing.Content" xmlns:localdata="using:PureRadio.LocalManage.DataModelsL"
     d:DataContext="{d:DesignInstance Type=viewmodels:ContentDetailViewModel}"
     mc:Ignorable="d"
     Background="Transparent">
@@ -124,6 +124,7 @@
                                 MaxLines="1"
                                 Text="{x:Bind ViewModel.Title, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}"/>
                             <StackPanel 
+                                
                                 x:Name="ContentPodcasters" 
                                 HorizontalAlignment="Left"
                                 Orientation="Horizontal"
@@ -132,6 +133,7 @@
                                 <TextBlock Margin="2,0" Text="{x:Bind ViewModel.Podcasters, Mode=OneWay}" MaxLines="1" TextTrimming="CharacterEllipsis" Style="{StaticResource SubtitleTextBlockStyle}"/>
                             </StackPanel>
                             <StackPanel
+                                Visibility="{x:Bind ViewModel.IsNotOffline ,Mode=OneWay}"
                                 x:Name="ContentPlaycount"
                                 HorizontalAlignment="Left"
                                 Orientation="Horizontal">
@@ -189,7 +191,9 @@
                                     <TextBlock x:Uid="DetailPagePlayButton" Margin="12,0" Text="Play"/>
                                 </StackPanel>
                             </Button>
-                            <Button HorizontalAlignment="Stretch" Margin="0,8"
+                            <Button 
+                                Visibility="{x:Bind ViewModel.IsNotOffline ,Mode=OneWay}"
+                                HorizontalAlignment="Stretch" Margin="0,8"
                                     Command="{x:Bind ViewModel.ToggleFavCommand}">
                                 <StackPanel Orientation="Horizontal">
                                     <FontIcon FontFamily="{StaticResource FluentIcons}" Glyph="{x:Bind ViewModel.IsFav,Mode=OneWay,Converter={StaticResource FavStateToIconConverter}}"/>
@@ -206,6 +210,7 @@
                     </animations:Implicit.Animations>
                 </Grid>
                 <Grid
+                    Visibility="{x:Bind ViewModel.IsNotOffline ,Mode=OneWay}"
                     x:Name="PlayListPanel"
                     Margin="0,8,8,8"
                     CornerRadius="8"
@@ -263,6 +268,65 @@
 
                                     <TextBlock Grid.Column="1" Margin="2,0"  VerticalAlignment="Center" Text="{x:Bind PlayCount}" Style="{StaticResource BodyTextBlockStyle}"/>
                                     <TextBlock x:Uid="LangPlayCount" Grid.Column="2" VerticalAlignment="Center" Text="plays" Style="{StaticResource BodyTextBlockStyle}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    <animations:Implicit.Animations>
+                        <animations:OffsetAnimation Duration="0:0:0.3"/>
+                    </animations:Implicit.Animations>
+                </Grid>
+                <Grid
+                    Visibility="{x:Bind ViewModel.IsOffline,Mode=OneWay}"
+                    x:Name="LocalPlayListPanel"
+                    Margin="0,8,8,8"
+                    CornerRadius="8"
+                    BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}"
+                    BorderThickness="1"
+                    Background="{ThemeResource LayerFillColorDefaultBrush}">
+                    <Border
+                        HorizontalAlignment="Stretch"
+                        MinHeight="300"
+                        Visibility="{x:Bind ViewModel.IsPlaylistLoading,Mode=OneWay,Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <muxc:ProgressRing/>
+                    </Border>
+                    <ListView 
+                        x:Name="LocalPlayListView" 
+                        ItemsSource="{x:Bind ViewModel.LocalContentList, Mode=TwoWay}"
+                        IsItemClickEnabled="True"
+                        SelectionMode="None"
+                        ItemClick="PlayListView_ItemClick">
+                        <ListView.Transitions>
+                            <TransitionCollection>
+                                <EntranceThemeTransition/>
+                            </TransitionCollection>
+                        </ListView.Transitions>
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:Name="LocalRadioPlaylistTemplate" x:DataType="localdata:AlbumRadioInfo">
+                                <Grid VerticalAlignment="Center" Height="60" Margin="8,0" >
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0"  VerticalAlignment="Center">
+                                        <TextBlock TextTrimming="CharacterEllipsis" MaxLines="1" Text="{x:Bind Title}" Style="{StaticResource BodyTextBlockStyle}"/>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock x:Uid="PageContentDetailUpdateTime" Text="Last update:" TextTrimming="CharacterEllipsis" MaxLines="1"
+                                                 Foreground="{ThemeResource CustomNavigationViewItemForeground}"
+                                                Style="{StaticResource CaptionTextBlockStyle}" />
+                                            <TextBlock Margin="2,0,12,0" Text="{x:Bind UpdateTime}" 
+                                                Foreground="{ThemeResource CustomNavigationViewItemForeground}"
+                                                Style="{StaticResource CaptionTextBlockStyle}"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                    <Button 
+                                        x:Uid="PageLibraryDelFavButton"
+                                        Click="RadioItemButton_Click"
+                                        Grid.Column="2"
+                                        Margin="2,0,12,0"
+                                        Width="120"
+                                        Content="Remove"/>
                                 </Grid>
                             </DataTemplate>
                         </ListView.ItemTemplate>

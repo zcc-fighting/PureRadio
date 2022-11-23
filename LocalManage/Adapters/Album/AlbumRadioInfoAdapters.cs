@@ -46,9 +46,10 @@ namespace PureRadio.LocalManage.Adapters
             info.Title = detail.Title;
             info.UpdateTime = detail.UpdateTime;
             info.AlbumId = ContentId;
+            info.Duration = detail.Duration;
           
             string url = string.Format(ApiConstants.Content.Play, ContentId, detail.ProgramId);
-            var query = await accountProvider.GenerateAuthorizedQueryStringAsync(url, null, RequestType.PlayContent, true);
+            var query = await _accountProvider.GenerateAuthorizedQueryStringAsync(url, null, RequestType.PlayContent, true);
             url += $"?{query}";
             info.RemoteUri = new Uri(url);
             return info;

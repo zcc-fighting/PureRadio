@@ -20,6 +20,7 @@ namespace PureRadio.LocalManage.DBBuilder.TableObj
         public readonly static string[] Version_ = { "Version", "TEXT" };
         public readonly static string[] LocalUri = { "LocalUri", "TEXT" };
         public readonly static string[] RemoteUri = { "RemoteUri", "TEXT NOT NULL" };
+        public readonly static string[] Duration = { "Duration", "INTEGER" };
 
 
         public readonly static string[] PrimaryKey = { ProgramId[0] };
@@ -36,6 +37,7 @@ namespace PureRadio.LocalManage.DBBuilder.TableObj
             {Version_,5 },
             {LocalUri,6 },
             {RemoteUri,7 },
+            {Duration,8 },
         };
 
         public TableInform GetTableInform()

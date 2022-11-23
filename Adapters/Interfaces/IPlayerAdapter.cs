@@ -53,5 +53,11 @@ namespace PureRadio.Uwp.Adapters.Interfaces
         /// <param name="item">播放项快照</param>
         /// <returns><see cref="PlayItemSnapshot"/></returns>
         List<PlayItemSnapshot> ConvertToPlayItemSnapshotList(ContentInfoDetail detail, List<ContentPlaylistDetail> playlist);
+        /// <summary>
+        /// 将内容详细信息 <see cref="ContentInfoDetail"/> 和播放列表 <see cref="AlbumRadioInfo"/> 转换为播放项快照 <see cref="PlayItemSnapshot"/>.
+        /// </summary>
+        /// <param name="item">本地播放项快照</param>
+        /// <returns><see cref="PlayItemSnapshot"/></returns>
+        public List<PlayItemSnapshot> ConvertToLocalPlayItemSnapshotList(ContentInfoDetail detail, List<AlbumRadioInfo> playlist);
     }
 }

@@ -10,7 +10,6 @@ using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
-using DataModels;
 using PureRadio.Uwp.Models.Data.User;
 using CommunityToolkit.Mvvm.ComponentModel;
 using PureRadio.Uwp.Services.Interfaces;

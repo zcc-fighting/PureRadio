@@ -62,8 +62,17 @@ namespace PureRadio.Uwp.Views.Secondary
 
         private void PlayListView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var item = e.ClickedItem as ContentPlaylistDetail;
-            ViewModel.PlayContent(item.ProgramId);
+            if(ViewModel.IsOffline)
+            {
+                var item = e.ClickedItem as AlbumRadioInfo;
+                ViewModel.PlayContent(item.ProgramId);
+            }
+            else
+            {
+                var item = e.ClickedItem as ContentPlaylistDetail;
+                ViewModel.PlayContent(item.ProgramId);
+            }
+
         }
 
         private void ButtonPlay_Click(object sender, RoutedEventArgs e)
@@ -73,9 +82,16 @@ namespace PureRadio.Uwp.Views.Secondary
 
         private void ContentTag_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var item = e.ClickedItem as AttributesItem;
-            if (item != null)
-                ViewModel.NavigateToCategory(item);
+            if (ViewModel.IsOffline)
+            {
+                //
+            }
+            else
+            {
+                var item = e.ClickedItem as AttributesItem;
+                if (item != null)
+                    ViewModel.NavigateToCategory(item);
+            }
         }
 
         private void PlayListView_ItemRightTapped(object sender, RightTappedRoutedEventArgs e)
@@ -87,6 +103,12 @@ namespace PureRadio.Uwp.Views.Secondary
         {
             ContentPlaylistDetail contentPlaylistDetail = ((MenuFlyoutItem)sender).DataContext as ContentPlaylistDetail;
             ViewModel.DownloadContentDetailListItem(contentPlaylistDetail);
+        }
+
+        private void RadioItemButton_Click(object sender, RoutedEventArgs e)
+        {
+            ContentPlaylistDetail contentPlaylistDetail = ((MenuFlyoutItem)sender).DataContext as ContentPlaylistDetail;
+            ViewModel.RemoveContentDetailListItem(contentPlaylistDetail);
         }
     }
 }

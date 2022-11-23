@@ -28,12 +28,20 @@ namespace PureRadio.Uwp.Models.Enums
         /// </summary>
         Search,
         /// <summary>
-        /// 推荐电台(Post GraphQL)
+        /// 电台推荐(Post GraphQL)
         /// </summary>
         RecommendRadio,
+        /// <summary>
+        /// 专辑分类推荐(Post GraphQL)
+        /// </summary>
+        RecommendContent,
         /// <summary>
         /// 播放点播内容(专辑内的节目)
         /// </summary>
         PlayContent,
+        /// <summary>
+        /// 主页电台推荐(Post GraphQL)
+        /// </summary>
+        HomeRadioRecommend,
     }
 }

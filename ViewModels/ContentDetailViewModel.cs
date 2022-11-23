@@ -45,11 +45,15 @@ namespace PureRadio.Uwp.ViewModels
             set
             {
                 SetProperty(ref _contentId, value);
-                GetContentFavState();
-                GetContentDetail();
+                if(IsNotOffline)
+                {
+                    GetContentFavState();
+                    GetContentDetail();
+                }
             }
         }
         static ContentInfoDetail currentDetail;
+        static List<AlbumRadioInfo> currentPlaylists;
         private AlbumCardInfo _albumCardInfo;
         public IAsyncRelayCommand ToggleFavCommand { get; }
 
@@ -76,8 +80,8 @@ namespace PureRadio.Uwp.ViewModels
 
         [ObservableProperty]
         private List<ContentPlaylistDetail> _contentPlaylists;
-
-        public List<ContentPlaylistDetail> localContentList=new List<ContentPlaylistDetail>();
+        [ObservableProperty]
+        public List<AlbumRadioInfo> _localContentList;
         [ObservableProperty]
         private bool _isInfoLoading;
 
@@ -186,16 +190,18 @@ namespace PureRadio.Uwp.ViewModels
 
         public void PlayContent(int programId = 0)
         {
-            if(IsOffline)
+            if (ContentId != 0)
             {
-
-            }
-            else if (ContentId != 0)
-            {
-                if (programId == 0) programId = ContentPlaylists[0].ProgramId;
+                if (programId == 0)
+                {
+                    if(IsOffline)
+                        programId = LocalContentList[0].ProgramId;
+                    else
+                        programId = ContentPlaylists[0].ProgramId;
+                }
                 //var playlist = playerAdapter.ConvertToPlayItemSnapshotList(_contentDetail, ContentPlaylists);
                 //playbackService.PlayContent(ContentId, programId, playlist);
-                playbackService.PlayContent(ContentId, programId, _version);
+                playbackService.PlayContent(ContentId, programId, _version,IsOffline);
             }
         }
 
@@ -234,6 +240,7 @@ namespace PureRadio.Uwp.ViewModels
             IsInfoLoading = true;
             _albumCardInfo = albumCardInfo;
             var result = AlbumCardInfoAdapter.ToContentInfoDetail(albumCardInfo);
+            ContentId= result.ContentId;
             currentDetail = result;
             Cover = new BitmapImage(result.Cover);
             Title = result.Title;
@@ -251,16 +258,23 @@ namespace PureRadio.Uwp.ViewModels
         {
             IsPlaylistLoading = true;
             _albumCardInfo = albumCardInfo;
-
-            foreach (var item in contentServ.Load(albumCardInfo))
-            {
-                localContentList.Add(AlbumRadioInfoAdapters.ToContentPlaylistDetail(item));
-            }
+            LocalContentList = contentServ.Load(albumCardInfo);
+            currentPlaylists = LocalContentList;
             IsPlaylistLoading = false;
         }
-        public static ContentInfoDetail GetRadioInfoDetail()
+        public static ContentInfoDetail GetContentInfoDetail()
         {
             return currentDetail;
+        }
+        public static List<AlbumRadioInfo> GetContentPlaylists()
+        {
+            return currentPlaylists;
+        }
+
+        public async void RemoveContentDetailListItem(ContentPlaylistDetail contentPlaylistDetail)
+        {
+            await contentServ.Remove(
+               await AlbumRadioInfoAdapters.ToAlbumRadioInfo(_contentDetail.ContentId, contentPlaylistDetail));
         }
     }
 }

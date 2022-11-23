@@ -318,7 +318,7 @@
                 </muxc:NavigationViewItem>
                 <muxc:NavigationViewItem Tag="2" x:Uid="navRadio">
                     <muxc:NavigationViewItem.Icon>
-                        <FontIcon FontFamily="{StaticResource FluentIcons}" Glyph="&#xE74C;"/>
+                        <FontIcon FontFamily="{StaticResource FluentIcons}" Glyph="&#xE95A;"/>
                     </muxc:NavigationViewItem.Icon>
                 </muxc:NavigationViewItem>
                 <muxc:NavigationViewItem Tag="3" x:Uid="navContent">
@@ -466,6 +466,7 @@
                                 VerticalAlignment="Center" 
                                 Orientation="Horizontal">
                                 <Button 
+                                    Visibility="{x:Bind ViewModel.IsNotOffline,Mode=OneWay}"
                                     x:Name="FavButton" Margin="8,0" Height="42" Width="42" BorderThickness="0" Background="Transparent"  
                                     Command="{x:Bind PlayerViewModel.ToggleFavCommand}">
                                     <FontIcon FontFamily="{StaticResource FluentIcons}" Glyph="{x:Bind PlayerViewModel.IsFav,Mode=OneWay,Converter={StaticResource FavStateToIconConverter}}"/>

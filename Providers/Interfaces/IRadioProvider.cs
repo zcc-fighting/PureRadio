@@ -49,5 +49,27 @@ namespace PureRadio.Uwp.Providers.Interfaces
         /// <param name="pageSize">页大小</param>
         /// <returns></returns>
         Task<ResultSet<RadioInfoCategory>> GetRadioCategoryResult(int categoryId, CancellationToken cancellationToken, int page = 1, int pageSize = 30);
+
+        /// <summary>
+        /// 获取推荐的电台
+        /// </summary>
+        /// <param name="cancellationToken">异步中止令牌.</param>
+        /// <returns>电台集合</returns>
+        Task<List<RadioInfoRecommend>> GetRadioRecommendResult(CancellationToken cancellationToken);
+
+        /// <summary>
+        /// 获取指定地区的电台排行榜结果.
+        /// </summary>
+        /// <param name="regionId">地区Id.</param>
+        /// <param name="cancellationToken">异步中止令牌.</param>
+        /// <returns>电台排行榜项目集合</returns>
+        Task<List<RadioInfoSummary>> GetRadioBillboardResult(int regionId, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// 获取首页推荐电台直播和回放节目
+        /// </summary>
+        /// <param name="cancellationToken">异步中止令牌.</param>
+        /// <returns>电台列表</returns>
+        Task<(List<RadioInfoDetail>, List<RadioReplayInfo>)> GetRadioHomeRecResult(CancellationToken cancellationToken);
     }
 }

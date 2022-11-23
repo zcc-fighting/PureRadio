@@ -121,6 +121,15 @@ namespace PureRadio.Uwp.Providers
                             parameters[ApiConstants.Search.ParamPage] ?? "1",
                             parameters[ApiConstants.Search.ParamType] ?? ApiConstants.Search.TypeRadio);
                         break;
+                    case RequestType.RecommendRadio:
+                        content = ApiConstants.Radio.RecommendRequest;
+                        break;
+                    case RequestType.RecommendContent:
+                        content = ApiConstants.Content.RecommendRequest;
+                        break;
+                    case RequestType.HomeRadioRecommend:
+                        content = ApiConstants.Radio.HomeRecommend;
+                        break;
                 }
                 requestMessage.Content = new StringContent(content, Encoding.UTF8, "application/json");
             }
@@ -204,6 +213,11 @@ namespace PureRadio.Uwp.Providers
             }
             var responseString = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<T>(responseString);
+        }
+        /// <inheritdoc/>
+        public T ParseAsync<T>(string response)
+        {
+            return JsonConvert.DeserializeObject<T>(response);
         }
 
         public void Dispose()

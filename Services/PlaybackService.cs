@@ -1,4 +1,6 @@
-﻿using PureRadio.Uwp.Adapters.Interfaces;
+﻿using PureRadio.LocalManage.Adapters;
+using PureRadio.LocalManage.DataModelsL;
+using PureRadio.Uwp.Adapters.Interfaces;
 using PureRadio.Uwp.Models.Args;
 using PureRadio.Uwp.Models.Data.Constants;
 using PureRadio.Uwp.Models.Data.Content;
@@ -310,7 +312,7 @@ namespace PureRadio.Uwp.Services
         public async void PlayRadioDemand(int radioId, int index, List<PlayItemSnapshot> radioPlaylist)
         {
             _radioPlayListIndex = Convert.ToUInt32(index);
-            if (_currentType == MediaPlayType.RadioDemand && _playItem != null && _playItem.MainId == radioId && _playItem.DayOfWeek == radioPlaylist[index].DayOfWeek)
+            if (_currentType == MediaPlayType.RadioDemand && _playItem != null && _playItem.MainId == radioId && _playItem.DayOfWeek == radioPlaylist[index].DayOfWeek&&radioPlaylist.Count== _playList.Count)
             {
                 (AudioPlayer.Source as MediaPlaybackList).MoveTo(_radioPlayListIndex);
                 Play();
@@ -342,7 +344,7 @@ namespace PureRadio.Uwp.Services
             }
         }
 
-        public async void PlayContent(int contentId, int programId, string version)
+        public async void PlayContent(int contentId, int programId, string version,bool isoffline)
         {
             if (_currentType == MediaPlayType.ContentDemand && _playItem != null && _playList != null && _playItem.MainId == contentId)
             {
@@ -351,7 +353,33 @@ namespace PureRadio.Uwp.Services
             }
             else if (version == string.Empty)
                 return;
-            var detail = await _contentProvider.GetContentDetailInfo(contentId, CancellationToken.None);
+            List<PlayItemSnapshot> playlist;
+            if(isoffline)
+            {
+                var detail = ContentDetailViewModel.GetContentInfoDetail();
+                var contentPlaylist = ContentDetailViewModel.GetContentPlaylists();
+                playlist = _playerAdapter.ConvertToLocalPlayItemSnapshotList(detail, contentPlaylist);
+            }
+            else
+            {
+                var detail = await _contentProvider.GetContentDetailInfo(contentId, CancellationToken.None);
+                var contentPlaylist = await _contentProvider.GetContentProgramListFull(contentId, version, CancellationToken.None);
+                playlist = _playerAdapter.ConvertToPlayItemSnapshotList(detail, contentPlaylist);
+            }
+            
+            PlayContent(contentId, programId, playlist);
+        }
+
+        public async void LocalPlayContent(int contentId, int programId, string version,AlbumCardInfo albumCardInfo)
+        {
+            if (_currentType == MediaPlayType.ContentDemand && _playItem != null && _playList != null && _playItem.MainId == contentId)
+            {
+                PlayContent(contentId, programId, _playList);
+                return;
+            }
+            else if (version == string.Empty)
+                return;
+            var detail = AlbumCardInfoAdapter.ToContentInfoDetail(albumCardInfo);
             var contentPlaylist = await _contentProvider.GetContentProgramListFull(contentId, version, CancellationToken.None);
             var playlist = _playerAdapter.ConvertToPlayItemSnapshotList(detail, contentPlaylist);
             PlayContent(contentId, programId, playlist);

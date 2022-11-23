@@ -213,13 +213,17 @@
     <Compile Include="Models\Data\Content\ContentInfoCard.cs" />
     <Compile Include="Models\Data\Content\ContentInfoCategory.cs" />
     <Compile Include="Models\Data\Content\ContentInfoDetail.cs" />
+    <Compile Include="Models\Data\Content\ContentInfoRecommend.cs" />
     <Compile Include="Models\Data\Content\ContentInfoSearch.cs" />
     <Compile Include="Models\Data\Content\ContentPlaylistDetail.cs" />
     <Compile Include="Models\Data\Radio\RadioInfoCard.cs" />
     <Compile Include="Models\Data\Radio\RadioInfoCategory.cs" />
     <Compile Include="Models\Data\Radio\RadioInfoDetail.cs" />
+    <Compile Include="Models\Data\Radio\RadioInfoRecommend.cs" />
     <Compile Include="Models\Data\Radio\RadioInfoSearch.cs" />
+    <Compile Include="Models\Data\Radio\RadioInfoSummary.cs" />
     <Compile Include="Models\Data\Radio\RadioPlaylistDetail.cs" />
+    <Compile Include="Models\Data\Radio\RadioReplayInfo.cs" />
     <Compile Include="Models\Data\Search\SearchSet.cs" />
     <Compile Include="Models\Data\User\AccountInfo.cs" />
     <Compile Include="Models\Enums\AuthorizeState.cs" />
@@ -229,9 +233,11 @@
     <Compile Include="Models\Enums\PageIds.cs" />
     <Compile Include="Models\Enums\PlaylistDay.cs" />
     <Compile Include="Models\Enums\RequestType.cs" />
+    <Compile Include="Models\Local\ContentRecommendSet.cs" />
     <Compile Include="Models\Local\IncrementalLoadingObservableCollection.cs" />
     <Compile Include="Models\Local\PlayItemSnapshot.cs" />
     <Compile Include="Models\Local\PlayStateSnapshot.cs" />
+    <Compile Include="Models\Local\RadioCategoryItem.cs" />
     <Compile Include="Models\Local\ResultSet.cs" />
     <Compile Include="Models\QingTing\Content\ContentCategoryItem.cs" />
     <Compile Include="Models\QingTing\Content\ContentCategoryResponse.cs" />
@@ -239,6 +245,8 @@
     <Compile Include="Models\QingTing\Content\ContentDetailResponse.cs" />
     <Compile Include="Models\QingTing\Content\ContentProgramListItem.cs" />
     <Compile Include="Models\QingTing\Content\ContentProgramListResponse.cs" />
+    <Compile Include="Models\QingTing\Content\ContentRecommendItem.cs" />
+    <Compile Include="Models\QingTing\Content\ContentRecommendResponse.cs" />
     <Compile Include="Models\QingTing\Network\IPAddrItem.cs" />
     <Compile Include="Models\QingTing\Network\IPAddrResponse.cs" />
     <Compile Include="Models\QingTing\Radio\RadioBillboardRegionItem.cs" />
@@ -249,6 +257,8 @@
     <Compile Include="Models\QingTing\Radio\RadioDetailResponse.cs" />
     <Compile Include="Models\QingTing\Radio\RadioPlaylistItem.cs" />
     <Compile Include="Models\QingTing\Radio\RadioPlaylistResponse.cs" />
+    <Compile Include="Models\QingTing\Radio\RadioRecommendItem.cs" />
+    <Compile Include="Models\QingTing\Radio\RadioRecommendResponse.cs" />
     <Compile Include="Models\QingTing\Recommend\RecommendRadioLiveItem.cs" />
     <Compile Include="Models\QingTing\Recommend\RecommendRadioReplayItem.cs" />
     <Compile Include="Models\QingTing\Recommend\RecommendResponse.cs" />
@@ -288,6 +298,8 @@
     <Compile Include="Resources\Converter\MediaPositionToDisplayConverter.cs" />
     <Compile Include="Resources\Converter\MutedStateToIconConverter.cs" />
     <Compile Include="Resources\Converter\PlayingStateToIconConverter.cs" />
+    <Compile Include="Resources\Converter\ProvinceIdToDisplayConverter.cs" />
+    <Compile Include="Resources\Converter\RadioCategoryToDisplayConverter.cs" />
     <Compile Include="Resources\Converter\ThemeToDisplayConverter.cs" />
     <Compile Include="Resources\Converter\ThemeToIndexConverter.cs" />
     <Compile Include="Services\Interfaces\ILibraryService.cs" />
@@ -302,23 +314,32 @@
     <Compile Include="Services\SqliteService.cs" />
     <Compile Include="ViewModels\ContentCategoryViewModel.cs" />
     <Compile Include="ViewModels\ContentDetailViewModel.cs" />
+    <Compile Include="ViewModels\ContentViewModel.cs" />
     <Compile Include="ViewModels\FullScreenPlayerViewModel.cs" />
+    <Compile Include="ViewModels\HomeViewModel.cs" />
     <Compile Include="ViewModels\LibraryViewModel.cs" />
-    <Compile Include="ViewModels\DownloadViewModel.cs" />
+    <Compile Include="ViewModels\LocalLibraryViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\NativePlayerViewModel.cs" />
     <Compile Include="ViewModels\RadioCategoryViewModel.cs" />
     <Compile Include="ViewModels\RadioDetailViewModel.cs" />
+    <Compile Include="ViewModels\RadioViewModel.cs" />
     <Compile Include="ViewModels\SearchViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="Views\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Main\ContentPage.xaml.cs">
+      <DependentUpon>ContentPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Main\LibraryPage.xaml.cs">
       <DependentUpon>LibraryPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Main\LocalLibraryPage.xaml.cs">
       <DependentUpon>LocalLibraryPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Main\RadioPage.xaml.cs">
+      <DependentUpon>RadioPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Main\SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
@@ -467,6 +488,19 @@
     <Content Include="Assets\Image\Provinces\83_shanghai.png" />
     <Content Include="Assets\Image\Provinces\85_jiangsu.png" />
     <Content Include="Assets\Image\Provinces\99_zhejiang.png" />
+    <Content Include="Assets\Image\RadioCategories\429.png" />
+    <Content Include="Assets\Image\RadioCategories\430.png" />
+    <Content Include="Assets\Image\RadioCategories\431.png" />
+    <Content Include="Assets\Image\RadioCategories\432.png" />
+    <Content Include="Assets\Image\RadioCategories\433.png" />
+    <Content Include="Assets\Image\RadioCategories\434.png" />
+    <Content Include="Assets\Image\RadioCategories\435.png" />
+    <Content Include="Assets\Image\RadioCategories\436.png" />
+    <Content Include="Assets\Image\RadioCategories\438.png" />
+    <Content Include="Assets\Image\RadioCategories\439.png" />
+    <Content Include="Assets\Image\RadioCategories\440.png" />
+    <Content Include="Assets\Image\RadioCategories\441.png" />
+    <Content Include="Assets\Image\RadioCategories\442.png" />
     <Content Include="Assets\SplashScreen\SplashScreen.scale-100.png" />
     <Content Include="Assets\SplashScreen\SplashScreen.scale-125.png" />
     <Content Include="Assets\SplashScreen\SplashScreen.scale-150.png" />
@@ -512,6 +546,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Main\ContentPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\Main\LibraryPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -519,6 +557,10 @@
     <Page Include="Views\Main\LocalLibraryPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Main\RadioPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Main\SettingsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -611,7 +653,9 @@
   <ItemGroup>
     <PRIResource Include="Resources\Strings\en-US\Resources.resw" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Assets\Font\SegoeFluentIcons.ttf" />
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

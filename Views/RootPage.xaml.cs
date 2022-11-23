@@ -144,22 +144,25 @@ namespace PureRadio.Uwp.Views
             // Complete app setup operations here...
 
             await Ioc.Default.GetRequiredService<ISqliteService>().InitializeDatabaseAsync();
-            
-            try
-            {
-                var httpProvider = Ioc.Default.GetRequiredService<IHttpProvider>();
-                var request = await httpProvider.GetRequestMessageAsync(ApiConstants.Network.IpAddr, HttpMethod.Get, null, RequestType.Default, false, false);
-                var response = await httpProvider.SendAsync(request);
-                var result = await httpProvider.ParseAsync<IPAddrResponse>(response);
-                if (result?.Code == 0)
+
+            if(!Ioc.Default.GetRequiredService<ISettingsService>().GetValue<bool>(AppConstants.SettingsKey.IsOffline))
+                try
+                {
+                    var httpProvider = Ioc.Default.GetRequiredService<IHttpProvider>();
+                    var request = await httpProvider.GetRequestMessageAsync(ApiConstants.Network.IpAddr, HttpMethod.Get, null, RequestType.Default, false, false);
+                    var response = await httpProvider.SendAsync(request);
+                    var result = await httpProvider.ParseAsync<IPAddrResponse>(response);
+                    if (result?.Code == 0)
+                    {
+                        if (!AppConstants.ProvinceIdDict.TryGetValue(result.Data.Region, out int regionId))
+                            regionId = 0;
+                        Ioc.Default.GetRequiredService<ISettingsService>().SetValue<int>(AppConstants.SettingsKey.LocalRegionId, regionId);
+                    }
+                }
+                catch (Exception)
                 {
 
                 }
-            }
-            catch(Exception)
-            {
-                
-            }
 
             ImageCache.Instance.CacheDuration = TimeSpan.FromHours(24);
             ImageCache.Instance.MaxMemoryCacheCount = 100;

@@ -41,6 +41,8 @@ namespace PureRadio.Uwp.Views
         private readonly List<(string Tag, PageIds pageIds, Type Page)> _mainPages = new List<(string Tag, PageIds pageIds, Type Page)>
         {
             (((int)PageIds.Home).ToString(), PageIds.Home, typeof(HomePage)),
+            (((int)PageIds.Radio).ToString(), PageIds.Radio, typeof(RadioPage)),
+            (((int)PageIds.Content).ToString(), PageIds.Content, typeof(ContentPage)),
             (((int)PageIds.Library).ToString(),PageIds.Library, typeof(LibraryPage)),
             (((int)PageIds.Settings).ToString(), PageIds.Settings, typeof(SettingsPage))
         };
@@ -51,7 +53,6 @@ namespace PureRadio.Uwp.Views
             //(((int)PageIds.Radio).ToString(), typeof(CategoriesPage)),
             //(((int)PageIds.Content).ToString(), typeof(RankPage)),
             //(((int)PageIds.Library).ToString(), typeof(ContentPage)),
-            //(((int)PageIds.Settings).ToString(),typeof(SettingsPage))
         };
 
         private PageIds _currentPageId;
@@ -196,7 +197,13 @@ namespace PureRadio.Uwp.Views
             ContentFrame.Navigated += On_Navigated;
             // NavView doesn't load any page by default, so load home page.
             if(NavView.SelectedItem == null)
-                NavigateToMainView(PageIds.Home, new EntranceNavigationTransitionInfo());
+            {
+                var newType = (ViewModel.GetIsOffline())
+                    ? PageIds.Library
+                    : PageIds.Home;
+                NavigateToMainView(newType, new EntranceNavigationTransitionInfo());
+            }
+                
             // Listen to the window directly so the app responds
             // to accelerator keys regardless of which element has focus.
             Window.Current.CoreWindow.Dispatcher.AcceleratorKeyActivated +=
@@ -220,10 +227,10 @@ namespace PureRadio.Uwp.Views
                     pageType = typeof(HomePage);
                     break;
                 case PageIds.Radio:
-
+                    pageType = typeof(RadioPage);
                     break;
                 case PageIds.Content:
-
+                    pageType = typeof(ContentPage);
                     break;
                 case PageIds.Library:
                     if (ViewModel.GetIsOffline())

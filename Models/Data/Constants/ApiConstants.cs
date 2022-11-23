@@ -126,6 +126,22 @@ namespace PureRadio.Uwp.Models.Data.Constants
             /// 根据分类请求电台
             /// </summary>
             public const string Category = "http://rapi.qingting.fm/channels";
+            /// <summary>
+            /// 电台推荐
+            /// </summary>
+            public const string Recommend = _webBase;
+            /// <summary>
+            /// 电台推荐请求
+            /// </summary>
+            public const string RecommendRequest = "{\"query\":\"{homePage{radioData}}\"}";
+            /// <summary>
+            /// 电台排行榜请求
+            /// </summary>
+            public const string Billboard = "https://rapi.qtfm.cn/billboards/0/{0}/channels";
+            /// <summary>
+            /// 电台主页推荐请求
+            /// </summary>
+            public const string HomeRecommend = "{\"query\":\"{radioPage {radioPlaying,replayRadio}}\"}";
         }
 
         /// <summary>
@@ -149,6 +165,15 @@ namespace PureRadio.Uwp.Models.Data.Constants
             /// 根据分类请求专辑
             /// </summary>
             public const string Category = "https://i.qingting.fm/capi/neo-channel-filter";
+            /// <summary>
+            /// 分类专辑推荐
+            /// </summary>
+            public const string Recommend = _webBase;
+            /// <summary>
+            /// 分类专辑推荐请求
+            /// </summary>
+            public const string RecommendRequest = "{\"query\":\"{homePage{categories}}\"}";
+
         }
 
         /// <summary>

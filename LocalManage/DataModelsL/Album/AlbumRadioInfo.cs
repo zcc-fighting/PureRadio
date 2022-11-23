@@ -28,6 +28,8 @@ namespace PureRadio.LocalManage.DataModelsL
         /// </summary>
         public string UpdateTime { get; set; } = "default";
 
+        public int Duration { get; set; } = 0;
+
         /// <summary>
         /// 节目类型(未知)
         /// </summary>

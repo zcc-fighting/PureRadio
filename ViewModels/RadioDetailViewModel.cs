@@ -368,7 +368,8 @@ namespace PureRadio.Uwp.ViewModels
 
         public async void DownloadRadioDetailListItem(RadioPlaylistDetail radioPlaylistDetail)
         {
-            await radioServ.Download(ChannalCardInfoAdapters.ToChanalCardInfo(radioDetail),ChannalRadioInfoAdapters.ToChannalRadioInfo(radioPlaylistDetail));
+           await radioServ.Download(ChannalCardInfoAdapters.ToChanalCardInfo(radioDetail),ChannalRadioInfoAdapters.ToChannalRadioInfo(radioPlaylistDetail));
+            
         }
 
         public void GetLocalRadioDetail(ChannalCardInfo channalCardInfo)

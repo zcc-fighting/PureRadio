@@ -67,7 +67,8 @@ namespace PureRadio.Uwp.ViewModels
         [ObservableProperty]
         private string _userDescription;
 
-
+        [ObservableProperty]
+        private bool _isNotOffline;
         public MainViewModel(
             ISettingsService settings,
             INavigateService navigate, 
@@ -78,6 +79,7 @@ namespace PureRadio.Uwp.ViewModels
             this.navigate = navigate;
             this.searchProvider = searchProvider;
             this.accountProvider = accountProvider;
+            IsNotOffline = !settings.GetValue<bool>(AppConstants.SettingsKey.IsOffline);
             _suggestionTimer = new DispatcherTimer
             {
                 Interval = TimeSpan.FromMilliseconds(350),
@@ -116,7 +118,10 @@ namespace PureRadio.Uwp.ViewModels
             switch (type)
             {
                 case NavigationType.Main:
-                    navigate.NavigateToMainView(pageId, new EntranceNavigationTransitionInfo(), parameter);
+                    var newid = ((settings.GetValue<bool>(AppConstants.SettingsKey.IsOffline) && pageId != PageIds.Settings)) 
+                                ? PageIds.Library
+                                : pageId;
+                    navigate.NavigateToMainView(newid, new EntranceNavigationTransitionInfo(), parameter);
                     break;
                 case NavigationType.Secondary:
                     navigate.NavigateToSecondaryView(pageId, new EntranceNavigationTransitionInfo(), parameter);

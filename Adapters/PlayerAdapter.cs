@@ -79,11 +79,9 @@ namespace PureRadio.Uwp.Adapters
         {
             return playlist.Select(p => ConvertToPlayItemSnapshot(p, detail.Cover, detail.Title)).ToList();
         }
+
         public List<PlayItemSnapshot> ConvertToLocalPlayItemSnapshotList(RadioInfoDetail detail, List<ChannalRadioInfo> playlist)
         {
-
-
-
             return playlist.Select(p => ConvertToLocalPlayItemSnapshot(p, detail.Cover, detail.Title)).ToList();
         }
 
@@ -92,10 +90,22 @@ namespace PureRadio.Uwp.Adapters
             return new PlayItemSnapshot(
                 MediaPlayType.ContentDemand, null, item.Cover, item.Title, contentTitle, contentId, item.ProgramId, item.Duration);
         }
+        private PlayItemSnapshot ConvertToLocalPlayItemSnapshot(AlbumRadioInfo item, Uri cover, int contentId, string contentTitle)
+        {
+            int duration = item.Duration;
+            //Uri sourceUri = new(String.Format(ApiConstants.Radio.OnLocalDemand, item.RadioId, item.RadioId, targetDay, item.StartTime.Replace(":", string.Empty), item.EndTime.Replace(":", string.Empty)));
+
+            return new PlayItemSnapshot(
+                MediaPlayType.ContentDemand, null, cover, item.Title, contentTitle, contentId, item.ProgramId, item.Duration);
+        }
 
         public List<PlayItemSnapshot> ConvertToPlayItemSnapshotList(ContentInfoDetail detail, List<ContentPlaylistDetail> playlist)
         {
             return playlist.Select(p => ConvertToPlayItemSnapshot(p, detail.ContentId, detail.Title)).ToList();
+        }
+        public List<PlayItemSnapshot> ConvertToLocalPlayItemSnapshotList(ContentInfoDetail detail, List<AlbumRadioInfo> playlist)
+        {
+            return playlist.Select(p => ConvertToLocalPlayItemSnapshot(p,detail.Cover, detail.ContentId, detail.Title)).ToList();
         }
     }
 }

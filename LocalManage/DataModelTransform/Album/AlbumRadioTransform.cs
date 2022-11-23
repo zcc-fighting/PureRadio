@@ -25,6 +25,7 @@ namespace PureRadio.LocalManage.DataModelTransform
             store[AlbumRadio.ColLocation[AlbumRadio.Title]] = info.Title;
             store[AlbumRadio.ColLocation[AlbumRadio.UpdateTime]] = info.UpdateTime;
             store[AlbumRadio.ColLocation[AlbumRadio.Version_]] = info.Version;
+            store[AlbumRadio.ColLocation[AlbumRadio.Duration]] = info.Duration;
             return store.ToList();
         }
 
@@ -70,6 +71,14 @@ namespace PureRadio.LocalManage.DataModelTransform
             if (store[AlbumRadio.ColLocation[AlbumRadio.Version_]] != null)
             {
                 info.Version = (string)store[AlbumRadio.ColLocation[AlbumRadio.Version_]];
+            }
+            try
+            {
+                info.Duration = (int)(long)store[AlbumRadio.ColLocation[AlbumRadio.Duration]];
+            }
+            catch
+            {
+
             }
             return info;
         }

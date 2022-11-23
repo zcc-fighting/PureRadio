@@ -166,6 +166,9 @@ namespace PureRadio.Uwp
                             .AddSingleton<IContentProvider, ContentProvider>()
                             // Viewmodels
                             .AddTransient<MainViewModel>()
+                            .AddTransient<HomeViewModel>()
+                            .AddTransient<RadioViewModel>()
+                            .AddTransient<ContentViewModel>()                            
                             .AddTransient<LibraryViewModel>()
                             .AddTransient<LocalLibraryViewModel>()
                             .AddTransient<SettingsViewModel>()

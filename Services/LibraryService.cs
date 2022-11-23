@@ -1,5 +1,6 @@
 ﻿using Microsoft.Toolkit.Uwp.UI.Controls.TextToolbarSymbols;
 using PureRadio.Uwp.Models.Args;
+using PureRadio.Uwp.Models.Data.Constants;
 using PureRadio.Uwp.Models.Database;
 using PureRadio.Uwp.Models.Enums;
 using PureRadio.Uwp.Models.Local;
@@ -21,21 +22,26 @@ namespace PureRadio.Uwp.Services
     {
         private readonly IPlaybackService _playbackService;
         private readonly ISqliteService _sqliteService;
+        private readonly ISettingsService _settingsService;
 
         public event EventHandler<FavItemChangedEventArgs> FavItemChanging;
         public event EventHandler<HistoryItemChangedEventArgs> HistoryItemAdded;
 
         public LibraryService(
             IPlaybackService playbackService, 
-            ISqliteService sqliteService)
+            ISqliteService sqliteService,
+            ISettingsService settingsService)
         {
             _playbackService = playbackService;
             _sqliteService = sqliteService;
-            //_playbackService.PlayerItemChanged += AddItemToHistory;
+            _settingsService = settingsService;
+            _playbackService.PlayerItemChanged += AddItemToHistory;
         }
 
         private async void AddItemToHistory(object sender, PlayerItemChangedEventArgs e)
         {
+            if (_settingsService.GetValue<bool>(AppConstants.SettingsKey.IsOffline))
+                return;
             var item = e.Snapshot;
             string title;
             string subTitle;

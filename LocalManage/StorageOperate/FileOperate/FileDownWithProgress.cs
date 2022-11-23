@@ -58,7 +58,7 @@ namespace LocalRadioManage.StorageOperate
                         }
                         else if (extension != ".jpg" && extension != ".JPG" && extension != ".jpeg" && extension != ".JPEG" && extension != ".PNG" && extension != ".png")
                         {
-                            file_name.Replace(extension, ".jpg");
+                           file_name=file_name.Replace(extension, ".jpg");
                         }
                     }
                     if (is_radio)

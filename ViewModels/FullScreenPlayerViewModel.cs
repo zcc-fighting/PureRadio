@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Toolkit.Uwp.UI;
 using PureRadio.Uwp.Models.Args;
+using PureRadio.Uwp.Models.Data.Constants;
 using PureRadio.Uwp.Models.Data.Radio;
 using PureRadio.Uwp.Models.Enums;
 using PureRadio.Uwp.Models.Local;
@@ -23,6 +24,7 @@ namespace PureRadio.Uwp.ViewModels
 {
     public sealed partial class FullScreenPlayerViewModel : ObservableRecipient
     {
+        private readonly ISettingsService settings;
         private readonly IPlaybackService playService;
         private readonly INavigateService navigate;
         private readonly ILibraryService library;
@@ -42,7 +44,10 @@ namespace PureRadio.Uwp.ViewModels
 
         [ObservableProperty]
         private bool _isFav;
-
+        [ObservableProperty]
+        private bool _isOffline;
+        [ObservableProperty]
+        private bool _isNotOffline;
         [ObservableProperty]
         private bool _showElement;
 
@@ -88,16 +93,20 @@ namespace PureRadio.Uwp.ViewModels
         private List<PlayItemSnapshot> _playlist;
 
         public FullScreenPlayerViewModel(
+            ISettingsService settingsService,
             IPlaybackService playbackService,
             ILibraryService libraryService,
             INavigateService navigateService)
         {
+            this.settings = settingsService;
             playService = playbackService;
             library = libraryService;
             navigate = navigateService;
             UpdatePlayerState(playService.GetCurrentPlayerState());
             itemSnapshot = playService.GetCurrentPlayItem();
             UpdatePlayerItem(itemSnapshot);
+            IsOffline = settings.GetValue<bool>(AppConstants.SettingsKey.IsOffline);
+            IsNotOffline = !IsOffline;
             _refreshTimer = new DispatcherTimer
             {
                 Interval = TimeSpan.FromSeconds(1),

@@ -189,7 +189,7 @@
                 MinHeight="300"
                 Visibility="{x:Bind ViewModel.IsItemsLoading,Mode=OneWay,Converter={StaticResource BooleanToVisibilityConverter}}">
             </Border>
-            <!-- DownloadRadio -->
+            <!-- LocalRadio -->
             <ListView 
                 x:Name="RadioListView" 
                 Visibility="{x:Bind ViewModel.IsDownloadRadioShown, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
@@ -201,7 +201,7 @@
                 ItemContainerStyle="{StaticResource ListViewItemContainerStyle}"
                 ItemClick="RadioListView_ItemClick">
             </ListView>
-            <!-- DownloadContent -->
+            <!-- LocalContent -->
             <ListView 
                 x:Name="ContentListView" 
                 Visibility="{x:Bind ViewModel.IsDownloadContentShown, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
